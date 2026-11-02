@@ -67,7 +67,7 @@
       "id": "babymonitor",
       "category": "android",
       "order": 6,
-      "version": "android-build-18",
+      "version": "1.0.0",
       "updated": "2026-10-11",
       "download": {
         "url": "https://github.com/havivon/BabyMonitor/releases/download/android-build-18/BabyMonitor-1.0.0-build18.apk",
@@ -101,7 +101,12 @@
       "order": 9,
       "open": "https://www.printmybingo.com/",
       "updated": "2026-10-18",
-      "download": null
+      "download": {
+        "url": "https://github.com/havivon/printmybingo-site/releases/download/app-latest/PrintMyBingo.apk",
+        "size": 4846211,
+        "type": "apk"
+      },
+      "version": null
     },
     {
       "id": "pdf",
