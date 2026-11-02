@@ -118,6 +118,19 @@
       }
     },
     {
+      "id": "hidon",
+      "category": "game",
+      "order": 12,
+      "version": null,
+      "updated": "2026-11-02",
+      "download": {
+        "url": "downloads/hidon.html",
+        "size": 997807,
+        "type": "html"
+      },
+      "open": "web/hidon/"
+    },
+    {
       "id": "tamlelan",
       "category": "web",
       "order": 14,

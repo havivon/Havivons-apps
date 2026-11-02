@@ -124,8 +124,7 @@
       "host": {
         "from": "dist/hidon.html",
         "to": "web/hidon/index.html"
-      },
-      "hidden": "DEFAULT_FAMILY has the children's real names; anonymize first"
+      }
     },
     "tamlelan": {
       "category": "web",
