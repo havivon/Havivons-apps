@@ -1,0 +1,333 @@
+{
+  "pigeon": {
+    "icon": "apps/pigeon/icon.png",
+    "screens": [
+      {
+        "src": "apps/pigeon/screens/01.webp",
+        "caption": "תיבת ההודעות הראשית עם השיחות וההודעות שלא נקראו"
+      },
+      {
+        "src": "apps/pigeon/screens/02.webp",
+        "caption": "שיחה במצב כהה"
+      },
+      {
+        "src": "apps/pigeon/screens/03.webp",
+        "caption": "בחירה מרובה של הודעות בשיחה"
+      },
+      {
+        "src": "apps/pigeon/screens/04.webp",
+        "caption": "תיקיית הספאם: הודעות חשודות מסוננות בנפרד"
+      },
+      {
+        "src": "apps/pigeon/screens/05.webp",
+        "caption": "כללי צבעים לסימון שיחות"
+      }
+    ]
+  },
+  "hebreminder": {
+    "icon": "apps/hebreminder/icon.png",
+    "screens": [
+      {
+        "src": "apps/hebreminder/screens/01.webp",
+        "caption": "המסך הראשי: התזכורות הקרובות לפי הלוח העברי"
+      },
+      {
+        "src": "apps/hebreminder/screens/02.webp",
+        "caption": "יצירת תזכורת חדשה"
+      },
+      {
+        "src": "apps/hebreminder/screens/03.webp",
+        "caption": "סוגי התזכורות"
+      },
+      {
+        "src": "apps/hebreminder/screens/04.webp",
+        "caption": "בחירת צדיקים מרשימה מובנית"
+      },
+      {
+        "src": "apps/hebreminder/screens/05.webp",
+        "caption": "הגדרות האפליקציה"
+      }
+    ]
+  },
+  "smartfiles": {
+    "icon": "apps/smartfiles/icon.png",
+    "screens": [
+      {
+        "src": "apps/smartfiles/screens/01.webp",
+        "caption": "מסך הבית: אחסון, אוספים חכמים ומועדפים"
+      },
+      {
+        "src": "apps/smartfiles/screens/02.webp",
+        "caption": "רשימת קבצים בתיקייה עם תאריך וגודל"
+      },
+      {
+        "src": "apps/smartfiles/screens/03.webp",
+        "caption": "תצוגת רשת של אותה תיקייה"
+      },
+      {
+        "src": "apps/smartfiles/screens/04.webp",
+        "caption": "בחירת כמה קבצים לפעולה משותפת"
+      },
+      {
+        "src": "apps/smartfiles/screens/05.webp",
+        "caption": "מסך הבית במצב כהה"
+      }
+    ]
+  },
+  "zochrim": {
+    "icon": "apps/zochrim/icon.png",
+    "screens": [
+      {
+        "src": "apps/zochrim/screens/01.webp",
+        "caption": "מסך הבית: ברכה, כניסה לאימון היומי והשבוע שלך"
+      },
+      {
+        "src": "apps/zochrim/screens/02.webp",
+        "caption": "תחנת הפתיחה: איזה יום היום?"
+      },
+      {
+        "src": "apps/zochrim/screens/03.webp",
+        "caption": "משחק הזוגות"
+      },
+      {
+        "src": "apps/zochrim/screens/04.webp",
+        "caption": "סודוקו"
+      },
+      {
+        "src": "apps/zochrim/screens/05.webp",
+        "caption": "מסך הסיום של האימון"
+      }
+    ]
+  },
+  "mahjong": {
+    "icon": "apps/mahjong/icon.png",
+    "screens": [
+      {
+        "src": "apps/mahjong/screens/01.webp",
+        "caption": "מסך הבית: המשך משחק, בחירת שלב והוראות"
+      },
+      {
+        "src": "apps/mahjong/screens/02.webp",
+        "caption": "לוח המשחק בשלבים הראשונים"
+      },
+      {
+        "src": "apps/mahjong/screens/03.webp",
+        "caption": "לוח משחק מורכב יותר בשלב מתקדם"
+      },
+      {
+        "src": "apps/mahjong/screens/04.webp",
+        "caption": "מפת השלבים"
+      },
+      {
+        "src": "apps/mahjong/screens/05.webp",
+        "caption": "איך משחקים"
+      }
+    ]
+  },
+  "newplayer": {
+    "icon": "apps/newplayer/icon.png",
+    "screens": [
+      {
+        "src": "apps/newplayer/screens/01.webp",
+        "caption": "ניגון: כפתורי ענק, זמן וקובץ מתוך כמה"
+      },
+      {
+        "src": "apps/newplayer/screens/02.webp",
+        "caption": "ניגון מושהה עם מעבר בין קבצים"
+      },
+      {
+        "src": "apps/newplayer/screens/03.webp",
+        "caption": "מצב פתיחה: עוד לא נבחר קובץ"
+      },
+      {
+        "src": "apps/newplayer/screens/04.webp",
+        "caption": "הנגן במצב כהה"
+      }
+    ]
+  },
+  "ragua": {
+    "icon": "apps/ragua/icon.png",
+    "screens": [
+      {
+        "src": "apps/ragua/screens/01.webp",
+        "caption": "סדר היום: משימות יומיות והתקדמות שבועית"
+      },
+      {
+        "src": "apps/ragua/screens/02.webp",
+        "caption": "כלי רגיעה לילד: מדחום רגשות ונשימות"
+      },
+      {
+        "src": "apps/ragua/screens/03.webp",
+        "caption": "רישום אירוע מהיר"
+      },
+      {
+        "src": "apps/ragua/screens/04.webp",
+        "caption": "מדריך להורה לפי שבועות"
+      }
+    ]
+  },
+  "babymonitor": {
+    "icon": "apps/babymonitor/icon.png",
+    "screens": [
+      {
+        "src": "apps/babymonitor/screens/01.webp",
+        "caption": "מסך הבית: זמן מאז ההאכלה האחרונה והוספה מהירה"
+      },
+      {
+        "src": "apps/babymonitor/screens/02.webp",
+        "caption": "היסטוריית האכלות לפי ימים"
+      },
+      {
+        "src": "apps/babymonitor/screens/03.webp",
+        "caption": "גדילה: גרף אחוזונים של WHO"
+      },
+      {
+        "src": "apps/babymonitor/screens/04.webp",
+        "caption": "סטטיסטיקה: ממוצעים והשוואה לתקופה קודמת"
+      },
+      {
+        "src": "apps/babymonitor/screens/05.webp",
+        "caption": "מסך הבית במצב כהה"
+      }
+    ]
+  },
+  "wa-unsaved": {
+    "icon": "apps/wa-unsaved/icon.png",
+    "screens": [
+      {
+        "src": "apps/wa-unsaved/screens/01.webp",
+        "caption": "הזנת מספר טלפון בלי לשמור איש קשר"
+      },
+      {
+        "src": "apps/wa-unsaved/screens/02.webp",
+        "caption": "מספר והודעה מוכנה מראש לשליחה"
+      },
+      {
+        "src": "apps/wa-unsaved/screens/03.webp",
+        "caption": "רשימת האחרונים במכשיר"
+      },
+      {
+        "src": "apps/wa-unsaved/screens/04.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "printmybingo": {
+    "icon": "apps/printmybingo/icon.png",
+    "screens": [
+      {
+        "src": "apps/printmybingo/screens/01.webp",
+        "caption": "הגדרות הכרטיסים: סוג משחק, גודל לוח וכמות"
+      },
+      {
+        "src": "apps/printmybingo/screens/02.webp",
+        "caption": "כרטיסי בינגו עם מספרים, מוכנים להדפסה"
+      },
+      {
+        "src": "apps/printmybingo/screens/03.webp",
+        "caption": "מצב מילים: הזנת רשימת מילים"
+      },
+      {
+        "src": "apps/printmybingo/screens/04.webp",
+        "caption": "כרטיסי בינגו עם מילים"
+      },
+      {
+        "src": "apps/printmybingo/screens/05.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "pdf": {
+    "icon": "apps/pdf/icon.png",
+    "screens": [
+      {
+        "src": "apps/pdf/screens/01.webp",
+        "caption": "מסך הפתיחה: גרירת קבצים להמרה ל-PDF"
+      },
+      {
+        "src": "apps/pdf/screens/02.webp",
+        "caption": "ארבעה עמודים מוכנים לסידור"
+      },
+      {
+        "src": "apps/pdf/screens/03.webp",
+        "caption": "מצב בחירה בכמה עמודים"
+      },
+      {
+        "src": "apps/pdf/screens/04.webp",
+        "caption": "בחירת שם לקובץ ה-PDF"
+      },
+      {
+        "src": "apps/pdf/screens/05.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "hidon": {
+    "icon": "apps/hidon/icon.png",
+    "screens": [
+      {
+        "src": "apps/hidon/screens/01.webp",
+        "caption": "הגדרת המשפחה: ילדים, מין ורמת קושי"
+      },
+      {
+        "src": "apps/hidon/screens/02.webp",
+        "caption": "שאלון מוכן לפרשת נח עם שמות הילדים"
+      },
+      {
+        "src": "apps/hidon/screens/03.webp",
+        "caption": "שאלות ברמות שונות עם תשובות מסומנות"
+      },
+      {
+        "src": "apps/hidon/screens/04.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "quiz": {
+    "icon": "apps/quiz/icon.png",
+    "screens": [
+      {
+        "src": "apps/quiz/screens/01.webp",
+        "caption": "בחירת פרשה ויצירת חידון אמריקאי"
+      },
+      {
+        "src": "apps/quiz/screens/02.webp",
+        "caption": "שאלות החידון עם סימון התשובה הנכונה"
+      },
+      {
+        "src": "apps/quiz/screens/03.webp",
+        "caption": "עריכת מאגר השאלות"
+      },
+      {
+        "src": "apps/quiz/screens/04.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "tamlelan": {
+    "icon": "apps/tamlelan/icon.png",
+    "screens": [
+      {
+        "src": "apps/tamlelan/screens/01.webp",
+        "caption": "הכתבה בעברית עם פקודות קוליות"
+      },
+      {
+        "src": "apps/tamlelan/screens/02.webp",
+        "caption": "אותו מסך במצב בהיר"
+      },
+      {
+        "src": "apps/tamlelan/screens/03.webp",
+        "caption": "תצוגת מחשב"
+      }
+    ]
+  },
+  "reply-forward": {
+    "icon": "apps/reply-forward/icon.png",
+    "screens": [
+      {
+        "src": "apps/reply-forward/screens/01.webp",
+        "caption": "המחשה: כפתורי Reply +Attach ו-Reply All +Attach ברצועת הכלים של Outlook"
+      }
+    ]
+  }
+}
