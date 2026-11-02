@@ -765,6 +765,13 @@ body {
 }
 .toast.success { background: var(--success); }
 .toast.error { background: var(--danger); }
+.toast.long {
+  white-space: normal;
+  max-width: min(92vw, 560px);
+  text-align: center;
+  line-height: 1.5;
+  border-radius: 18px;
+}
 
 /* ============ FOOTER ============ */
 .credit-footer {
@@ -1098,16 +1105,55 @@ async function handleFiles(fileList) {
   await handleFileArray(fileArray);
 }
 
+// ---- error helpers ----
+const PASSWORD_MSG = 'הקובץ מוגן בסיסמה — הסר את הסיסמה ונסה שוב';
+
+function isPasswordError(err) {
+  if (!err) return false;
+  const name = err.name || '';
+  const msg = String(err.message || '');
+  return name === 'PasswordException' || name === 'EncryptedPDFError' || /encrypted|password/i.test(msg);
+}
+
+function describeFileFailure(err, ext) {
+  if (isPasswordError(err)) return { reason: PASSWORD_MSG, short: 'מוגן בסיסמה' };
+  const msg = String((err && err.message) || '');
+  if (ext === 'docx' && /central directory|zip|corrupt/i.test(msg)) {
+    const r = 'הקובץ פגום או מוגן בסיסמה';
+    return { reason: r, short: r };
+  }
+  return { reason: 'שגיאה בעיבוד הקובץ', short: 'שגיאה בעיבוד' };
+}
+
+function summarizeUploadResult(total, added, failures) {
+  if (failures.length === 0) {
+    return total === 1 ? 'הקובץ נוסף בהצלחה' : `${total} קבצים נוספו בהצלחה`;
+  }
+  if (total === 1) {
+    return `${failures[0].name}: ${failures[0].reason}`;
+  }
+  const head = added > 0 ? `נוספו ${added} מתוך ${total} קבצים` : 'לא נוסף אף קובץ';
+  if (failures.length === 1) {
+    return `${head} — ${failures[0].name}: ${failures[0].reason}`;
+  }
+  const shown = failures.slice(0, 3).map(f => `${f.name} (${f.short})`).join(', ');
+  const more = failures.length > 3 ? ` ועוד ${failures.length - 3}` : '';
+  return `${head} — נכשלו: ${shown}${more}`;
+}
+
 async function handleFileArray(files) {
   if (!files || files.length === 0) return;
   showLoading('מעבד קבצים...');
   let processed = 0;
+  let added = 0;
+  const failures = [];
   const total = files.length;
 
   for (let i = 0; i < total; i++) {
     const file = files[i];
     try {
       const ext = file.name.split('.').pop().toLowerCase();
+      let handled = true;
       if (ext === 'pdf') {
         await processPDF(file);
       } else if (['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'avif', 'ico'].includes(ext)) {
@@ -1121,13 +1167,20 @@ async function handleFileArray(files) {
       } else if (ext === 'docx') {
         await processDOCX(file);
       } else if (ext === 'doc') {
-        showToast(`קובצי .doc ישנים אינם נתמכים — המירו ל-.docx ב-Word`, 'error');
+        handled = false;
+        const r = 'קובצי .doc ישנים אינם נתמכים — המירו ל-.docx ב-Word';
+        failures.push({ name: file.name, reason: r, short: 'פורמט .doc לא נתמך' });
       } else {
-        showToast(`סוג קובץ לא נתמך: ${ext}`, 'error');
+        handled = false;
+        const r = `סוג קובץ לא נתמך: ${ext}`;
+        failures.push({ name: file.name, reason: r, short: r });
       }
+      if (handled) added++;
     } catch (err) {
       console.error('Error processing file:', file.name, err);
-      showToast(`שגיאה בעיבוד: ${file.name}`, 'error');
+      const ext = file.name.split('.').pop().toLowerCase();
+      const d = describeFileFailure(err, ext);
+      failures.push({ name: file.name, reason: d.reason, short: d.short });
     }
     processed++;
     updateProgress(Math.round((processed / total) * 100));
@@ -1135,7 +1188,9 @@ async function handleFileArray(files) {
 
   hideLoading();
   renderPageList();
-  showToast(`${total} קבצים נוספו בהצלחה`, 'success');
+  const msg = summarizeUploadResult(total, added, failures);
+  if (failures.length === 0) showToast(msg, 'success');
+  else showToast(msg, 'error', 8000);
 }
 
 async function processPDF(file) {
@@ -1163,6 +1218,7 @@ async function processPDF(file) {
       children.push({
         id: generateId(),
         type: 'pdf-page',
+        sourceName: file.name,
         label: `${file.name} — עמוד ${i + 1}`,
         rotation: 0,
         pdfBytes: pdfBytes.buffer,
@@ -2149,26 +2205,73 @@ async function confirmCreatePDF() {
     }
 
     let processed = 0;
-    for (const page of flatPages) {
+    let okCount = 0;
+    const failures = [];
+    for (let idx = 0; idx < flatPages.length; idx++) {
+      const page = flatPages[idx];
       try {
         if (page.type === 'image') await addImagePage(pdfDoc, page);
         else if (page.type === 'pdf-page') await addPdfPage(pdfDoc, page);
+        else throw new Error('Unknown page type: ' + page.type);
+        okCount++;
       } catch (err) {
         console.error('Error adding page:', page.label, err);
+        failures.push({
+          pos: idx + 1,
+          name: page.sourceName || page.label,
+          password: isPasswordError(err)
+        });
       }
       processed++;
       updateProgress(Math.round((processed / flatPages.length) * 100));
     }
 
+    const totalPages = flatPages.length;
+    if (okCount === 0) {
+      hideLoading();
+      showToast(buildCreateFailureMessage(totalPages, okCount, failures), 'error', 8000);
+      return;
+    }
+
     const pdfBytesOut = await pdfDoc.save();
     downloadBlob(pdfBytesOut, filename + '.pdf', 'application/pdf');
     hideLoading();
-    showToast('הקובץ נוצר בהצלחה! 🎉', 'success');
+    if (failures.length === 0) {
+      showToast('הקובץ נוצר בהצלחה! 🎉', 'success');
+    } else {
+      showToast(buildCreateFailureMessage(totalPages, okCount, failures), 'error', 9000);
+    }
   } catch (err) {
     console.error('PDF creation error:', err);
     hideLoading();
     showToast('שגיאה ביצירת הקובץ', 'error');
   }
+}
+
+function buildCreateFailureMessage(totalPages, okCount, failures) {
+  // Group failed pages by source file
+  const groups = [];
+  const byName = new Map();
+  for (const f of failures) {
+    let g = byName.get(f.name);
+    if (!g) { g = { name: f.name, positions: [], password: false }; byName.set(f.name, g); groups.push(g); }
+    g.positions.push(f.pos);
+    if (f.password) g.password = true;
+  }
+  const parts = groups.slice(0, 3).map(g => {
+    const shown = g.positions.slice(0, 5).join(', ') + (g.positions.length > 5 ? '…' : '');
+    return g.positions.length === 1 ? `עמוד ${shown} מ-${g.name}` : `עמודים ${shown} מ-${g.name}`;
+  });
+  let detail = parts.join('; ');
+  if (groups.length > 3) detail += ` ועוד ${groups.length - 3} קבצים`;
+  detail += (failures.length === 1) ? ' נכשל' : ' נכשלו';
+
+  const pwGroups = groups.filter(g => g.password);
+  if (pwGroups.length === 1) detail += ' (הקובץ מוגן בסיסמה — הסר את הסיסמה ונסה שוב)';
+  else if (pwGroups.length > 1) detail += ' (חלק מהקבצים מוגנים בסיסמה — הסר את הסיסמה ונסה שוב)';
+
+  if (okCount === 0) return `לא נוצר PDF — כל ${totalPages} העמודים נכשלו: ${detail}`;
+  return `נוצר PDF עם ${okCount} מתוך ${totalPages} עמודים — ${detail}`;
 }
 
 async function addImagePage(pdfDoc, item) {
@@ -2267,13 +2370,16 @@ function hideLoading() {
   document.getElementById('loadingOverlay').classList.remove('active');
 }
 
-function showToast(msg, type = '') {
+function showToast(msg, type = '', duration = 3000) {
   const container = document.getElementById('toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'toast' + (type ? ' ' + type : '');
+  toast.className = 'toast' + (type ? ' ' + type : '') + (duration > 3000 ? ' long' : '');
   toast.textContent = msg;
+  if (duration > 3000) {
+    toast.style.animation = `slideUp 0.3s ease, fadeOut 0.3s ease ${(duration - 300) / 1000}s`;
+  }
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
+  setTimeout(() => toast.remove(), duration);
 }
 
 // Keyboard shortcuts

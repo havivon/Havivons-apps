@@ -96,10 +96,10 @@
       "order": 10,
       "path": "F:/My Projects/PDF",
       "artifact": [
-        "PDF-Word.html"
+        "PDF Creator/dist/PDF-Creator-Offline.zip"
       ],
       "host": {
-        "from": "PDF-Word.html",
+        "from": "PDF.html",
         "to": "web/pdf/index.html"
       }
     },
@@ -127,27 +127,24 @@
       },
       "hidden": "DEFAULT_FAMILY has the children's real names; anonymize first"
     },
-    "quiz": {
-      "category": "game",
-      "order": 13,
-      "path": "F:/My Projects/Quiz",
-      "artifact": [
-        "index.html"
-      ],
-      "host": {
-        "from": "index.html",
-        "to": "web/quiz/index.html"
-      },
-      "hidden": "children's real names hard-coded; anonymize first"
-    },
     "tamlelan": {
-      "category": "desktop",
+      "category": "web",
       "order": 14,
       "path": "F:/My Projects/Tamlelan",
-      "artifact": [
-        "Tamlelan-Installer.bat"
-      ],
-      "zip": true
+      "host": {
+        "to": "web/tamlelan",
+        "files": [
+          "index.html",
+          "app.js",
+          "style.css",
+          "manifest.json",
+          "sw.js",
+          "icon.svg",
+          "icon-*.png",
+          "icon.ico",
+          "vendor/jszip.min.js"
+        ]
+      }
     },
     "reply-forward": {
       "category": "desktop",

@@ -80,7 +80,8 @@ def sync_local(app_id, src, entry):
     art = newest_artifact(base, src.get("artifact", []))
     if not art:
         entry["download"] = None
-        print(f"  {app_id}: no build found")
+        if not src.get("host"):
+            print(f"  {app_id}: no build found")
     else:
         os.makedirs(os.path.join(ROOT, "downloads"), exist_ok=True)
         ext = os.path.splitext(art)[1].lower()
@@ -104,7 +105,23 @@ def sync_local(app_id, src, entry):
         print(f"  {app_id}: {os.path.relpath(art, base)} -> downloads/{name} (v{version}, {entry['updated']})")
 
     host = src.get("host")
-    if host:
+    if host and host.get("files"):
+        # multi-file web app: copy the listed files/globs into a fresh web/<id>/
+        dest_dir = os.path.join(ROOT, host["to"])
+        shutil.rmtree(dest_dir, ignore_errors=True)
+        newest = 0
+        for pattern in host["files"]:
+            for f in glob.glob(os.path.join(base, pattern), recursive=True):
+                if os.path.isfile(f):
+                    out = os.path.join(dest_dir, os.path.relpath(f, base))
+                    os.makedirs(os.path.dirname(out), exist_ok=True)
+                    shutil.copy2(f, out)
+                    newest = max(newest, os.path.getmtime(f))
+        entry["open"] = host["to"].replace("\\", "/").rstrip("/") + "/"
+        if newest and not art:
+            entry["updated"] = day(newest)
+        print(f"  {app_id}: hosted at {entry['open']} ({entry.get('updated')})")
+    elif host:
         dest = os.path.join(ROOT, host["to"])
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy2(os.path.join(base, host["from"]), dest)

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>הכתבה בעברית · תמלול בזמן אמת</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png?v=15">
+<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png?v=15">
+<link rel="icon" type="image/png" sizes="48x48" href="icon-48.png?v=15">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=15">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=15">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=15">
+<link rel="shortcut icon" href="icon.ico?v=15">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=15">
+<link rel="manifest" href="manifest.json?v=15">
+<meta name="theme-color" content="#8b5cf6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=15">
+</head>
+<body>
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="app">
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>הכתבה בעברית</h1>
+        <p class="subtitle">תמלול בזמן אמת · 2026</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="install-btn" class="text-btn install-btn" type="button" hidden title="התקן את האפליקציה במכשיר" aria-label="התקן כאפליקציה">התקן כאפליקציה</button>
+      <button id="theme-toggle" class="icon-btn" title="החלף מצב כהה/בהיר" aria-label="החלף מצב כהה/בהיר">
+        <svg id="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <section class="commands-panel">
+    <div class="commands-header">
+      <h2>פקודות קוליות</h2>
+      <button id="commands-toggle" class="text-btn" title="כווץ/הרחב" aria-label="כווץ או הרחב את רשימת הפקודות הקוליות" aria-expanded="true" aria-controls="commands-grid">הסתר</button>
+    </div>
+    <div class="commands-grid" id="commands-grid">
+      <div class="cmd-card"><span class="cmd-word">"נקודה"</span><span class="cmd-result">.</span></div>
+      <div class="cmd-card"><span class="cmd-word">"פסיק"</span><span class="cmd-result">,</span></div>
+      <div class="cmd-card"><span class="cmd-word">"סימן שאלה"</span><span class="cmd-result">?</span></div>
+      <div class="cmd-card"><span class="cmd-word">"סימן קריאה"</span><span class="cmd-result">!</span></div>
+      <div class="cmd-card"><span class="cmd-word">"נקודותיים"</span><span class="cmd-result">:</span></div>
+      <div class="cmd-card"><span class="cmd-word">"ציטוט"</span><span class="cmd-result">'</span></div>
+      <div class="cmd-card"><span class="cmd-word">"רווח"</span><span class="cmd-result">␣</span></div>
+      <div class="cmd-card"><span class="cmd-word">"שורה חדשה"</span><span class="cmd-result">↵</span></div>
+      <div class="cmd-card cmd-explain"><span class="cmd-word">"מחק N"</span><span class="cmd-result">מוחק N מילים אחרונות</span></div>
+      <div class="cmd-card cmd-explain"><span class="cmd-word">"תקן מילה X לY"</span><span class="cmd-result">החלפה ב-5 האחרונות</span></div>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <button id="start-btn" class="btn btn-primary" type="button" title="התחל הכתבה (F2)" aria-pressed="false" aria-keyshortcuts="F2">
+      <span class="rec-dot"></span>
+      <span class="btn-text">התחל הכתבה</span>
+    </button>
+    <button id="copy-btn" class="btn btn-secondary" title="העתק את כל הטקסט" aria-label="העתק את כל הטקסט">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      <span>העתק</span>
+    </button>
+    <button id="save-btn" class="btn btn-secondary" title="שמור כקובץ Word" aria-label="שמור כקובץ Word">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      <span>שמור כ-Word</span>
+    </button>
+    <button id="clear-btn" class="btn btn-danger" title="נקה את כל הטקסט" aria-label="נקה את כל הטקסט">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      <span>נקה</span>
+    </button>
+    <div class="toolbar-spacer"></div>
+    <div class="speaking-indicator" id="speaking-indicator" title="מזוהה דיבור">
+      <span class="speaking-dot"></span>
+      <span>מדבר</span>
+    </div>
+    <div class="status-pill" id="status">
+      <span class="status-dot"></span>
+      <span id="status-text">מוכן</span>
+    </div>
+  </section>
+
+  <section class="editor-wrap">
+    <div class="editor-toolbar">
+      <div class="toolbar-group">
+        <span class="doc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </span>
+        <input type="text" class="doc-title" id="doc-title" placeholder="מסמך חדש" maxlength="120" spellcheck="false" aria-label="שם המסמך" />
+      </div>
+      <div class="toolbar-group">
+        <div class="font-controls" title="גודל פונט">
+          <button id="font-dec" class="font-mini-btn" title="הקטן פונט" aria-label="הקטן פונט">A−</button>
+          <span class="font-size-display" id="font-size-display">19</span>
+          <button id="font-inc" class="font-mini-btn" title="הגדל פונט" aria-label="הגדל פונט">A+</button>
+        </div>
+        <span class="doc-stats" id="doc-stats">0 מילים</span>
+      </div>
+    </div>
+    <div class="editor is-empty" id="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="עורך הטקסט המומלל" spellcheck="false" data-placeholder='לחץ "התחל הכתבה" ודבר בעברית. הטקסט יופיע כאן בזמן אמת ככל שתדבר. אפשר גם להקליד ולערוך ידנית.'></div>
+  </section>
+
+  <footer class="footer">
+    <span>טכנולוגיית זיהוי דיבור של הדפדפן (Chrome/Edge) · עברית · ללא עלות</span>
+    <span class="footer-privacy">פרטיות: האודיו נשלח לעיבוד בשירות זיהוי הדיבור של הדפדפן (Google ב-Chrome, Microsoft ב-Edge) ונדרש חיבור לאינטרנט. הטקסט עצמו נשאר במכשיר שלך. הגופנים נטענים משירות Google Fonts.</span>
+    <span class="footer-credit">Created by Havivon</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<dialog id="privacy-dialog" class="dialog" aria-labelledby="privacy-title">
+  <div class="dialog-content">
+    <h3 id="privacy-title">לפני שמתחילים: על הפרטיות</h3>
+    <p>ההכתבה פועלת באמצעות שירות זיהוי הדיבור של הדפדפן. <strong>האודיו מהמיקרופון נשלח לעיבוד בשרתי הספק</strong> (Google ב-Chrome, Microsoft ב-Edge), ולכן נדרש חיבור לאינטרנט. הטקסט שמתקבל נשאר על המכשיר שלך ואינו נשלח לשום מקום על ידי האפליקציה. הגופנים נטענים משירות Google Fonts.</p>
+    <div class="dialog-actions">
+      <button id="privacy-ok" class="btn btn-primary" type="button">הבנתי, המשך להכתבה</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="confirm-dialog" class="dialog">
+  <div class="dialog-content">
+    <h3 id="dialog-title">אישור פעולה</h3>
+    <p id="dialog-message">האם אתה בטוח?</p>
+    <div class="dialog-actions">
+      <button id="dialog-cancel" class="btn btn-secondary">ביטול</button>
+      <button id="dialog-confirm" class="btn btn-danger">אישור</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="vendor/jszip.min.js"></script>
+<script src="app.js?v=15"></script>
+</body>
+</html>

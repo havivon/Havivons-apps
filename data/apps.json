@@ -96,11 +96,11 @@
       "category": "web",
       "order": 10,
       "version": null,
-      "updated": "2026-05-14",
+      "updated": "2026-11-02",
       "download": {
-        "url": "downloads/pdf.html",
-        "size": 72083,
-        "type": "html"
+        "url": "downloads/pdf.zip",
+        "size": 1477537,
+        "type": "zip"
       },
       "open": "web/pdf/"
     },
@@ -119,15 +119,12 @@
     },
     {
       "id": "tamlelan",
-      "category": "desktop",
+      "category": "web",
       "order": 14,
       "version": null,
-      "updated": "2026-05-19",
-      "download": {
-        "url": "downloads/tamlelan.zip",
-        "size": 131366,
-        "type": "zip"
-      }
+      "updated": "2026-11-02",
+      "download": null,
+      "open": "web/tamlelan/"
     },
     {
       "id": "reply-forward",

@@ -283,27 +283,6 @@
       }
     ]
   },
-  "quiz": {
-    "icon": "apps/quiz/icon.png",
-    "screens": [
-      {
-        "src": "apps/quiz/screens/01.webp",
-        "caption": "בחירת פרשה ויצירת חידון אמריקאי"
-      },
-      {
-        "src": "apps/quiz/screens/02.webp",
-        "caption": "שאלות החידון עם סימון התשובה הנכונה"
-      },
-      {
-        "src": "apps/quiz/screens/03.webp",
-        "caption": "עריכת מאגר השאלות"
-      },
-      {
-        "src": "apps/quiz/screens/04.webp",
-        "caption": "תצוגת מחשב"
-      }
-    ]
-  },
   "tamlelan": {
     "icon": "apps/tamlelan/icon.png",
     "screens": [
