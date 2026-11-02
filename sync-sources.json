@@ -41,8 +41,7 @@
         "app/build/outputs/apk/release/*.apk",
         "app/build/outputs/apk/debug/*.apk"
       ],
-      "version_file": "app/build.gradle",
-      "hidden": "sends session summaries + voice recordings to a hard-coded email; publish only after that is removed"
+      "version_file": "app/build.gradle"
     },
     "newplayer": {
       "category": "android",
