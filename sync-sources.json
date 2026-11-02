@@ -1,0 +1,163 @@
+{
+  "_comment": "Where each app's latest build lives. Used by sync.py. category: android | web | game | desktop",
+  "apps": {
+    "pigeon": {
+      "category": "android",
+      "order": 1,
+      "path": "F:/My Projects/Pigeon",
+      "artifact": [
+        "dist/*.apk",
+        "app/build/outputs/apk/release/*.apk",
+        "app/build/outputs/apk/debug/*.apk"
+      ],
+      "version_file": "app/build.gradle.kts",
+      "repo": "havivon/Pigeon"
+    },
+    "smartfiles": {
+      "category": "android",
+      "order": 2,
+      "path": "F:/My Projects/SmartFileManager",
+      "artifact": [
+        "dist/*.apk",
+        "app/build/outputs/apk/release/*.apk"
+      ],
+      "version_file": "app/build.gradle.kts",
+      "repo": "havivon/SmartFileManager"
+    },
+    "hebreminder": {
+      "category": "android",
+      "order": 3,
+      "path": "F:/My Projects/HebReminder-v5",
+      "artifact": [
+        "app/build/outputs/apk/release/*.apk"
+      ],
+      "version_file": "app/build.gradle.kts"
+    },
+    "zochrim": {
+      "category": "android",
+      "order": 4,
+      "path": "F:/My Projects/Memory/ZochrimApp",
+      "artifact": [
+        "app/build/outputs/apk/release/*.apk",
+        "app/build/outputs/apk/debug/*.apk"
+      ],
+      "version_file": "app/build.gradle",
+      "hidden": "sends session summaries + voice recordings to a hard-coded email; publish only after that is removed"
+    },
+    "newplayer": {
+      "category": "android",
+      "order": 5,
+      "remote": {
+        "kind": "release",
+        "repo": "havivon/NewPlayer",
+        "asset": ".apk"
+      }
+    },
+    "babymonitor": {
+      "category": "android",
+      "order": 6,
+      "remote": {
+        "kind": "release",
+        "repo": "havivon/BabyMonitor",
+        "asset": ".apk"
+      }
+    },
+    "ragua": {
+      "category": "web",
+      "order": 7,
+      "open": "https://havivon.github.io/child-behavior/",
+      "remote": {
+        "kind": "file",
+        "repo": "havivon/child-behavior",
+        "file": "dist/ragua-vehazak.apk"
+      }
+    },
+    "wa-unsaved": {
+      "category": "web",
+      "order": 8,
+      "open": "https://havivon.github.io/Whatsapp-incognito/",
+      "remote": {
+        "kind": "commit",
+        "repo": "havivon/Whatsapp-incognito"
+      }
+    },
+    "printmybingo": {
+      "category": "web",
+      "order": 9,
+      "open": "https://www.printmybingo.com/",
+      "remote": {
+        "kind": "release",
+        "repo": "havivon/printmybingo-site",
+        "asset": ".apk"
+      }
+    },
+    "pdf": {
+      "category": "web",
+      "order": 10,
+      "path": "F:/My Projects/PDF",
+      "artifact": [
+        "PDF-Word.html"
+      ],
+      "host": {
+        "from": "PDF-Word.html",
+        "to": "web/pdf/index.html"
+      }
+    },
+    "mahjong": {
+      "category": "game",
+      "order": 11,
+      "path": "F:/My Projects/mahjong",
+      "artifact": [
+        "app/build/outputs/apk/release/*.apk",
+        "app/build/outputs/apk/debug/*.apk"
+      ],
+      "version_file": "app/build.gradle.kts",
+      "repo": "havivon/mahjong"
+    },
+    "hidon": {
+      "category": "game",
+      "order": 12,
+      "path": "F:/My Projects/Hidon",
+      "artifact": [
+        "dist/hidon.html"
+      ],
+      "host": {
+        "from": "dist/hidon.html",
+        "to": "web/hidon/index.html"
+      },
+      "hidden": "DEFAULT_FAMILY has the children's real names; anonymize first"
+    },
+    "quiz": {
+      "category": "game",
+      "order": 13,
+      "path": "F:/My Projects/Quiz",
+      "artifact": [
+        "index.html"
+      ],
+      "host": {
+        "from": "index.html",
+        "to": "web/quiz/index.html"
+      },
+      "hidden": "children's real names hard-coded; anonymize first"
+    },
+    "tamlelan": {
+      "category": "desktop",
+      "order": 14,
+      "path": "F:/My Projects/Tamlelan",
+      "artifact": [
+        "Tamlelan-Installer.bat"
+      ],
+      "zip": true
+    },
+    "reply-forward": {
+      "category": "desktop",
+      "order": 15,
+      "path": "F:/My Projects/Replay and Forward",
+      "artifact": [
+        "publish/*.zip",
+        "publish/setup.exe",
+        "*.msi"
+      ]
+    }
+  }
+}

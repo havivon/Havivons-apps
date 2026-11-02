@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>האפליקציות של Havivon</title>
+  <meta name="description" content="אפליקציות אנדרואיד, כלי ווב, משחקים ויישומים למחשב — בעברית, בלי פרסומות. הורדה ישירה.">
+  <meta property="og:title" content="האפליקציות של Havivon">
+  <meta property="og:description" content="אפליקציות קטנות שעושות דבר אחד, וטוב. הורדה ישירה.">
+  <meta name="theme-color" content="#e8552f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23e8552f'/%3E%3Ctext x='32' y='45' font-family='Arial' font-weight='bold' font-size='36' text-anchor='middle' fill='white'%3EH%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+  <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+</head>
+<body data-page="home" class="min-h-screen antialiased">
+  <header class="sticky top-0 z-30 backdrop-blur-md border-b line" style="background:color-mix(in srgb, var(--bg) 82%, transparent)">
+    <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="./" class="flex items-center gap-2.5 font-display font-bold text-lg">
+        <span class="grid place-items-center w-9 h-9 rounded-xl bg-accent text-base">H</span>
+        <span>Havivon<span class="muted font-medium"> · אפליקציות</span></span>
+      </a>
+      <button type="button" data-theme-toggle class="btn btn-ghost !px-3" aria-label="החלפת מצב כהה/בהיר">
+        <i data-lucide="sun-moon"></i>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero-glow">
+      <div class="max-w-6xl mx-auto px-4 pt-16 pb-14 sm:pt-24 sm:pb-20">
+        <p class="reveal in inline-flex items-center gap-2 text-sm font-medium bg-accent-soft rounded-full px-3.5 py-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>בעברית · בלי פרסומות · הורדה ישירה
+        </p>
+        <h1 class="reveal in font-display font-extrabold text-4xl sm:text-6xl leading-[1.1] mt-6 max-w-3xl">
+          אפליקציות קטנות<br>שעושות דבר אחד, <span class="ink-underline accent">וטוב.</span>
+        </h1>
+        <p class="reveal in muted text-lg sm:text-xl mt-5 max-w-2xl leading-relaxed">
+          אוסף הכלים שבניתי לעצמי, למשפחה ולחברים: אפליקציות לאנדרואיד, כלים שרצים בדפדפן,
+          חידונים ומשחקים ויישומים למחשב. כל אחד נבנה כדי לפתור בעיה אמיתית.
+        </p>
+        <div class="reveal in flex flex-wrap gap-3 mt-8">
+          <a href="#apps" class="btn btn-primary"><i data-lucide="layout-grid"></i>לכל האפליקציות</a>
+        </div>
+        <dl class="reveal in grid grid-cols-3 gap-3 mt-12 max-w-lg">
+          <div class="surface rounded-2xl p-4"><dt class="text-xs muted">אפליקציות</dt><dd id="count-all" class="font-display text-3xl font-bold mt-1">–</dd></div>
+          <div class="surface rounded-2xl p-4"><dt class="text-xs muted">להורדה לאנדרואיד</dt><dd id="count-android" class="font-display text-3xl font-bold mt-1">–</dd></div>
+          <div class="surface rounded-2xl p-4"><dt class="text-xs muted">פתוחות בדפדפן</dt><dd id="count-web" class="font-display text-3xl font-bold mt-1">–</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="apps" class="max-w-6xl mx-auto px-4 py-12 scroll-mt-16">
+      <div class="flex flex-col md:flex-row md:items-center gap-4 justify-between mb-8">
+        <div id="chips" class="flex flex-wrap gap-2" role="group" aria-label="סינון לפי סוג"></div>
+        <label class="relative md:w-72">
+          <span class="sr-only">חיפוש אפליקציה</span>
+          <i data-lucide="search" class="w-4 h-4 absolute top-1/2 -translate-y-1/2 right-3.5 muted"></i>
+          <input id="search" type="search" placeholder="חיפוש…" class="search w-full rounded-full py-2.5 pr-10 pl-4">
+        </label>
+      </div>
+      <div id="grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <p id="empty" hidden class="text-center muted py-16">לא נמצאו אפליקציות שמתאימות לחיפוש.</p>
+    </section>
+
+    <section class="max-w-6xl mx-auto px-4 pb-16">
+      <div class="surface rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row gap-5 sm:items-center">
+        <span class="grid place-items-center w-12 h-12 rounded-2xl bg-accent-soft shrink-0"><i data-lucide="shield-question"></i></span>
+        <div class="flex-1">
+          <h2 class="font-display text-lg font-semibold">התקנת APK בפעם הראשונה?</h2>
+          <p class="muted mt-1 leading-relaxed">האפליקציות לא מגיעות מחנות Play, ולכן בפעם הראשונה אנדרואיד יבקש לאשר "התקנה ממקורות לא ידועים" לדפדפן שממנו הורדת. מאשרים פעם אחת, ומתקינים.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t line">
+    <div class="max-w-6xl mx-auto px-4 py-8 flex flex-col sm:flex-row gap-3 items-center justify-between text-sm muted">
+      <p>Created By <span class="font-display font-semibold accent">Havivon</span> · <span data-year></span></p>
+      <a href="https://github.com/havivon" class="inline-flex items-center gap-1.5 hover:underline" target="_blank" rel="noopener"><i data-lucide="github" class="w-4 h-4"></i>github.com/havivon</a>
+    </div>
+  </footer>
+</body>
+</html>

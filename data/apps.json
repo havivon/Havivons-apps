@@ -1,0 +1,139 @@
+{
+  "generated": "2026-11-02",
+  "apps": [
+    {
+      "id": "pigeon",
+      "category": "android",
+      "order": 1,
+      "repo": "https://github.com/havivon/Pigeon",
+      "version": "0.4.6",
+      "updated": "2026-11-02",
+      "download": {
+        "url": "downloads/pigeon.apk",
+        "size": 20954391,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "smartfiles",
+      "category": "android",
+      "order": 2,
+      "repo": "https://github.com/havivon/SmartFileManager",
+      "version": "1.0.0",
+      "updated": "2026-11-02",
+      "download": {
+        "url": "downloads/smartfiles.apk",
+        "size": 2855667,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "hebreminder",
+      "category": "android",
+      "order": 3,
+      "version": "1.4.0",
+      "updated": "2026-11-02",
+      "download": {
+        "url": "downloads/hebreminder.apk",
+        "size": 3848419,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "newplayer",
+      "category": "android",
+      "order": 5,
+      "version": null,
+      "updated": "2026-10-05",
+      "download": {
+        "url": "https://github.com/havivon/NewPlayer/releases/download/latest/NewPlayer.apk",
+        "size": 7202799,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "babymonitor",
+      "category": "android",
+      "order": 6,
+      "version": "android-build-18",
+      "updated": "2026-10-11",
+      "download": {
+        "url": "https://github.com/havivon/BabyMonitor/releases/download/android-build-18/BabyMonitor-1.0.0-build18.apk",
+        "size": 7638919,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "ragua",
+      "category": "web",
+      "order": 7,
+      "open": "https://havivon.github.io/child-behavior/",
+      "updated": "2026-10-18",
+      "download": {
+        "url": "https://github.com/havivon/child-behavior/raw/ccr-82643f82-qh3f6c/dist/ragua-vehazak.apk",
+        "size": 452431,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "wa-unsaved",
+      "category": "web",
+      "order": 8,
+      "open": "https://havivon.github.io/Whatsapp-incognito/",
+      "updated": "2026-08-16",
+      "download": null
+    },
+    {
+      "id": "printmybingo",
+      "category": "web",
+      "order": 9,
+      "open": "https://www.printmybingo.com/",
+      "updated": "2026-10-18",
+      "download": null
+    },
+    {
+      "id": "pdf",
+      "category": "web",
+      "order": 10,
+      "version": null,
+      "updated": "2026-05-14",
+      "download": {
+        "url": "downloads/pdf.html",
+        "size": 72083,
+        "type": "html"
+      },
+      "open": "web/pdf/"
+    },
+    {
+      "id": "mahjong",
+      "category": "game",
+      "order": 11,
+      "repo": "https://github.com/havivon/mahjong",
+      "version": "1.0.0",
+      "updated": "2026-10-22",
+      "download": {
+        "url": "downloads/mahjong.apk",
+        "size": 21483086,
+        "type": "apk"
+      }
+    },
+    {
+      "id": "tamlelan",
+      "category": "desktop",
+      "order": 14,
+      "version": null,
+      "updated": "2026-05-19",
+      "download": {
+        "url": "downloads/tamlelan.zip",
+        "size": 131366,
+        "type": "zip"
+      }
+    },
+    {
+      "id": "reply-forward",
+      "category": "desktop",
+      "order": 15,
+      "download": null
+    }
+  ]
+}
