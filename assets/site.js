@@ -41,6 +41,7 @@ async function loadApps() {
   const [catalog, content, screens] = await Promise.all([
     getJson('data/apps.json'), getJson('data/content.json'), getJson('data/screens.json'),
   ]);
+  showSiteUpdated(catalog.generated);
   return (catalog.apps || []).map((a) => {
     const c = content[a.id] || {};
     const s = screens[a.id] || {};
@@ -54,6 +55,13 @@ async function loadApps() {
       description: c.description || [],
     };
   });
+}
+
+// "generated" is the day sync.py last changed the catalog (a new version, download or app)
+function showSiteUpdated(iso) {
+  if (!iso) return;
+  document.querySelectorAll('[data-updated]').forEach((e) => { e.textContent = `עודכן לאחרונה ${fmtDate(iso)}`; });
+  document.querySelectorAll('[data-updated-box]').forEach((e) => { e.hidden = false; });
 }
 
 // ---------- helpers ----------

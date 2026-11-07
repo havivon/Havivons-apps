@@ -78,3 +78,6 @@ input.search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   *, .reveal { transition: none !important; animation: none !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* the hidden attribute wins over utility classes like .flex */
+[hidden] { display: none !important; }
