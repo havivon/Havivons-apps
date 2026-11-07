@@ -31,11 +31,11 @@
       "id": "hebreminder",
       "category": "android",
       "order": 3,
-      "version": "1.4.0",
-      "updated": "2026-11-02",
+      "version": "1.4.1",
+      "updated": "2026-11-07",
       "download": {
         "url": "downloads/hebreminder.apk",
-        "size": 3848419,
+        "size": 3848415,
         "type": "apk"
       }
     },
@@ -44,10 +44,10 @@
       "category": "android",
       "order": 4,
       "version": "2.5",
-      "updated": "2026-11-02",
+      "updated": "2026-11-07",
       "download": {
         "url": "downloads/zochrim.apk",
-        "size": 2661377,
+        "size": 2661825,
         "type": "apk"
       }
     },
@@ -92,7 +92,7 @@
       "category": "web",
       "order": 8,
       "open": "https://havivon.github.io/Whatsapp-incognito/",
-      "updated": "2026-08-16",
+      "updated": "2026-11-07",
       "download": null
     },
     {
