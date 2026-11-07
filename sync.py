@@ -184,9 +184,12 @@ def main(argv):
             print(f"  {app_id}: FAILED ({e})")
 
     apps = sorted((catalog[i] for i in sources), key=lambda a: a["order"])
+    previous = load(CATALOG, {})
+    # keep the old date when nothing changed, so a scheduled run makes no empty commit
+    generated = previous.get("generated") if previous.get("apps") == apps else datetime.now(timezone.utc).strftime("%Y-%m-%d")
     os.makedirs(os.path.dirname(CATALOG), exist_ok=True)
     with open(CATALOG, "w", encoding="utf-8") as f:
-        json.dump({"generated": datetime.now(timezone.utc).strftime("%Y-%m-%d"), "apps": apps}, f, ensure_ascii=False, indent=2)
+        json.dump({"generated": generated, "apps": apps}, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
     if push:
