@@ -21125,6 +21125,14 @@ button, select, input { font: inherit; color: inherit; }
     return familyTitle(familyName) + " - פרשת " + parashaName;
   }
 
+  /** document.title while a quiz is shown — "Save as PDF" uses it as the file name:
+   *  "משפחת לוי - פרשת נח" (no family name → "חידון - פרשת נח"). */
+  function pdfTitle(familyName, parashaName) {
+    const f = cleanText(familyName);
+    const who = !f ? "חידון" : /^משפחת(\s|$)/.test(f) ? f : "משפחת " + f;
+    return who + " - פרשת " + parashaName;
+  }
+
   /* ------------------------------------------------------------------ family validation */
   /** Explicit level of a kid; a v2-style { level:"auto", age } is mapped by age (migration). */
   function kidLevel(k) {
@@ -21913,7 +21921,8 @@ button, select, input { font: inherit; color: inherit; }
         .then((parts) => {
           if (my !== requestNo) return;
           const cards = generateQuiz(parts, mulberry32(seed), fam);
-          const title = renderQuiz(ui.quiz, entry, fam, cards);
+          renderQuiz(ui.quiz, entry, fam, cards);
+          const title = pdfTitle(fam.name, entry.name);
           current = { id: id, seed: seed, sig: sig };
           applyAnswers();
           updateControls();
