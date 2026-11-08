@@ -92,8 +92,7 @@
           "drop": ["CNAME", "ads.txt", "blog/blog"],
           "rewrite": {"https://printmybingo.com/": "https://havivon.github.io/Havivons-apps/web/printmybingo/"},
           "strip_tracking": true,
-          "relative_links": true,
-          "zip": "printmybingo-site.zip"
+          "relative_links": true
         }
       }
     },

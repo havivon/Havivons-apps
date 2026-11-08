@@ -210,6 +210,8 @@ def host_repo(app_id, r, entry):
                     z.writestr(zipfile.ZipInfo(os.path.relpath(path, dest_dir).replace(os.sep, "/"), (2000, 1, 1, 0, 0, 0)),
                                open(path, "rb").read(), zipfile.ZIP_DEFLATED)
         entry["site_download"] = {"url": f"downloads/{host['zip']}", "size": os.path.getsize(zip_path), "type": "zip"}
+    else:
+        entry.pop("site_download", None)
 
 
 def main(argv):

@@ -106,12 +106,7 @@
         "size": 4846211,
         "type": "apk"
       },
-      "version": null,
-      "site_download": {
-        "url": "downloads/printmybingo-site.zip",
-        "size": 47444,
-        "type": "zip"
-      }
+      "version": null
     },
     {
       "id": "pdf",
