@@ -343,9 +343,21 @@ function exportXLSX(items){function x(s){return s.replace(/[\x00-\x08\x0B\x0C\x0
   if(o.quotes) s=`'${s}'`;
   return s;
  }
+ // Soft scroll: slow ease-in-out, follows the page if it grows mid-way, stops as soon as the user scrolls
+ let scrollRaf=0;
+ const stopScroll=()=>{ cancelAnimationFrame(scrollRaf); scrollRaf=0; };
+ ['wheel','touchstart','keydown','mousedown'].forEach(ev=>window.addEventListener(ev,()=>{ if(scrollRaf) stopScroll(); },{passive:true}));
  function scrollToBottom(){
   const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  requestAnimationFrame(()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:reduce?'auto':'smooth'}));
+  const target=()=>Math.max(0,document.documentElement.scrollHeight-window.innerHeight);
+  stopScroll();
+  if(reduce){ window.scrollTo(0,target()); return; }
+  const start=window.scrollY; if(target()-start<2) return;
+  const dur=Math.min(1800,Math.max(1100,(target()-start)*1.1));
+  const ease=t=>-(Math.cos(Math.PI*t)-1)/2;          // easeInOutSine — gentle start and landing
+  let t0;
+  const step=ts=>{ if(t0===undefined) t0=ts; const p=Math.min(1,(ts-t0)/dur); window.scrollTo(0,start+(target()-start)*ease(p)); scrollRaf=p<1?requestAnimationFrame(step):0; };
+  scrollRaf=requestAnimationFrame(step);
  }
  qs('#process').addEventListener('click',async()=>{
   const collator=new Intl.Collator(undefined,{numeric:true,sensitivity:'base'});
