@@ -29,7 +29,7 @@
     "screens": [
       {
         "src": "apps/hebreminder/screens/01.webp",
-        "caption": "המסך הראשי: התזכורות הקרובות לפי הלוח העברי"
+        "caption": "המסך הראשי: לוח שנה עברי עם התזכורות הקרובות"
       },
       {
         "src": "apps/hebreminder/screens/02.webp",
@@ -45,7 +45,7 @@
       },
       {
         "src": "apps/hebreminder/screens/05.webp",
-        "caption": "הגדרות האפליקציה"
+        "caption": "ערכות עיצוב לבחירה"
       }
     ]
   },
