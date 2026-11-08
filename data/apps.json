@@ -161,6 +161,19 @@
       "category": "desktop",
       "order": 15,
       "download": null
+    },
+    {
+      "id": "architext",
+      "category": "web",
+      "order": 16,
+      "version": null,
+      "updated": "2026-11-08",
+      "download": {
+        "url": "downloads/architext.html",
+        "size": 63082,
+        "type": "html"
+      },
+      "open": "web/architext/"
     }
   ]
 }

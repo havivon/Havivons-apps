@@ -308,5 +308,30 @@
         "caption": "המחשה: כפתורי Reply +Attach ו-Reply All +Attach ברצועת הכלים של Outlook"
       }
     ]
+  },
+  "architext": {
+    "icon": "apps/architext/icon.png",
+    "screens": [
+      {
+        "src": "apps/architext/screens/01.webp",
+        "caption": "המסך הראשי: מדביקים רשימה ובוחרים פעולות"
+      },
+      {
+        "src": "apps/architext/screens/02.webp",
+        "caption": "אחרי הביצוע: התוצאה וסיכום כמה רשומות שונו"
+      },
+      {
+        "src": "apps/architext/screens/03.webp",
+        "caption": "פונקציות מתקדמות בעיצוב אוקיינוס כהה"
+      },
+      {
+        "src": "apps/architext/screens/04.webp",
+        "caption": "בחירת סגנון עיצוב, כאן ניאון במצב כהה"
+      },
+      {
+        "src": "apps/architext/screens/05.webp",
+        "caption": "סיכום השינויים בעיצוב שקיעה"
+      }
+    ]
   }
 }

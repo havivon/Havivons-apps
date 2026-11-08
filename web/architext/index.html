@@ -1,0 +1,524 @@
+<!DOCTYPE html> 
+<html lang="he" dir="rtl"> 
+<head> 
+<meta charset="UTF-8"/> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+<title>אַרְכִיטֵקְסְט — Architext Pro</title> 
+<style>
+/* ---------- Theme tokens ---------- */
+body{--ok:#27ae60;--err:#e74c3c;--radius:15px;--btn-radius:25px;--font:'Segoe UI',Arial,sans-serif;--title-font:var(--font);--blur:none;--bg-img:none;--card-bd:transparent;--menu-bg:var(--card);--title-grad:none;
+--bg:#f5f7fa;--card:#fff;--fg:#222;--muted:#34495e;--heading:#2c3e50;--primary:#3498db;--primary-h:#2980b9;--primary-fg:#fff;--input-bg:#fff;--input-fg:#000;--input-bd:#dfe6e9;--bd2:#ccc;--tip-bg:#34495e;--tip-fg:#fff;--shadow:0 4px 20px rgba(0,0,0,.1);--soft:#eef5fb;--title-shadow:2px 2px 4px rgba(0,0,0,.2)}
+body.dark{--bg:#121212;--card:#1e1e1e;--fg:#e0e0e0;--muted:#cfd8dc;--heading:#e0e0e0;--primary:#007bff;--primary-h:#0056b3;--primary-fg:#fff;--input-bg:#2c2c2c;--input-fg:#e9eef3;--input-bd:#3a3a3a;--bd2:#444;--tip-bg:#444;--tip-fg:#fff;--shadow:0 4px 20px rgba(255,255,255,.1);--soft:#262a30;--title-shadow:2px 2px 4px rgba(255,255,255,.15)}
+/* Ocean (glass) */
+body[data-theme=ocean]{--bg:#e0f2fe;--bg-img:linear-gradient(135deg,#a5f3fc 0%,#bae6fd 40%,#c7d2fe 100%);--card:rgba(255,255,255,.62);--card-bd:rgba(255,255,255,.75);--blur:blur(14px) saturate(140%);--menu-bg:#f0fbff;--fg:#0f2a3d;--muted:#1e4a63;--heading:#0c4a6e;--primary:#0891b2;--primary-h:#0e7490;--primary-fg:#fff;--input-bg:rgba(255,255,255,.88);--input-fg:#0f2a3d;--input-bd:rgba(14,116,144,.25);--bd2:rgba(14,116,144,.35);--tip-bg:#0c4a6e;--tip-fg:#fff;--shadow:0 10px 40px rgba(14,116,144,.18);--soft:rgba(8,145,178,.1);--title-shadow:none}
+body.dark[data-theme=ocean]{--bg:#06131f;--bg-img:radial-gradient(circle at 20% 10%,#0e3a5c 0,transparent 45%),radial-gradient(circle at 85% 80%,#312e81 0,transparent 45%),linear-gradient(160deg,#04111c,#0a1730);--card:rgba(13,30,48,.6);--card-bd:rgba(125,211,252,.15);--menu-bg:#0d1e30;--fg:#e0f2fe;--muted:#a5d8f0;--heading:#7dd3fc;--primary:#22d3ee;--primary-h:#06b6d4;--primary-fg:#04212b;--input-bg:rgba(6,19,31,.7);--input-fg:#e0f2fe;--input-bd:rgba(125,211,252,.2);--bd2:rgba(125,211,252,.25);--tip-bg:#0e3a5c;--tip-fg:#fff;--shadow:0 10px 40px rgba(0,0,0,.5);--soft:rgba(34,211,238,.08);--title-shadow:0 0 18px rgba(34,211,238,.35)}
+/* Paper */
+body[data-theme=paper]{--radius:6px;--btn-radius:6px;--title-font:Georgia,'David','Times New Roman',serif;--bg:#f3ede2;--card:#fffdf8;--card-bd:#e6dccb;--fg:#2b2622;--muted:#5a4e44;--heading:#2b2622;--primary:#b4532a;--primary-h:#943f1c;--primary-fg:#fff;--input-bg:#fffdf8;--input-fg:#2b2622;--input-bd:#d9cdb8;--bd2:#cdbfa6;--tip-bg:#3b322b;--tip-fg:#fdf6ea;--shadow:0 1px 0 #e6dccb,0 12px 30px rgba(80,60,30,.08);--soft:#f6eee0;--title-shadow:none}
+body.dark[data-theme=paper]{--bg:#1b1815;--card:#24201c;--card-bd:#3a332c;--fg:#ece3d6;--muted:#c2b5a3;--heading:#f3e9da;--primary:#e07a4f;--primary-h:#c7653c;--primary-fg:#1b1815;--input-bg:#1b1815;--input-fg:#ece3d6;--input-bd:#3f372f;--bd2:#4a4037;--tip-bg:#3b322b;--tip-fg:#fdf6ea;--shadow:0 12px 30px rgba(0,0,0,.4);--soft:#2c2620;--title-shadow:none}
+/* Neon */
+body[data-theme=neon]{--bg:#f4f1ff;--bg-img:radial-gradient(circle at 0 0,#e9d5ff 0,transparent 40%),radial-gradient(circle at 100% 100%,#cffafe 0,transparent 40%);--card:#fff;--card-bd:#e4dcff;--fg:#1e1b3a;--muted:#4c4680;--heading:#6d28d9;--primary:#7c3aed;--primary-h:#6d28d9;--primary-fg:#fff;--input-bg:#fbfaff;--input-fg:#1e1b3a;--input-bd:#d9d0ff;--bd2:#c4b5fd;--tip-bg:#2e1065;--tip-fg:#fff;--shadow:0 10px 40px rgba(124,58,237,.15);--soft:#f1ebff;--title-shadow:none;--title-grad:linear-gradient(90deg,#7c3aed,#06b6d4)}
+body.dark[data-theme=neon]{--bg:#07070f;--bg-img:radial-gradient(circle at 10% 0,rgba(168,85,247,.25) 0,transparent 40%),radial-gradient(circle at 90% 100%,rgba(34,211,238,.18) 0,transparent 40%);--card:#10101c;--card-bd:rgba(168,85,247,.35);--fg:#e9e6ff;--muted:#b9b3e6;--heading:#e879f9;--primary:#a855f7;--primary-h:#9333ea;--primary-fg:#fff;--input-bg:#0a0a14;--input-fg:#f0edff;--input-bd:rgba(168,85,247,.3);--bd2:rgba(34,211,238,.35);--tip-bg:#1e1033;--tip-fg:#fff;--shadow:0 0 0 1px rgba(168,85,247,.2),0 0 40px rgba(168,85,247,.18);--soft:rgba(168,85,247,.1);--title-grad:linear-gradient(90deg,#e879f9,#22d3ee)}
+/* Forest */
+body[data-theme=forest]{--radius:18px;--bg:#edf3ec;--card:#fff;--card-bd:#d7e5d6;--fg:#1d2b22;--muted:#3d5a46;--heading:#1f4d33;--primary:#2f7d4f;--primary-h:#246340;--primary-fg:#fff;--input-bg:#fbfdfb;--input-fg:#1d2b22;--input-bd:#cfe0cf;--bd2:#b5cdb5;--tip-bg:#1f4d33;--tip-fg:#fff;--shadow:0 6px 24px rgba(31,77,51,.1);--soft:#eaf4ec;--title-shadow:none}
+body.dark[data-theme=forest]{--bg:#0d1612;--card:#14211a;--card-bd:#21352a;--fg:#dcebe0;--muted:#a9c7b2;--heading:#7fdca0;--primary:#4cc27f;--primary-h:#3aa86a;--primary-fg:#08130d;--input-bg:#0f1a14;--input-fg:#dcebe0;--input-bd:#26402f;--bd2:#2f4d39;--tip-bg:#1f3a2a;--tip-fg:#fff;--shadow:0 6px 24px rgba(0,0,0,.45);--soft:#1a2b21;--title-shadow:none}
+/* Sunset */
+body[data-theme=sunset]{--bg:#fff1e6;--bg-img:linear-gradient(135deg,#ffe8d6 0%,#ffd6e0 50%,#e9d6ff 100%);--card:rgba(255,255,255,.82);--card-bd:rgba(255,255,255,.9);--blur:blur(10px);--menu-bg:#fff8f4;--fg:#3a1f2b;--muted:#6b3a4c;--heading:#c2410c;--primary:#f0552c;--primary-h:#d9431c;--primary-fg:#fff;--input-bg:#fffaf7;--input-fg:#3a1f2b;--input-bd:#f5cdbd;--bd2:#f0b9a5;--tip-bg:#5b2236;--tip-fg:#fff;--shadow:0 14px 40px rgba(240,85,44,.15);--soft:#fff0e8;--title-shadow:none;--title-grad:linear-gradient(90deg,#f0552c,#e8467c,#8b5cf6)}
+body.dark[data-theme=sunset]{--bg:#170d16;--bg-img:linear-gradient(160deg,#1c0f1d 0%,#2a1222 55%,#331a12 100%);--card:rgba(36,20,34,.8);--card-bd:rgba(255,122,69,.18);--menu-bg:#24142a;--fg:#fde8df;--muted:#e5b9a8;--heading:#ff9a6b;--primary:#ff7a45;--primary-h:#f0612b;--primary-fg:#fff;--input-bg:#1d1019;--input-fg:#fde8df;--input-bd:#4a2734;--bd2:#5a3040;--tip-bg:#4a1d2e;--tip-fg:#fff;--shadow:0 14px 40px rgba(0,0,0,.5);--soft:rgba(255,122,69,.08);--title-grad:linear-gradient(90deg,#ff9a6b,#ff6aa2,#c4a1ff)}
+/* Mono */
+body[data-theme=mono]{--radius:4px;--btn-radius:4px;--font:'Segoe UI',system-ui,sans-serif;--bg:#fafafa;--card:#fff;--card-bd:#e5e5e5;--fg:#111;--muted:#444;--heading:#111;--primary:#111;--primary-h:#333;--primary-fg:#fff;--input-bg:#fff;--input-fg:#111;--input-bd:#d4d4d4;--bd2:#bdbdbd;--tip-bg:#111;--tip-fg:#fff;--shadow:none;--soft:#f2f2f2;--title-shadow:none}
+body.dark[data-theme=mono]{--bg:#0a0a0a;--card:#111;--card-bd:#2a2a2a;--fg:#f2f2f2;--muted:#bbb;--heading:#fff;--primary:#f2f2f2;--primary-h:#d4d4d4;--primary-fg:#111;--input-bg:#0a0a0a;--input-fg:#f2f2f2;--input-bd:#333;--bd2:#3a3a3a;--tip-bg:#f2f2f2;--tip-fg:#111;--shadow:none;--soft:#1a1a1a;--title-shadow:none}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box}
+body{font-family:var(--font);background-color:var(--bg);background-image:var(--bg-img);background-attachment:fixed;color:var(--fg);margin:0;padding:20px;min-height:100vh;direction:rtl;text-align:right;transition:background-color .3s,color .3s}
+body.ltr{direction:ltr;text-align:left}
+.container{max-width:1000px;margin:auto;background:var(--card);border:1px solid var(--card-bd);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);padding:20px;border-radius:var(--radius);box-shadow:var(--shadow);min-height:600px;transition:background-color .3s,box-shadow .3s;position:relative}
+.header-container{text-align:center;margin-bottom:25px}
+h1#title{color:var(--heading);font-family:var(--title-font);font-size:3em;margin:0;display:inline-block;text-shadow:var(--title-shadow);font-weight:bold;transition:color .3s,text-shadow .3s}
+body[data-theme=neon] h1#title,body[data-theme=sunset] h1#title{background:var(--title-grad);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
+body.dark[data-theme=neon] h1#title{filter:drop-shadow(0 0 10px rgba(168,85,247,.55))}
+body[data-theme=mono] h1#title{font-weight:800;letter-spacing:-.02em}
+h2{color:var(--muted);font-size:1.25em;margin:18px 0 10px}
+label{color:var(--muted);font-size:1.05em;cursor:pointer}
+.primary-label{font-weight:600}
+textarea{width:100%;resize:vertical;max-height:240px;border:1px solid var(--input-bd);border-radius:8px;padding:8px;font-size:1rem;background:var(--input-bg);color:var(--input-fg)}
+textarea, input[type=text], input[type=number], select{font-family:inherit}
+input[type=text],input[type=number],select{border:1px solid var(--input-bd);border-radius:6px;padding:4px 6px;font-size:1rem;background:var(--input-bg);color:var(--input-fg)}
+textarea:focus,input[type=text]:focus,input[type=number]:focus,select:focus{outline:2px solid var(--primary);outline-offset:1px}
+input[type=checkbox]{width:18px;height:18px;margin:0 5px 0 0;vertical-align:middle;accent-color:var(--primary);cursor:pointer}
+::placeholder{color:var(--muted);opacity:.6}
+.manipulation{margin:4px 0;padding:4px 8px;border-radius:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;direction:rtl;text-align:right;transition:background-color .15s}
+.manipulation:hover{background:var(--soft)}
+body.ltr .manipulation{direction:ltr;text-align:left}
+.manipulation .tooltip,.manipulation label{user-select:none}
+button{background:var(--primary);color:var(--primary-fg);border:0;padding:8px 15px;border-radius:var(--btn-radius);font-size:1rem;font-family:inherit;cursor:pointer;transition:background .2s,transform .2s,filter .2s}
+button:hover{background:var(--primary-h);transform:translateY(-2px)}
+button:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+body[data-theme=sunset] button:not(.sw),body[data-theme=sunset] button:not(.sw):hover{background:linear-gradient(135deg,#ff7a45,#e8467c);color:#fff}
+body[data-theme=sunset] button:not(.sw):hover{filter:brightness(1.07)}
+body.dark[data-theme=neon] button:not(.sw){box-shadow:0 0 16px rgba(168,85,247,.45)}
+.button-row{margin:16px 0;display:flex;flex-wrap:wrap;gap:8px}
+#output{height:150px;margin-top:8px}
+#output.flash{animation:flash 1s ease}
+@keyframes flash{0%{box-shadow:0 0 0 0 var(--primary)}100%{box-shadow:0 0 0 12px transparent}}
+.toggle-bar{position:absolute;top:20px;left:20px;display:flex;gap:10px;z-index:10;align-items:center}
+body.ltr .toggle-bar{left:auto;right:20px}
+.tooltip{position:relative;display:inline-block}
+.tooltip .q{display:inline-block;color:var(--primary);font-weight:700;cursor:help}
+.tooltip .box{visibility:hidden;opacity:0;min-width:280px;max-width:380px;background:var(--tip-bg);color:var(--tip-fg);text-align:right;border-radius:6px;padding:10px;position:absolute;z-index:5;bottom:125%;right:-10px;transition:opacity .2s;box-shadow:0 2px 5px rgba(0,0,0,.2);font-weight:400}
+.tooltip .box::after{content:"";position:absolute;top:100%;right:10px;border:5px solid transparent;border-top-color:var(--tip-bg)}
+body.ltr .tooltip .box{text-align:left;right:auto;left:-10px}
+body.ltr .tooltip .box::after{right:auto;left:10px}
+.tooltip:hover .box,.tooltip:focus-within .box{visibility:visible;opacity:1}
+.adv-toggle{margin:12px 0;display:flex;align-items:center;gap:8px}
+#advanced{display:none;margin-top:8px;padding:12px;border:1px dashed var(--bd2);border-radius:10px}
+#notif{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--ok);color:#fff;padding:14px 22px;border-radius:10px;font-size:1.05rem;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:999;text-align:center;max-width:90vw}
+#notif.error{background:var(--err)}
+#measure{position:absolute;left:-99999px;top:0;visibility:hidden;white-space:nowrap;width:auto}
+/* digit selects: show 10 cleanly */
+.digit-select{width:calc(6ch + 28px);min-width:calc(48px + 28px);direction:ltr;text-align:center;text-align-last:center;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:var(--input-bg);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%23333' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 8px center;padding-right:28px}
+body.dark .digit-select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%23ccc' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
+/* format modal */
+#fmtBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:9999}
+#fmtBox{background:var(--menu-bg);color:var(--fg);border:1px solid var(--card-bd);border-radius:12px;min-width:280px;max-width:90vw;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#fmtTitle{margin:0 0 10px 0;font-size:1.15rem;color:var(--heading)}
+#fmtActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:12px}
+#fmtActions button{border-radius:8px}
+/* theme picker */
+.theme-wrap{position:relative}
+#themeMenu{display:none;position:absolute;top:calc(100% + 8px);left:0;width:280px;padding:10px;grid-template-columns:repeat(2,1fr);gap:8px;background:var(--menu-bg);border:1px solid var(--input-bd);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.22);z-index:50}
+body.ltr #themeMenu{left:auto;right:0}
+#themeMenu.open{display:grid;animation:pop .2s ease}
+.sw{display:flex;flex-direction:column;gap:6px;padding:7px;border-radius:10px;background:transparent;color:var(--fg);border:1px solid var(--input-bd);font-size:.9rem;text-align:center}
+.sw:hover{background:var(--soft);transform:translateY(-1px)}
+.sw.active{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary) inset}
+.sw .pv{display:block;height:40px;border-radius:7px;position:relative;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.sw .pv-card{position:absolute;inset:8px 10px 8px 26px;border-radius:4px}
+.sw .pv-dot{position:absolute;left:8px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%}
+/* change summary */
+#summary{display:none;margin-top:18px;padding:16px;border:1px solid var(--input-bd);border-radius:12px;background:var(--soft)}
+#summary.show{display:block}
+#summary.pop{animation:pop .45s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.sum-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.sum-title{font-weight:700;color:var(--heading);font-size:1.1rem}
+.sum-main{font-size:1.05rem}
+.sum-main b{color:var(--primary);font-size:1.35rem}
+.sum-pct{margin-inline-start:auto;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.sum-bar{height:8px;border-radius:99px;background:var(--input-bd);overflow:hidden;margin:6px 0 14px}
+.sum-bar i{display:block;height:100%;width:0;background:var(--primary);border-radius:99px;transition:width .8s ease}
+.sum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--input-bd);border-radius:10px;padding:10px 12px}
+.tile .n{font-size:1.5rem;font-weight:700;color:var(--fg);font-variant-numeric:tabular-nums}
+.tile .l{font-size:.85rem;color:var(--muted)}
+.tile.hl .n{color:var(--primary)}
+.sum-ops{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sum-lbl{font-weight:600;color:var(--muted);font-size:.9rem}
+.chip{padding:3px 10px;border-radius:99px;background:var(--card);border:1px solid var(--input-bd);font-size:.85rem;color:var(--fg)}
+.credit{text-align:center;color:var(--muted);font-size:.9rem;margin:18px 0 6px;opacity:.85;direction:ltr}
+@media (max-width:640px){
+ body{padding:10px}
+ .container{padding:14px}
+ .toggle-bar{position:static;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+ .toggle-bar button{padding:6px 12px;font-size:.9rem}
+ #themeMenu,body.ltr #themeMenu{left:50%;right:auto;transform:translateX(-50%)}
+ h1#title{font-size:2.2em}
+ .tooltip .box{min-width:220px;max-width:78vw}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style> 
+</head> 
+<body> 
+ <div class="container"> 
+ <div class="toggle-bar"> 
+ <button id="toggleDark">🌙 מצב כהה</button> 
+ <button id="toggleLang">English</button>
+ <div class="theme-wrap"><button id="toggleTheme" aria-haspopup="true" aria-expanded="false">🎨 עיצוב</button><div id="themeMenu" role="menu"></div></div> 
+ </div> 
+ <div class="header-container"><h1 id="title">אַרְכִיטֵקְסְט</h1></div> 
+ <label id="inputLbl">כאן יש להכניס רשימה אנכית או אופקית של ערכים:</label> 
+ <textarea id="input" rows="9" placeholder="לדוגמה:&#10;תפוח&#10;בננה&#10;אגס"></textarea> 
+ <h2 id="ops">אפשרויות</h2> 
+ <div id="manipulations-main"> 
+ <div class="manipulation" data-fixed="true" data-key="horizontal"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipHorizontal">הסבר: מחזיר את הנתונים בשורה אופקית במקום אנכית.<br/></span></span> 
+ <input type="checkbox" id="horizontal"><label class="primary-label" id="lblHorizontal">החזר רשימה אופקית</label> 
+ </div> 
+ <div class="manipulation" data-fixed="true" data-key="vertical"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipVertical">הסבר: מחזיר את הנתונים בשורה אנכית במקום שורה אופקית.<br/></span></span> 
+ <input type="checkbox" id="vertical"><label class="primary-label" id="lblVertical">החזר רשימה אנכית</label> 
+ </div> 
+ <div class="manipulation" data-key="comma"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipSeparateByComma">הסבר: מפריד בין פריטים בפסיק (ללא רווח).<br/>דוגמה: תפוח בננה ← תפוח,בננה</span></span> 
+ <input type="checkbox" id="separateByComma"><label class="primary-label" id="lblSeparateByComma">הפרד בפסיק</label> 
+ </div> 
+ <div class="manipulation" data-key="sort"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipSort">הסבר: ממיין את הרשימה בסדר עולה/יורד (מיון טבעי).<br/>דוגמה: 2,10,1 ← 1,2,10</span></span> 
+ <input type="checkbox" id="sort"><label class="primary-label" id="lblSort">מיון</label> 
+ <select id="sortDir"><option value="asc" id="optAsc">עולה</option><option value="desc" id="optDesc">יורד</option></select> 
+ </div> 
+ <div class="manipulation" data-key="trim"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipTrimSpaces">הסבר: מסיר רווחים בהתחלה ובסוף ומצמצם רווחים בין מילים לאחד.<br/>דוגמה: " שלום    עולם " ← "שלום עולם"</span></span> 
+ <input type="checkbox" id="trimSpaces"><label class="primary-label" id="lblTrimSpaces">הסר רווחים</label> 
+ </div> 
+ <div class="manipulation" data-key="lower"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipLower">הסבר: ממיר לאותיות קטנות.<br/>דוגמה: ABC → abc</span></span> 
+ <input type="checkbox" id="lower"><label class="primary-label" id="lblLower">אותיות קטנות</label> 
+ </div> 
+ <div class="manipulation" data-key="upper"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipUpper">הסבר: ממיר לאותיות גדולות.<br/>דוגמה: abc → ABC</span></span> 
+ <input type="checkbox" id="upper"><label class="primary-label" id="lblUpper">אותיות גדולות</label> 
+ </div> 
+ <div class="manipulation" data-key="rmzeros"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipRemoveLeadingZeros">הסבר: מסיר אפסים מובילים ממספרים.<br/>דוגמה: 00045 ← 45</span></span> 
+ <input type="checkbox" id="removeLeadingZeros"><label class="primary-label" id="lblRemoveLeadingZeros">הסר אפסים מובילים</label> 
+ </div> 
+ <div class="manipulation" data-key="rmspecial"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipRemoveSpecial">הסבר: מסיר תווים שאינם אותיות, מספרים או רווחים.<br/>דוגמה: "אב@ג# ד!" ← "אבג ד"</span></span> 
+ <input type="checkbox" id="removeSpecial"><label class="primary-label" id="lblRemoveSpecial">הסר תווים מיוחדים</label> 
+ </div> 
+ <div class="manipulation" data-key="dedup"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipRemoveDup">הסבר: מסיר ערכים כפולים תוך שמירה על סדר הופעה ראשון.<br/>דוגמה: א,ב,א,ג ← א,ב,ג</span></span> 
+ <input type="checkbox" id="removeDup"><label class="primary-label" id="lblRemoveDup">צמצום כפולים</label> 
+ </div> 
+ <div class="manipulation" data-key="quotes"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipAddQuotes">הסבר: מוסיף גרשיים בודדים סביב כל ערך.<br/>דוגמה: א,ב ← 'א','ב'</span></span> 
+ <input type="checkbox" id="addQuotes"><label class="primary-label" id="lblAddQuotes">הוסף גרשיים</label> 
+ </div> 
+ </div> 
+ <div class="adv-toggle"><button id="toggleAdvanced">פונקציות מתקדמות ▸</button></div> 
+ <div id="advanced"> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-sep"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipAdvSep">עבור רשימת ערכים אנכית, מחזיר רשימה אופקית עם תו מפריד לבחירה.<br/>דוגמה: <br> א <br> ב  <br> ג <br> מפריד ";" ← א;ב;ג</span></span> 
+ <input type="checkbox" id="useCustomSep"><label class="primary-label" id="lblCustomSep">מפריד מותאם אישית</label> 
+ <label id="lblSep">מפריד:</label><input type="text" id="customSep" placeholder=""> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-pre-suf"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipAdvPreSuf">הוסף תחילית ו/או סיומת לכל ערך.<br/>דוגמה: בננה, תחילית="#"  סיומת="@" ← #בננה@</span></span> 
+ <input type="checkbox" id="usePreSuf"><label class="primary-label" id="lblPreSuf">תחילית / סיומת</label> 
+ <label id="lblPrefix">תחילית:</label><input type="text" id="prefix"> 
+ <label id="lblSuffix">סיומת:</label><input type="text" id="suffix"> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-pad"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipAdvPad">ריפוד לאורך קבוע עם תו לבחירה, משמאל או מימין.<br/>דוגמה: בננה , אורך יעד 7, תו 0, משמאל ← בננה000 </span></span> 
+ <input type="checkbox" id="usePad"><label class="primary-label" id="lblPad">ריפוד לאורך קבוע</label> 
+ <label id="lblPadLen">אורך יעד:</label><input type="number" id="padLen" min="1" value="8" style="width:70px"> 
+ <label id="lblPadChar">תו ריפוד:</label><input type="text" id="padChar" maxlength="1" style="width:40px" value="0"> 
+ <select id="padSide"><option value="left" id="optPadLeft">שמאל</option><option value="right" id="optPadRight">ימין</option></select> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-split"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipAdvSplit">פיצול רשימת ערכים אופקית, על פי  מפריד, לשורות נפרדות.<br/>דוגמה: "א;ב;ג" עם מפריד ";" ← <br>א <br> ב <br> ג בשלוש שורות נפרדות</span></span> 
+ <input type="checkbox" id="useSplit"><label class="primary-label" id="lblSplit">פיצול</label> 
+ <label id="lblSplitDelim">מפריד:</label><input type="text" id="splitDelim" placeholder=""> 
+ <input type="checkbox" id="splitTrim"><label id="lblSplitTrim">Trim לכל ערך</label> 
+ <input type="checkbox" id="splitDropEmpty"><label id="lblSplitDrop">הסר חלקים ריקים</label> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-replace"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipReplace">מחליף כל הופעה של טקסט מסוים בטקסט אחר.<br/>דוגמה: "א-ב" החלף "-" ב ":" ← "א:ב"</span></span> 
+ <input type="checkbox" id="replaceBox"><label class="primary-label" id="lblReplace">החלף טקסט</label> 
+ <label id="lblSearch">חיפוש:</label><input type="text" id="search" class="replace-input"> 
+ <label id="lblReplaceWith">החלף ב:</label><input type="text" id="replace" class="replace-input"> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-between"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipBetween">מחזיר טקסט בין שני תווים מוגדרים.<br/>דוגמה: "[בננה]" בין "[" ו-"]" → "בננה"</span></span> 
+ <input type="checkbox" id="betweenBox"><label class="primary-label" id="lblBetween">החזר טקסט בין שני תווים</label> 
+ <input type="text" id="betweenStart" maxlength="1" size="1"> 
+ <input type="text" id="betweenEnd" maxlength="1" size="1"> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-rmchars"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipRemoveChars">מסיר כמות תווים מההתחלה ו/או הסוף לפי המספר שנבחר.<br/>דוגמה: "בננה" עם התחלה=1, סוף=1 ← "ננ"</span></span> 
+ <input type="checkbox" id="removeCharsBox"><label class="primary-label" id="lblRemoveCharsBox">הסר כמות תווים</label> 
+ <label id="lblRemoveFromStart">מההתחלה</label> 
+ <select id="removeStart" class="digit-select"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select> 
+ <label id="lblRemoveFromEnd">מהסוף</label> 
+ <select id="removeEnd" class="digit-select"><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select> 
+ </div> 
+ <div class="manipulation adv" data-adv="true" data-key="adv-rmfromchar"> 
+ <span class="tooltip"><span class="q">?</span><span class="box" id="tipRemoveFromChar">מסיר טקסט החל מתו מסוים ואילך.<br/>דוגמה: על "בננה#תפוח" החל מהתו "#" ← "בננה"</span></span> 
+ <input type="checkbox" id="removeFromCharBox"><label class="primary-label" id="lblRemoveFromCharBox">הסר מהתו</label> 
+ <input type="text" id="removeFromChar" maxlength="1" size="1"> 
+ </div> 
+ </div> 
+ <div class="button-row"> 
+ <button id="process">ביצוע והעתקה</button> 
+ <button id="exportExcel">ייצוא לאקסל</button> 
+ <button id="reset">איפוס</button> 
+ </div> 
+ <h2 id="outLbl">הטקסט לאחר שינוי</h2> 
+ <textarea id="output"></textarea>
+ <div id="summary" aria-live="polite"></div> 
+ <div id="notif"></div> 
+ <div id="measure"></div> 
+ </div> 
+ <footer class="credit">Created By <strong>Havivon</strong></footer>
+ <!-- export format chooser --> 
+ <div id="fmtBackdrop" role="dialog" aria-modal="true" aria-labelledby="fmtTitle"> 
+ <div id="fmtBox"> 
+ <h3 id="fmtTitle">בחירת פורמט ייצוא</h3> 
+ <div id="fmtDesc">בחר פורמט לקובץ הייצוא:</div> 
+ <div id="fmtActions"> 
+ <button id="btnXlsx">Excel (XLSX)</button> 
+ <button id="btnCsv">CSV</button> 
+ <button id="btnCancel">ביטול</button> 
+ </div> 
+ </div> 
+ </div> 
+<script> 
+// --------------- Utilities --------------- 
+const qs=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)]; 
+let notifTimer;const notify=(m,e=false)=>{const n=qs('#notif');n.textContent=m;n.classList.toggle('error',e);n.style.display='block';clearTimeout(notifTimer);notifTimer=setTimeout(()=>n.style.display='none',2200)};
+const store={get:k=>{try{return localStorage.getItem(k)}catch(_){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}}}; 
+const unescapeEscapes = (s) => (s||'').replace(/\\t/g,'\t').replace(/\\n/g,'\n'); 
+const getLocalizedBaseName = ()=> document.body.classList.contains('ltr') ? 'architext' : 'ארכיטקסט'; 
+// --------------- Layout helpers --------------- 
+function blockScore(block){const meas=qs('#measure');const clone=block.cloneNode(true);clone.style.display='inline-block';meas.appendChild(clone);const width=clone.scrollWidth;meas.removeChild(clone);const t=block.innerText.trim().length;const inText=block.querySelectorAll('input[type="text"]').length;const selects=block.querySelectorAll('select').length;const cbx=block.querySelectorAll('input[type="checkbox"]').length;return width + t*0.5 + inText*10 + selects*6 + Math.max(0,cbx-1)*4;} 
+function orderByVisualLength(container){const blocks=[...container.children].filter(b=>b.classList.contains('manipulation'));const fixed=blocks.filter(b=>b.dataset.fixed==='true');const rest=blocks.filter(b=>b.dataset.fixed!=='true');rest.sort((a,b)=>blockScore(a)-blockScore(b));container.innerHTML='';fixed.forEach(b=>container.appendChild(b));rest.forEach(b=>container.appendChild(b));} 
+function orderAll(){orderByVisualLength(qs('#manipulations-main'));} 
+// --------------- XLSX (ZIP STORE) --------------- 
+function crc32(buf){ const table=(function(){let c,t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++) c=((c&1)?(0xEDB88320^(c>>>1)):(c>>>1));t[n]=c>>>0;}return t;})(); let crc=0^(-1); for(let i=0;i<buf.length;i++){crc=(crc>>>8)^table[(crc^buf[i])&0xFF];} return (crc^(-1))>>>0; } 
+function u16(n){return new Uint8Array([n&255,(n>>8)&255])} function u32(n){return new Uint8Array([n&255,(n>>8)&255,(n>>16)&255,(n>>24)&255])} 
+function dateToDos(dt){const d=new Date(dt||Date.now());const dosTime=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>>1);const dosDate=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();return{time:dosTime,date:dosDate}} 
+function zipStore(files){let chunks=[],central=[],offset=0;for(const f of files){const nameBytes=(new TextEncoder()).encode(f.path);const data=f.data;const ts=dateToDos();const crc=crc32(data);const size=data.length;const local=new Uint8Array(30+nameBytes.length);local.set([0x50,0x4b,0x03,0x04,10,0,0,0,0,0]);local.set(u16(ts.time),10);local.set(u16(ts.date),12);local.set(u32(crc),14);local.set(u32(size),18);local.set(u32(size),22);local.set(u16(nameBytes.length),26);local.set(u16(0),28);local.set(nameBytes,30);chunks.push(local,data);const centralHdr=new Uint8Array(46+nameBytes.length);centralHdr.set([0x50,0x4b,0x01,0x02,0,0,10,0,0,0,0,0]);centralHdr.set(u16(ts.time),12);centralHdr.set(u16(ts.date),14);centralHdr.set(u32(crc),16);centralHdr.set(u32(size),20);centralHdr.set(u32(size),24);centralHdr.set(u16(nameBytes.length),28);centralHdr.set(u16(0),30);centralHdr.set(u16(0),32);centralHdr.set(u16(0),34);centralHdr.set(u16(0),36);centralHdr.set(u16(0),38);centralHdr.set(u32(0),40);centralHdr.set(u32(offset),42);centralHdr.set(nameBytes,46);central.push(centralHdr);offset+=local.length+size;}const centralSize=central.reduce((a,b)=>a+b.length,0);const centralOffset=offset;const eocd=new Uint8Array(22);eocd.set([0x50,0x4b,0x05,0x06]);eocd.set(u16(files.length),8);eocd.set(u16(files.length),10);eocd.set(u32(centralSize),12);eocd.set(u32(centralOffset),16);const totalLen=offset+centralSize+eocd.length;const out=new Uint8Array(totalLen);let p=0;for(const c of chunks){out.set(c,p);p+=c.length;}for(const c of central){out.set(c,p);p+=c.length;}out.set(eocd,p);return out} 
+function exportXLSX(items){function x(s){return s.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'').replace(/&/g,'&amp;').replace(/\</g,'&lt;').replace(/\>/g,'&gt;')}const CT=`<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">\n<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>\n<Default Extension="xml" ContentType="application/xml"/>\n<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>\n<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>\n<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>\n<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>\n</Types>`;const rels=`<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>\n</Relationships>`;const wb=`<?xml version="1.0" encoding="UTF-8"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Export" sheetId="1" r:id="rId1"/></sheets></workbook>`;const wbR=`<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`;let rows=items.map((v,i)=>`<row r="${i+1}"><c r="A${i+1}" t="inlineStr"><is><t xml:space="preserve">${x(v)}</t></is></c></row>`).join('');if(rows==='')rows='<row r="1"/>';const sheet=`<?xml version="1.0" encoding="UTF-8"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${rows}</sheetData></worksheet>`;const core=`<?xml version="1.0" encoding="UTF-8"?>\n<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Export</dc:title></cp:coreProperties>`;const app=`<?xml version="1.0" encoding="UTF-8"?>\n<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Architext</Application><Sheets>1</Sheets></Properties>`;const enc=new TextEncoder();const files=[{path:'[Content_Types].xml',data:enc.encode(CT)},{path:'_rels/.rels',data:enc.encode(rels)},{path:'xl/workbook.xml',data:enc.encode(wb)},{path:'xl/_rels/workbook.xml.rels',data:enc.encode(wbR)},{path:'xl/worksheets/sheet1.xml',data:enc.encode(sheet)},{path:'docProps/core.xml',data:enc.encode(core)},{path:'docProps/app.xml',data:enc.encode(app)},];const zip=zipStore(files);const blob=new Blob([zip],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=getLocalizedBaseName()+'.xlsx';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)} 
+// --------------- Core logic --------------- 
+(function init(){
+
+ // link each label to the checkbox right before it, so sub-options (Trim / remove empty) toggle themselves
+ $$('.manipulation label').forEach(l=>{const p=l.previousElementSibling; if(p&&p.matches('input[type=checkbox]')&&!l.htmlFor) l.htmlFor=p.id;});
+ $$('.tooltip .q').forEach(q=>q.tabIndex=0);
+ // row click toggle
+ $$('.manipulation').forEach(div=>{
+   div.addEventListener('click',e=>{
+     const tag=(e.target.tagName||'').toLowerCase();
+     if(['input','select','textarea','button'].includes(tag)) return;
+     if(e.target.closest('.tooltip')) return;
+     const lbl=e.target.closest('label'); if(lbl&&lbl.control) return; // native label toggle
+     const cb=div.querySelector('input[type="checkbox"]');
+     if(cb){cb.checked=!cb.checked;cb.dispatchEvent(new Event('change'));}
+   });
+ });
+ 
+ // Mutual exclusivity 
+ qs('#horizontal').addEventListener('change',e=>{if(e.target.checked)qs('#vertical').checked=false;}); 
+ qs('#vertical').addEventListener('change',e=>{if(e.target.checked)qs('#horizontal').checked=false;});
+ qs('#lower').addEventListener('change',e=>{if(e.target.checked)qs('#upper').checked=false;});
+ qs('#upper').addEventListener('change',e=>{if(e.target.checked)qs('#lower').checked=false;});
+ // typing a value into an option's field turns that option on
+ $$('.manipulation').forEach(row=>{const cb=row.querySelector('input[type=checkbox]'); if(!cb) return; row.querySelectorAll('input[type=text],input[type=number],select').forEach(el=>el.addEventListener('input',()=>{ if(el.value!==''&&el.value!=='0'&&!cb.checked){ cb.checked=true; cb.dispatchEvent(new Event('change')); } }));}); 
+ // Toggle advanced panel 
+ qs('#toggleAdvanced').addEventListener('click',()=>{const adv=qs('#advanced');const open=adv.style.display==='block';adv.style.display=open?'none':'block';qs('#toggleAdvanced').textContent=open?(document.body.classList.contains('ltr')?'Advanced functions ▸':'פונקציות מתקדמות ▸'):(document.body.classList.contains('ltr')?'Advanced functions ▾':'פונקציות מתקדמות ▾');if(!open){orderByVisualLength(qs('#advanced'));}}); 
+ // Process button
+ const isEn=()=>document.body.classList.contains('ltr');
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ async function copyText(t){
+  try{ if(navigator.clipboard&&window.isSecureContext){ await navigator.clipboard.writeText(t); return true; } }catch(_){}
+  try{ const ta=qs('#output'); ta.focus({preventScroll:true}); ta.select(); const ok=document.execCommand('copy'); ta.setSelectionRange(0,0); ta.blur(); return ok; }catch(_){ return false; }
+ }
+ function readOptions(){
+  return {
+   trim:qs('#trimSpaces').checked, zeros:qs('#removeLeadingZeros').checked, special:qs('#removeSpecial').checked,
+   rmChars:qs('#removeCharsBox').checked, rs:parseInt(qs('#removeStart').value)||0, re:parseInt(qs('#removeEnd').value)||0,
+   between:qs('#betweenBox').checked, bA:qs('#betweenStart').value||'', bB:qs('#betweenEnd').value||'',
+   fromChar:qs('#removeFromCharBox').checked, fc:qs('#removeFromChar').value||'',
+   preSuf:qs('#usePreSuf').checked, pre:qs('#prefix').value??'', suf:qs('#suffix').value??'',
+   lower:qs('#lower').checked, upper:qs('#upper').checked,
+   replace:qs('#replaceBox').checked, rf:unescapeEscapes(qs('#search').value)||'', rt:unescapeEscapes(qs('#replace').value)||'',
+   pad:qs('#usePad').checked, padLen:parseInt(qs('#padLen').value)||0, padCh:(qs('#padChar').value||' ')[0]||' ', padSide:qs('#padSide').value,
+   quotes:qs('#addQuotes').checked
+  };
+ }
+ function transformValue(v,o){
+  let s=v;
+  if(o.trim) s=s.replace(/\s+/g,' ').trim();
+  if(o.zeros) s=s.replace(/^0+(?=\d)/,'');               // "007"→"7", "000"→"0" (not empty)
+  if(o.special) s=s.replace(/[^\p{L}\p{M}\p{N} ]/gu,'');  // keeps letters of every language + niqqud
+  if(o.rmChars){ if(o.rs>0) s=s.substring(o.rs); if(o.re>0) s=s.substring(0,Math.max(0,s.length-o.re)); }
+  if(o.between&&o.bA&&o.bB){ const i1=s.indexOf(o.bA), i2=i1>-1?s.indexOf(o.bB,i1+1):-1; if(i1>-1&&i2>-1) s=s.substring(i1+1,i2); }
+  if(o.fromChar&&o.fc){ const i=s.indexOf(o.fc); if(i>-1) s=s.substring(0,i); }
+  if(o.preSuf) s=`${o.pre}${s}${o.suf}`;
+  if(o.lower) s=s.toLowerCase();
+  if(o.upper) s=s.toUpperCase();
+  if(o.replace&&o.rf!=='') s=s.split(o.rf).join(o.rt);
+  if(o.pad&&o.padLen>0){ if(o.padSide==='left') s=s.padStart(o.padLen,o.padCh); else s=s.padEnd(o.padLen,o.padCh); }
+  if(o.quotes) s=`'${s}'`;
+  return s;
+ }
+ function scrollToBottom(){
+  const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  requestAnimationFrame(()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:reduce?'auto':'smooth'}));
+ }
+ qs('#process').addEventListener('click',async()=>{
+  const collator=new Intl.Collator(undefined,{numeric:true,sensitivity:'base'});
+  const raw=qs('#input').value.replace(/\s+$/,'');
+  const rawLines=raw?raw.split('\n'):[];
+  let lines=rawLines.map(x=>x.trim()).filter(Boolean);
+  if(!lines.length) return notify(isEn()?'No data':'אין נתונים',true);
+  const inCount=lines.length, emptyRemoved=rawLines.length-lines.length;
+  const changed=new Set();                      // indexes of input records that were modified
+  let items=lines.map((v,i)=>({v,src:i}));
+  let splitAdded=0;
+  // Pre-map (Split)
+  if(qs('#useSplit').checked){
+   const delim=unescapeEscapes(qs('#splitDelim').value)||',', doTrim=qs('#splitTrim').checked, dropEmpty=qs('#splitDropEmpty').checked, out=[];
+   items.forEach(it=>{ let p=it.v.split(delim); if(doTrim) p=p.map(x=>x.trim()); if(dropEmpty) p=p.filter(Boolean); if(p.length!==1||p[0]!==it.v) changed.add(it.src); p.forEach(x=>out.push({v:x,src:it.src})); });
+   splitAdded=out.length-items.length; items=out;
+  }
+  // Per-line
+  const o=readOptions();
+  items.forEach(it=>{ const n=transformValue(it.v,o); if(n!==it.v) changed.add(it.src); it.v=n; });
+  lines=items.map(it=>it.v);
+  const preDedup=lines.length;
+  if(qs('#removeDup').checked) lines=[...new Set(lines)];
+  const dupRemoved=preDedup-lines.length;
+  const sortDir=qs('#sortDir').value;
+  if(qs('#sort').checked){ lines.sort((a,b)=>collator.compare(a,b)); if(sortDir==='desc') lines.reverse(); }
+  const customSepOn = qs('#useCustomSep').checked && (qs('#customSep').value??'')!=='';
+  const horizontal = qs('#separateByComma').checked || customSepOn || qs('#horizontal').checked;
+  const sep = unescapeEscapes(customSepOn ? qs('#customSep').value : (qs('#separateByComma').checked ? ',' : ' '));
+  const result = horizontal ? lines.join(sep) : lines.join('\n');
+  qs('#output').value = result;
+  window.__lastItems = lines; // לשימוש בייצוא
+  const ops=$$('.manipulation').map(r=>r.querySelector('input[type=checkbox]')).filter(cb=>cb&&cb.checked&&cb.id!=='horizontal'&&cb.id!=='vertical').map(cb=>cb.id);
+  window.__lastStats={inCount,outCount:lines.length,changed:changed.size,dupRemoved,emptyRemoved,splitAdded,horizontal,sep,ops,sortDir};
+  renderSummary(true);
+  const out=qs('#output'); out.classList.remove('flash'); void out.offsetWidth; out.classList.add('flash');
+  scrollToBottom();
+  const ok=await copyText(result);
+  notify(ok ? (isEn()?'Updated text copied and ready to paste':'הטקסט המעודכן הועתק ומוכן להדבקה')
+            : (isEn()?'Done — copy the result manually (Ctrl+C)':'בוצע — יש להעתיק את התוצאה ידנית (Ctrl+C)'), !ok);
+ });
+ // Change summary (bottom of page)
+ function renderSummary(animate){
+  const box=qs('#summary'), st=window.__lastStats;
+  if(!st){ box.classList.remove('show','pop'); box.innerHTML=''; return; }
+  const en=isEn();
+  const L=en?{title:'Change summary',main:(c,t)=>`<b>${c}</b> of ${t} records changed`,none:'No values were changed',in:'Input records',out:'Output records',chg:'Changed',unch:'Unchanged',dup:'Duplicates removed',empty:'Empty lines removed',split:'Added by split',fmt:'Output:',ops:'Applied:',noops:'No options selected',vert:'Vertical list',horiz:'Horizontal list',sepw:'separator',space:'space'}
+             :{title:'סיכום השינויים',main:(c,t)=>`בוצע שינוי ב-<b>${c}</b> מתוך ${t} רשומות`,none:'לא בוצע שינוי באף רשומה',in:'רשומות בקלט',out:'רשומות בפלט',chg:'רשומות ששונו',unch:'ללא שינוי',dup:'כפולים שהוסרו',empty:'שורות ריקות שהוסרו',split:'נוספו מפיצול',fmt:'פלט:',ops:'פעולות:',noops:'לא נבחרו פעולות',vert:'רשימה אנכית',horiz:'רשימה אופקית',sepw:'מפריד',space:'רווח'};
+  const pct=st.inCount?Math.round(st.changed/st.inCount*100):0;
+  const tiles=[[st.inCount,L.in],[st.outCount,L.out],[st.changed,L.chg,true],[st.inCount-st.changed,L.unch]];
+  if(st.dupRemoved) tiles.push([st.dupRemoved,L.dup]);
+  if(st.emptyRemoved) tiles.push([st.emptyRemoved,L.empty]);
+  if(st.splitAdded>0) tiles.push([st.splitAdded,L.split]);
+  const sepName=st.sep===' '?L.space:st.sep==='\t'?'Tab':st.sep==='\n'?'\\n':st.sep;
+  const fmt=st.horizontal?`${L.horiz} · ${L.sepw} "${sepName}"`:L.vert;
+  const opLabel=id=>{ const cb=qs('#'+id), t=cb&&cb.nextElementSibling?cb.nextElementSibling.textContent:id; return id==='sort'?`${t} (${qs(st.sortDir==='desc'?'#optDesc':'#optAsc').textContent})`:t; };
+  const chips=st.ops.map(id=>`<span class="chip">${esc(opLabel(id))}</span>`).join('')||`<span class="chip">${L.noops}</span>`;
+  box.innerHTML=`<div class="sum-head"><span class="sum-title">${L.title}</span><span class="sum-main">${st.changed?L.main(st.changed,st.inCount):L.none}</span><span class="sum-pct">${pct}%</span></div>`
+   +`<div class="sum-bar"><i></i></div>`
+   +`<div class="sum-grid">${tiles.map(([n,l,hl])=>`<div class="tile${hl?' hl':''}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('')}</div>`
+   +`<div class="sum-ops"><span class="sum-lbl">${L.fmt}</span><span class="chip">${esc(fmt)}</span></div>`
+   +`<div class="sum-ops"><span class="sum-lbl">${L.ops}</span>${chips}</div>`;
+  box.classList.add('show');
+  const bar=box.querySelector('.sum-bar i');
+  if(animate){ box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop'); requestAnimationFrame(()=>requestAnimationFrame(()=>bar.style.width=pct+'%')); }
+  else bar.style.width=pct+'%';
+ }
+ // Reset — back to the defaults written in the HTML (pad length 8, pad char 0, ascending...)
+ qs('#reset').addEventListener('click',()=>{ $$('input[type=checkbox]').forEach(i=>i.checked=false); $$('input[type=text],input[type=number]').forEach(i=>i.value=i.defaultValue); $$('select').forEach(s=>s.selectedIndex=0); qs('#input').value=''; qs('#output').value=''; window.__lastItems=[]; window.__lastStats=null; renderSummary(); });
+ // Dark mode (remembered; first visit follows the system)
+ const savedDark=store.get('architext.dark');
+ if(savedDark==='1'||(savedDark===null&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)) document.body.classList.add('dark');
+ qs('#toggleDark').addEventListener('click',()=>{ const d=document.body.classList.toggle('dark'); store.set('architext.dark',d?'1':'0'); refreshDynamic(); });
+ // Design themes
+ const THEMES=[
+  {id:'classic',he:'קלאסי',en:'Classic',pv:['#f5f7fa','#ffffff','#3498db'],pvd:['#121212','#1e1e1e','#007bff']},
+  {id:'ocean',he:'אוקיינוס',en:'Ocean',pv:['linear-gradient(135deg,#a5f3fc,#c7d2fe)','rgba(255,255,255,.7)','#0891b2'],pvd:['linear-gradient(160deg,#04111c,#0e3a5c,#312e81)','rgba(13,30,48,.85)','#22d3ee']},
+  {id:'paper',he:'נייר',en:'Paper',pv:['#f3ede2','#fffdf8','#b4532a'],pvd:['#1b1815','#24201c','#e07a4f']},
+  {id:'neon',he:'ניאון',en:'Neon',pv:['#f4f1ff','#ffffff','#7c3aed'],pvd:['#07070f','#10101c','#a855f7']},
+  {id:'forest',he:'יער',en:'Forest',pv:['#edf3ec','#ffffff','#2f7d4f'],pvd:['#0d1612','#14211a','#4cc27f']},
+  {id:'sunset',he:'שקיעה',en:'Sunset',pv:['linear-gradient(135deg,#ffe8d6,#ffd6e0,#e9d6ff)','rgba(255,255,255,.85)','linear-gradient(135deg,#ff7a45,#e8467c)'],pvd:['linear-gradient(160deg,#1c0f1d,#2a1222,#331a12)','rgba(36,20,34,.9)','#ff7a45']},
+  {id:'mono',he:'מינימל',en:'Mono',pv:['#fafafa','#ffffff','#111111'],pvd:['#0a0a0a','#111111','#f2f2f2']}
+ ];
+ function setTheme(id){ if(!THEMES.some(t=>t.id===id)) id='classic'; document.body.dataset.theme=id; store.set('architext.theme',id); renderThemeMenu(); }
+ function renderThemeMenu(){
+  const m=qs('#themeMenu'), en=isEn(), dark=document.body.classList.contains('dark'), cur=document.body.dataset.theme||'classic';
+  m.innerHTML='';
+  THEMES.forEach(t=>{ const p=dark?t.pvd:t.pv, b=document.createElement('button'); b.type='button'; b.className='sw'+(t.id===cur?' active':''); b.setAttribute('role','menuitemradio'); b.setAttribute('aria-checked',String(t.id===cur));
+   b.innerHTML=`<span class="pv" style="background:${p[0]}"><span class="pv-card" style="background:${p[1]}"></span><span class="pv-dot" style="background:${p[2]}"></span></span><span class="sw-name">${en?t.en:t.he}</span>`;
+   b.addEventListener('click',()=>{ setTheme(t.id); closeThemeMenu(); }); m.appendChild(b); });
+ }
+ function closeThemeMenu(){ qs('#themeMenu').classList.remove('open'); qs('#toggleTheme').setAttribute('aria-expanded','false'); }
+ qs('#toggleTheme').addEventListener('click',e=>{ e.stopPropagation(); const o=qs('#themeMenu').classList.toggle('open'); qs('#toggleTheme').setAttribute('aria-expanded',String(o)); });
+ document.addEventListener('click',e=>{ if(!e.target.closest('.theme-wrap')) closeThemeMenu(); });
+ document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeThemeMenu(); closeFormatDialog(); } });
+ function refreshDynamic(){
+  const en=isEn(), dark=document.body.classList.contains('dark');
+  qs('#toggleDark').textContent=dark?(en?'☀️ Light':'☀️ מצב בהיר'):(en?'🌙 Dark':'🌙 מצב כהה');
+  qs('#toggleTheme').textContent=en?'🎨 Theme':'🎨 עיצוב';
+  renderThemeMenu(); renderSummary();
+ }
+ function afterLang(){ const en=isEn(); document.documentElement.lang=en?'en':'he'; document.documentElement.dir=en?'ltr':'rtl'; store.set('architext.lang',en?'en':'he'); refreshDynamic(); }
+ setTheme(store.get('architext.theme')||'classic');
+ // Language toggle 
+ const DEFAULT_HE_PH = 'לדוגמה:\nתפוח\nבננה\nאגס'; 
+ const DEFAULT_EN_PH = 'Example:\nApple\nBanana\nPear'; 
+ function setHeb(){
+ qs('#toggleAdvanced').textContent = (qs('#advanced').style.display==='block'?'פונקציות מתקדמות ▾':'פונקציות מתקדמות ▸'); document.body.classList.remove('ltr'); document.body.dir='rtl'; qs('#title').textContent='אַרְכִיטֵקְסְט'; qs('#inputLbl').textContent='כאן יש להכניס רשימה אנכית או אופקית של ערכים:'; qs('#input').placeholder=DEFAULT_HE_PH; qs('#ops').textContent='אפשרויות'; qs('#lblHorizontal').textContent='החזר רשימה אופקית'; qs('#tipHorizontal').innerHTML='הסבר: מחזיר את הנתונים בשורה אופקית במקום שורה אנכית.<br/>'; qs('#lblVertical').textContent='החזר רשימה אנכית'; qs('#tipVertical').innerHTML='הסבר: מחזיר את הנתונים בשורה אנכית במקום שורה אופקית.<br/>'; qs('#lblSeparateByComma').textContent='הפרד בפסיק'; qs('#tipSeparateByComma').innerHTML='הסבר: מפריד בין פריטים בפסיק (ללא רווח).<br/>דוגמה: תפוח בננה ← תפוח,בננה'; qs('#lblSort').textContent='מיון'; qs('#tipSort').innerHTML='הסבר: ממיין את הרשימה בסדר עולה/יורד (מיון טבעי).<br/>דוגמה: 2,10,1 ← 1,2,10'; qs('#optAsc').textContent='עולה'; qs('#optDesc').textContent='יורד'; qs('#lblTrimSpaces').textContent='הסר רווחים'; qs('#tipTrimSpaces').innerHTML='הסבר: מסיר רווחים בהתחלה ובסוף ומצמצם רווחים בין מילים לאחד.<br/>דוגמה: " שלום    עולם " ← "שלום עולם"'; qs('#lblLower').textContent='אותיות קטנות'; qs('#tipLower').innerHTML='הסבר: ממיר לאותיות קטנות.<br/>דוגמה: ABC → abc'; qs('#lblUpper').textContent='אותיות גדולות'; qs('#tipUpper').innerHTML='הסבר: ממיר לאותיות גדולות.<br/>דוגמה: abc → ABC'; qs('#lblRemoveLeadingZeros').textContent='הסר אפסים מובילים'; qs('#tipRemoveLeadingZeros').innerHTML='הסבר: מסיר אפסים מובילים ממספרים.<br/>דוגמה: 00045 ← 45'; qs('#lblRemoveSpecial').textContent='הסר תווים מיוחדים'; qs('#tipRemoveSpecial').innerHTML='הסבר: מסיר תווים שאינם אותיות, מספרים או רווחים.<br/>דוגמה: "אב@ג# ד!" ← "אבג ד"'; qs('#lblRemoveDup').textContent='צמצום כפולים'; qs('#tipRemoveDup').innerHTML='הסבר: מסיר ערכים כפולים תוך שמירה על סדר הופעה ראשון.<br/>דוגמה: א,ב,א,ג ← א,ב,ג'; qs('#lblAddQuotes').textContent='הוסף גרשיים'; qs('#tipAddQuotes').innerHTML='הסבר: מוסיף גרשיים בודדים סביב כל ערך.<br/>דוגמה: א,ב ← \'א\',\'ב\''; qs('#toggleLang').textContent='English'; qs('#outLbl').textContent='הטקסט לאחר שינוי'; qs('#process').textContent='ביצוע והעתקה'; qs('#reset').textContent='איפוס'; 
+ // Export (HE)
+ qs('#fmtTitle').textContent='בחירת פורמט ייצוא'; qs('#fmtDesc').textContent='בחר פורמט לקובץ הייצוא:'; qs('#btnXlsx').textContent='Excel (XLSX)'; qs('#btnCsv').textContent='CSV'; qs('#btnCancel').textContent='ביטול'; qs('#exportExcel').textContent='ייצוא'; 
+ 
+ // Advanced (HE) – refresh all advanced labels/tooltips on language toggle
+ qs('#lblCustomSep').textContent='מפריד מותאם אישית';
+ qs('#lblSep').textContent='מפריד:';
+ qs('#tipAdvSep').innerHTML='עבור רשימת ערכים אנכית, מחזיר רשימה אופקית עם תו מפריד לבחירה.<br/>דוגמה: <br> א <br> ב <br> ג <br> מפריד ";" ← א;ב;ג';
+ qs('#lblPreSuf').textContent='תחילית / סיומת';
+ qs('#lblPrefix').textContent='תחילית:';
+ qs('#lblSuffix').textContent='סיומת:';
+ qs('#tipAdvPreSuf').innerHTML='הוסף תחילית ו/או סיומת לכל פריט.<br/>דוגמה: בננה, תחילית="#"  סיומת="@" ← #בננה@';
+ qs('#lblPad').textContent='ריפוד לאורך קבוע';
+ qs('#lblPadLen').textContent='אורך יעד:';
+ qs('#lblPadChar').textContent='תו ריפוד:';
+ qs('#optPadLeft').textContent='שמאל';
+ qs('#optPadRight').textContent='ימין';
+ qs('#tipAdvPad').innerHTML='ריפוד לאורך קבוע עם תו לבחירה, משמאל או מימין.<br/>דוגמה: בננה,אורך יעד 7,תו 0,משמאל ← בננה000 ';
+ qs('#lblSplit').textContent='פיצול ערכים';
+ qs('#lblSplitDelim').textContent='מפריד:';
+ qs('#lblSplitTrim').textContent='Trim לכל ערך';
+ qs('#lblSplitDrop').textContent='הסר חלקים ריקים';
+ qs('#tipAdvSplit').innerHTML='פיצול רשימת ערכים אופקית, על פי  מפריד, לשורות נפרדות.<br/>דוגמה: "א;ב;ג" עם מפריד ";" ← <br>א <br> ב <br> ג';
+ qs('#lblReplace').textContent='החלף טקסט';
+ qs('#lblSearch').textContent='חיפוש:';
+ qs('#lblReplaceWith').textContent='החלף ב:';
+ qs('#tipReplace').innerHTML='מחליף כל הופעה של טקסט מסוים בטקסט אחר.<br/>דוגמה: "א-ב" החלף "-" ב ":" ← "א:ב"';
+ qs('#lblBetween').textContent='החזר טקסט בין שני תווים';
+ qs('#tipBetween').innerHTML='מחזיר טקסט בין שני תווים מוגדרים.<br/>דוגמה: "[בננה]" בין "[" ו-"]" ← "בננה"';
+ qs('#lblRemoveCharsBox').textContent='הסר כמות תווים';
+ qs('#lblRemoveFromStart').textContent='מההתחלה';
+ qs('#lblRemoveFromEnd').textContent='מהסוף';
+ qs('#tipRemoveChars').innerHTML='מסיר כמות תווים מההתחלה ו/או הסוף לפי המספר שנבחר.<br/>דוגמה: "בננה" עם התחלה=1, סוף=1 ← "ננ"';
+ qs('#lblRemoveFromCharBox').textContent='הסר מהתו';
+ qs('#tipRemoveFromChar').innerHTML='מסיר טקסט החל מתו מסוים ואילך.<br/>דוגמה: "בננה#תפוח" החל מהתו "#" ← "בננה"';
+
+ orderAll(); afterLang(); } 
+ function setEng(){
+ qs('#toggleAdvanced').textContent = (qs('#advanced').style.display==='block'?'Advanced functions ▾':'Advanced functions ▸'); document.body.classList.add('ltr'); document.body.dir='ltr'; qs('#title').textContent='Architext'; qs('#inputLbl').textContent='Paste a vertical or horizontal list of values:'; qs('#input').placeholder=DEFAULT_EN_PH; qs('#ops').textContent='Options'; qs('#lblHorizontal').textContent='Horizontal list'; qs('#tipHorizontal').innerHTML='Return items on a single line.<br/>'; qs('#lblVertical').textContent='Vertical list'; qs('#tipVertical').innerHTML='Return items on separate lines.<br/>'; qs('#lblSeparateByComma').textContent='Separate by comma'; qs('#tipSeparateByComma').innerHTML='Separate items by comma (no space).<br/>Example: "apple banana" → "apple,banana"'; qs('#lblSort').textContent='Sort'; qs('#tipSort').innerHTML='Sort ascending/descending (natural).<br/>Example: 2,10,1 → 1,2,10'; qs('#optAsc').textContent='Ascending'; qs('#optDesc').textContent='Descending'; qs('#lblTrimSpaces').textContent='Trim & collapse spaces'; qs('#tipTrimSpaces').innerHTML='Trim edges and collapse inner spaces to one.<br/>Example: " hello world " → "hello world"'; qs('#lblLower').textContent='Lowercase'; qs('#tipLower').innerHTML='Convert to lowercase.<br/>Example: ABC → abc'; qs('#lblUpper').textContent='Uppercase'; qs('#tipUpper').innerHTML='Convert to UPPERCASE.<br/>Example: abc → ABC'; qs('#lblRemoveLeadingZeros').textContent='Remove leading zeros'; qs('#tipRemoveLeadingZeros').innerHTML='Remove leading zeros from numbers.<br/>Example: 00045 → 45'; qs('#lblRemoveSpecial').textContent='Remove special chars'; qs('#tipRemoveSpecial').innerHTML='Remove non letters/digits/space.<br/>Example: "a@b# c!" → "ab c"'; qs('#lblRemoveDup').textContent='Remove duplicates'; qs('#tipRemoveDup').innerHTML='Remove duplicates preserving first occurrence order.<br/>Example: a,b,a,c → a,b,c'; qs('#lblAddQuotes').textContent='Add quotes'; qs('#tipAddQuotes').innerHTML="Wrap each item with single quotes.<br/>Example: a,b → 'a','b'"; qs('#toggleLang').textContent='עברית'; qs('#outLbl').textContent='Result'; qs('#process').textContent='Process & Copy'; qs('#reset').textContent='Reset'; 
+ // Export (EN)
+ qs('#fmtTitle').textContent='Choose export format'; qs('#fmtDesc').textContent='Select a format for the exported file:'; qs('#btnXlsx').textContent='Excel (XLSX)'; qs('#btnCsv').textContent='CSV'; qs('#btnCancel').textContent='Cancel'; qs('#exportExcel').textContent='Export'; 
+ // Advanced (EN) – natural phrasing
+ qs('#lblCustomSep').textContent='Custom separator'; qs('#lblSep').textContent='Separator:'; qs('#tipAdvSep').innerHTML='Use a custom separator for horizontal output.<br/>Example: <br> a <br> b <br> c <br> with separator ";" → a;b;c'; 
+ qs('#lblPreSuf').textContent='Prefix / Suffix'; qs('#lblPrefix').textContent='Prefix:'; qs('#lblSuffix').textContent='Suffix:'; qs('#tipAdvPreSuf').innerHTML='Add a prefix and/or suffix to each item.<br/>Example: A,B,C Prefix "ID-" → ID-a,ID-b,ID-c'; 
+ qs('#lblPad').textContent='Pad to length'; qs('#lblPadLen').textContent='Target length:'; qs('#lblPadChar').textContent='Pad character:'; qs('#optPadLeft').textContent='Left'; qs('#optPadRight').textContent='Right'; qs('#tipAdvPad').innerHTML='Pad each item to a fixed length using the chosen character, either left or right.<br/>Example: 7 → 007 (target 3, pad "0")'; 
+ qs('#lblSplit').textContent='Split & expand'; qs('#lblSplitDelim').textContent='Delimiter:'; qs('#lblSplitTrim').textContent='Trim each part'; qs('#lblSplitDrop').textContent='Remove empty parts'; qs('#tipAdvSplit').innerHTML='Split each line using the chosen delimiter and output each part separately.<br/>Example: "a;b;c" with delimiter ";" → a <br> b <br> c <br> '; 
+ qs('#lblReplace').textContent='Replace text'; qs('#lblSearch').textContent='Find:'; qs('#lblReplaceWith').textContent='Replace with:'; qs('#tipReplace').innerHTML='Replace all occurrences of one text with another.<br/>Example: replace "-" with ":" → "a-b" becomes "a:b"'; 
+ qs('#lblBetween').textContent='Extract text between chars'; qs('#tipBetween').innerHTML='Extract the substring between two given characters.<br/>Example: "[ABC]" between "[" and "]" → "ABC"'; 
+ qs('#lblRemoveCharsBox').textContent='Remove characters'; qs('#lblRemoveFromStart').textContent='From start'; qs('#lblRemoveFromEnd').textContent='From end'; qs('#tipRemoveChars').innerHTML='Remove a specified number of characters from the start and/or end.<br/>Example: with start 1 and end 1 <br> "hello" → "ell"'; 
+ qs('#lblRemoveFromCharBox').textContent='Remove from character'; qs('#tipRemoveFromChar').innerHTML='Remove everything from the first occurrence of the chosen character onward.<br/>Example: "abc#def" with "#" → "abc"'; 
+ orderAll(); afterLang(); } 
+ qs('#toggleLang').addEventListener('click',()=>{ (document.body.classList.contains('ltr') ? setHeb : setEng)(); }); 
+ (store.get('architext.lang')==='en' ? setEng : setHeb)(); 
+ // Export dialog — one set of listeners; the items waiting for export live in pendingExport
+ let pendingExport=null;
+ function openFormatDialog(){ qs('#fmtBackdrop').style.display='flex'; qs('#btnXlsx').focus(); }
+ function closeFormatDialog(){ pendingExport=null; qs('#fmtBackdrop').style.display='none'; }
+ qs('#exportExcel').addEventListener('click',()=>{ const items=(window.__lastItems||[]).map(x=>x.trim()).filter(Boolean); if(!items.length){ return notify(isEn()?'No data — run Process first':'אין נתונים — יש לבצע עיבוד תחילה',true); } pendingExport=items; openFormatDialog(); });
+ qs('#btnCsv').addEventListener('click',()=>{ const it=pendingExport; closeFormatDialog(); if(it) exportCSV(it); });
+ qs('#btnXlsx').addEventListener('click',()=>{ const it=pendingExport; closeFormatDialog(); if(it) exportXLSX(it); });
+ qs('#btnCancel').addEventListener('click',closeFormatDialog);
+ qs('#fmtBackdrop').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeFormatDialog(); });
+ // CSV export with BOM (Hebrew friendly) 
+ function csvEscape(s){ return /[",\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; } 
+ window.exportCSV = function(items){ const csv = items.map(csvEscape).join('\r\n'); const BOM='\uFEFF'; const blob = new Blob([BOM + csv], {type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=getLocalizedBaseName()+'.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); }; 
+})(); 
+</script> 
+</body> 
+</html>

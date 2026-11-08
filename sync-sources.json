@@ -159,6 +159,18 @@
         "publish/setup.exe",
         "*.msi"
       ]
+    },
+    "architext": {
+      "category": "web",
+      "order": 16,
+      "path": "F:/My Projects/Architext",
+      "artifact": [
+        "Architext_Pro.html"
+      ],
+      "host": {
+        "from": "Architext_Pro.html",
+        "to": "web/architext/index.html"
+      }
     }
   }
 }
