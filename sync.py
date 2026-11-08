@@ -150,6 +150,12 @@ def sync_remote(app_id, src, entry):
         repo = github(api)
         entry["updated"] = repo["pushed_at"][:10]
         entry.setdefault("download", None)
+    if r.get("site_zip"):
+        # the whole site as GitHub's archive of the default branch: always the latest commit
+        branch = github(api)["default_branch"]
+        entry["site_download"] = {"url": f"https://github.com/{r['repo']}/archive/refs/heads/{branch}.zip", "type": "zip"}
+    else:
+        entry.pop("site_download", None)
     print(f"  {app_id}: {r['repo']} (v{entry.get('version')}, {entry.get('updated')})")
 
 

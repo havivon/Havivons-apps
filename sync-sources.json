@@ -87,7 +87,8 @@
       "remote": {
         "kind": "release",
         "repo": "havivon/printmybingo-site",
-        "asset": ".apk"
+        "asset": ".apk",
+        "site_zip": true
       }
     },
     "pdf": {
@@ -95,7 +96,7 @@
       "order": 10,
       "path": "F:/My Projects/PDF",
       "artifact": [
-        "PDF Creator/dist/PDF-Creator-Offline.zip"
+        "PDF Creator/PDF-Creator-Offline.html"
       ],
       "host": {
         "from": "PDF.html",

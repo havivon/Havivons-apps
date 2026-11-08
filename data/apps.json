@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-07",
+  "generated": "2026-11-08",
   "apps": [
     {
       "id": "pigeon",
@@ -106,7 +106,11 @@
         "size": 4846211,
         "type": "apk"
       },
-      "version": null
+      "version": null,
+      "site_download": {
+        "url": "https://github.com/havivon/printmybingo-site/archive/refs/heads/main.zip",
+        "type": "zip"
+      }
     },
     {
       "id": "pdf",
@@ -115,9 +119,9 @@
       "version": null,
       "updated": "2026-11-02",
       "download": {
-        "url": "downloads/pdf.zip",
-        "size": 1477537,
-        "type": "zip"
+        "url": "downloads/pdf.html",
+        "size": 4019088,
+        "type": "html"
       },
       "open": "web/pdf/"
     },

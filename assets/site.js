@@ -97,6 +97,9 @@ function actionButtons(app, { compact = false } = {}) {
     const size = app.download.size && !compact ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.download.size)}</span>` : '';
     out.push(`<a class="btn btn-primary" href="${esc(withVersion(app.download.url, app))}" download><i data-lucide="download"></i>${label}${size}</a>`);
   }
+  if (app.site_download) {
+    out.push(`<a class="btn btn-ghost" href="${esc(app.site_download.url)}" download><i data-lucide="folder-down"></i>הורדת האתר (ZIP)</a>`);
+  }
   if (app.open) {
     const cls = app.download ? 'btn btn-ghost' : 'btn btn-primary';
     out.push(`<a class="${cls}" href="${esc(app.open)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>פתח באתר</a>`);
