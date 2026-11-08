@@ -92,7 +92,10 @@ function iconHtml(app, size) {
 
 function actionButtons(app, { compact = false } = {}) {
   const out = [];
-  if (app.download) {
+  if (app.store) {
+    out.push(`<a class="btn btn-primary" href="${esc(app.store)}" target="_blank" rel="noopener"><i data-lucide="store"></i>להורדה מ-Google Play</a>`);
+  }
+  if (app.download && !app.store) {
     const label = DOWNLOAD_LABEL[app.download.type] || 'הורדה';
     const size = app.download.size && !compact ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.download.size)}</span>` : '';
     out.push(`<a class="btn btn-primary" href="${esc(withVersion(app.download.url, app))}" download><i data-lucide="download"></i>${label}${size}</a>`);
@@ -101,7 +104,7 @@ function actionButtons(app, { compact = false } = {}) {
     out.push(`<a class="btn btn-ghost" href="${esc(withVersion(app.site_download.url, app))}" download><i data-lucide="folder-down"></i>הורדת האתר (ZIP)${app.site_download.size ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.site_download.size)}</span>` : ''}</a>`);
   }
   if (app.open) {
-    const cls = app.download ? 'btn btn-ghost' : 'btn btn-primary';
+    const cls = app.download || app.store ? 'btn btn-ghost' : 'btn btn-primary';
     out.push(`<a class="${cls}" href="${esc(app.open)}" target="_blank" rel="noopener"><i data-lucide="external-link"></i>פתח באתר</a>`);
   }
   if (!out.length) out.push(`<span class="btn btn-ghost cursor-default muted"><i data-lucide="hourglass"></i>בקרוב להורדה</span>`);
@@ -128,7 +131,7 @@ async function renderHome() {
   let filter = 'all';
 
   document.getElementById('count-all').textContent = apps.length;
-  document.getElementById('count-android').textContent = apps.filter((a) => a.download?.type === 'apk').length;
+  document.getElementById('count-android').textContent = apps.filter((a) => a.store || a.download?.type === 'apk').length;
   document.getElementById('count-web').textContent = apps.filter((a) => a.open).length;
 
   const chips = document.getElementById('chips');

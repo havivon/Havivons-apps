@@ -28,6 +28,7 @@
       "category": "android",
       "order": 3,
       "path": "F:/My Projects/HebReminder-v5",
+      "store": "https://play.google.com/store/apps/details?id=com.hebreminder.app",
       "artifact": [
         "app/build/outputs/apk/release/*.apk"
       ],

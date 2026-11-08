@@ -83,6 +83,14 @@ def sync_local(app_id, src, entry):
         entry["download"] = None
         if not src.get("host"):
             print(f"  {app_id}: no build found")
+    elif src.get("store"):
+        # published in a store: the build only gives the version and date, nothing to download here
+        entry["download"] = None
+        entry["version"] = apk_version(art) if art.endswith(".apk") else None
+        if not entry["version"] and src.get("version_file"):
+            entry["version"] = gradle_version(os.path.join(base, src["version_file"]))
+        entry["updated"] = day(os.path.getmtime(art))
+        print(f"  {app_id}: store listing (v{entry['version']}, {entry['updated']})")
     else:
         os.makedirs(os.path.join(ROOT, "downloads"), exist_ok=True)
         ext = os.path.splitext(art)[1].lower()
@@ -235,6 +243,10 @@ def main(argv):
         entry["order"] = src["order"]
         if src.get("open"):
             entry["open"] = src["open"]
+        if src.get("store"):
+            entry["store"] = src["store"]
+        else:
+            entry.pop("store", None)
         if src.get("repo"):
             entry["repo"] = f"https://github.com/{src['repo']}"
         if only and app_id not in only:
