@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Print My Bingo | Free Printable Bingo Card Generator (PDF)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --header-color: #1d4ed8; 
+            --header-text-color: white; 
+        }
+        
+        body { font-family: 'Heebo', sans-serif; background-color: #f3f4f6; }
+        
+        .logo-text {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(to right, #1d4ed8, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        /* Navigation Styles */
+        .nav-links { display: flex; gap: 0.8rem; overflow-x: auto; white-space: nowrap; }
+        .nav-link { color: #4b5563; transition: color 0.2s; font-weight: 400; font-size: 0.95rem; border: none; background: none; cursor: pointer; padding: 0.5rem; }
+        .nav-link.active { color: #1d4ed8; font-weight: 700; }
+
+        /* Mobile adjustments: Fixes for spacing and gaps */
+        @media (max-width: 640px) {
+            .nav-container {
+                padding-left: 16px !important; /* Space from left edge */
+                padding-right: 16px !important; /* Space from right edge */
+            }
+            .nav-links { 
+                gap: 6px; /* Small fixed gap between items */
+                width: auto;
+                flex: 1; 
+                justify-content: flex-start; /* Items stay together, not spread out */
+                overflow-x: auto; 
+            }
+            .nav-link { 
+                padding: 0 2px; /* Minimal padding for text */
+                font-size: 0.9rem; 
+                flex-shrink: 0;
+            }
+            #lang-button {
+                font-size: 0.75rem;
+                padding: 2px 8px;
+                margin-inline-start: auto !important; /* Pushes button to the end but respects container padding */
+                flex-shrink: 0;
+                margin-left: 0; 
+            }
+        }
+        
+        #output-container { display: grid; grid-template-columns: 1fr; gap: 24px; width: 100%; justify-items: center; }
+        @media (min-width: 1024px) { #output-container { grid-template-columns: repeat(2, 1fr); } }
+        
+        .bingo-card { 
+            border: 3px solid #1f2937; 
+            border-radius: 12px; 
+            background: white; 
+            width: 100%; 
+            max-width: 450px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+            position: relative; 
+            user-select: none;
+            transform: translateZ(0);
+            /* Removed touch-action: none to allow scrolling on mobile */
+        }
+        
+        .bingo-card.has-bg { cursor: move; }
+
+        .card-bg-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%; 
+            height: auto;
+            min-height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none; 
+            transform-origin: center center;
+        }
+
+        .card-logo {
+            position: absolute;
+            top: 10px;
+            width: 60px;
+            height: auto;
+            z-index: 20;
+            pointer-events: none;
+        }
+        
+        .card-logo[data-pos="left"] { left: 10px !important; right: auto !important; }
+        .card-logo[data-pos="right"] { right: 10px !important; left: auto !important; }
+
+        html[dir="rtl"] .card-logo:not([data-pos]) { left: 10px; right: auto; }
+        html[dir="ltr"] .card-logo:not([data-pos]) { right: 10px; left: auto; }
+
+        .bingo-table { width: 100%; border-collapse: collapse; table-layout: fixed; direction: ltr; position: relative; z-index: 10; pointer-events: none; background: transparent; }
+        .bingo-table th, .bingo-table td { border: 1px solid #d1d5db; text-align: center; height: 60px; font-size: 1.1rem; font-weight: 700; word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; line-height: 1.1; padding: 2px;}
+        
+        .bingo-table th { 
+            color: var(--header-text-color) !important; 
+            background-color: var(--header-color) !important; 
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact; 
+        }
+        
+        .has-bg .bingo-table td { background-color: rgba(255,255,255, 0.6) !important; }
+        .bingo-table td { background-color: rgba(255,255,255, 0.5); } 
+        
+        .free-cell { background-color: #fca5a5 !important; color: #b91c1c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 0.9rem; }
+        .page-section { display: none; }
+        .active-section { display: block; }
+        select:disabled { background-color: #e5e7eb; cursor: not-allowed; opacity: 0.6; }
+
+        .custom-file-upload { display: inline-block; padding: 12px 24px; cursor: pointer; background: #fff; border: 2px dashed #d1d5db; border-radius: 12px; transition: all 0.3s; width: 100%; text-align: center; color: #4b5563; font-weight: bold; }
+        .custom-file-upload:hover { border-color: #1d4ed8; color: #1d4ed8; background: #eff6ff; }
+
+        input[type=range] { width: 100%; cursor: pointer; }
+        
+        .preset-btn { width: 100%; padding: 8px; border-radius: 8px; border: 2px solid #e5e7eb; background: white; transition: 0.2s; font-size: 0.9rem; }
+        .preset-btn:hover { background: #eff6ff; border-color: #93c5fd; }
+        .preset-btn.active { border-color: #1d4ed8; background: #eff6ff; color: #1d4ed8; font-weight: bold; box-shadow: 0 0 0 2px #bfdbfe; }
+
+        @media print {
+            body { background: white; margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            #output-container { display: block !important; width: 100%; margin: 0; padding: 0; }
+            
+            .bingo-card { 
+                box-shadow: none; 
+                border: 2px solid black !important; 
+                margin: 0 auto; 
+                page-break-inside: avoid; 
+                break-inside: avoid; 
+                cursor: default;
+                overflow: hidden !important; 
+                border-radius: 12px !important;
+                clip-path: inset(0px round 12px); 
+                -webkit-clip-path: inset(0px round 12px);
+            }
+            
+            .print-1 .bingo-card { max-width: 80%; margin-top: 50px; page-break-after: always; }
+            
+            .print-4 #output-container { 
+                display: grid !important; 
+                grid-template-columns: 1fr 1fr !important; 
+                grid-template-rows: auto auto !important;
+                gap: 10mm; 
+                margin-top: 10px;
+            }
+            .print-4 .bingo-card { 
+                max-width: 95%; 
+                font-size: 0.8em; 
+                page-break-after: auto; 
+                margin: 0 !important;
+            }
+            .print-4 .bingo-card:nth-child(4n) { page-break-after: always; }
+
+            .print-2 .bingo-card { max-width: 70%; margin-bottom: 30px; margin-top: 20px; page-break-after: auto; }
+            .print-2 .bingo-card:nth-of-type(2n) { page-break-after: always; }
+            
+            .card-bg-image, .card-logo { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .has-bg .bingo-table td { background-color: rgba(255,255,255, 0.6) !important; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+
+    <!-- SEO Meta (added for Google/AdSense readiness) -->
+    <meta name="description" content="Create free printable bingo cards in seconds. Generate custom number or word bingo boards (3x3, 4x4, 5x5), customize headers, and print or save as PDF. Perfect for classrooms, parties, and corporate events.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+    <link rel="canonical" href="https://havivon.github.io/Havivons-apps/web/printmybingo/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Print My Bingo">
+    <meta property="og:title" content="Print My Bingo – Free Bingo Card Generator (PDF)">
+    <meta property="og:description" content="Generate custom bingo cards (numbers or words), download as PDF, and print instantly.">
+    <meta property="og:url" content="https://havivon.github.io/Havivons-apps/web/printmybingo/">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Print My Bingo – Free Bingo Card Generator">
+    <meta name="twitter:description" content="Create custom bingo cards and print/save as PDF in seconds.">
+
+    <!-- Hreflang -->
+    <link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/" hreflang="x-default">
+    <link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/" hreflang="en">
+    <link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/" hreflang="he">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Print My Bingo",
+      "url": "https://havivon.github.io/Havivons-apps/web/printmybingo/",
+      "inLanguage": [
+        "en",
+        "he"
+      ]
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Print My Bingo",
+      "url": "https://havivon.github.io/Havivons-apps/web/printmybingo/",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "All",
+      "description": "Free online tool to generate printable bingo cards (numbers or words), customize design, and export to PDF for printing.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "Print My Bingo",
+      "url": "https://havivon.github.io/Havivons-apps/web/printmybingo/",
+      "email": "havivontm@gmail.com"
+    }
+  ]
+}
+</script>
+
+</head>
+<body>
+
+    <nav class="bg-white shadow-sm no-print mb-4 sticky top-0 z-50">
+        <div class="nav-container max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+            <div class="nav-links">
+                <button onclick="showSection('main')" id="nav-main" class="nav-link active" data-i18n="navHome">בית</button>
+                <button onclick="showSection('guide')" id="nav-guide" class="nav-link" data-i18n="navGuide">מדריך</button>
+                <button onclick="showSection('history')" id="nav-history" class="nav-link" data-i18n="navHistory">היסטוריה</button>
+                <button onclick="showSection('about')" id="nav-about" class="nav-link" data-i18n="navAbout">אודות</button>
+                <button onclick="showSection('contact')" id="nav-contact" class="nav-link" data-i18n="navContact">צור קשר</button>
+            </div>
+            <button id="lang-button" onclick="toggleLanguage()" class="text-sm px-4 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition ml-2">English</button>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto p-4 pb-20">
+        <div class="text-center mb-8 no-print">
+            <h1 class="text-5xl md:text-6xl font-bold logo-text py-2">Print My Bingo</h1>
+            <p class="text-gray-500 text-sm md:text-base mt-2" data-i18n="tagline">הדרך הקלה ליצירת כרטיסי בינגו להדפסה</p>
+        </div>
+
+        <div id="section-main" class="page-section active-section">
+            <div class="text-center mb-6 no-print">
+                 <h2 class="text-lg font-medium text-blue-900" data-i18n="instructionHeader">בחר הגדרות ולחץ על "צור כרטיסי בינגו" כדי להתחיל.</h2>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl mb-10 no-print max-w-4xl mx-auto">
+                
+                <div class="mb-6 border-b pb-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="gameModeLabel">סוג משחק</label>
+                    <div class="flex gap-4">
+                        <button id="mode-numbers" onclick="setGameMode('numbers')" class="flex-1 py-3 px-4 rounded-xl border-2 border-blue-600 bg-blue-50 text-blue-700 text-lg font-bold transition"><span data-i18n="modeNumbers">מספרים</span></button>
+                        <button id="mode-words" onclick="setGameMode('words')" class="flex-1 py-3 px-4 rounded-xl border-2 border-gray-200 text-gray-600 text-lg font-bold hover:bg-gray-50 transition"><span data-i18n="modeWords">מילים</span></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="boardSizeLabel">גודל הטבלה</label>
+                        <select id="boardSize" onchange="handleBoardSizeChange(); saveSettings(); autoUpdate()" class="w-full p-3 border rounded-xl bg-gray-50">
+                            <option value="5">5x5</option>
+                            <option value="4">4x4</option>
+                            <option value="3">3x3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="emptyCardsLabel">כרטיסיות ריקות</label>
+                        <select id="emptyCardsOption" onchange="toggleMaxNumberInput(); saveSettings(); autoUpdate()" class="w-full p-3 border rounded-xl bg-gray-50">
+                            <option value="no" data-i18n="no">לא</option>
+                            <option value="yes" data-i18n="yes">כן</option>
+                        </select>
+                    </div>
+                    
+                    <div id="numbers-input-group">
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="maxNumberLabel">טווח מספרים (1-90)</label>
+                        <input type="number" id="maxNumberInput" value="90" min="25" max="90" onchange="saveSettings(); autoUpdate()" class="w-full p-3 border rounded-xl bg-gray-50">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="centerOptionLabel">משבצת מרכזית</label>
+                        <select id="centerOption" onchange="saveSettings(); autoUpdate()" class="w-full p-3 border rounded-xl bg-gray-50">
+                            <option value="free">FREE</option>
+                            <option value="number" data-i18n="centerOptionNumber">רגיל</option>
+                            <option value="blank" data-i18n="centerOptionBlank">ריק</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="totalCardsLabel">סה"כ כרטיסים</label>
+                        <input type="number" id="totalCards" value="10" min="1" max="150" onchange="saveSettings(); autoUpdate()" class="w-full p-3 border rounded-xl bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="cardsPerPageLabel">כרטיסים בעמוד</label>
+                        <select id="cardsPerPage" onchange="updatePrintLayoutLive(); saveSettings()" class="w-full p-3 border rounded-xl bg-gray-50">
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="words-input-group" class="hidden mt-6">
+                    <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="wordListLabel">רשימת מילים (הפרד בפסיק או שורה חדשה)</label>
+                    <textarea id="wordListInput" oninput="saveSettings(); autoUpdate()" rows="4" class="w-full p-3 border rounded-xl bg-gray-50 placeholder-gray-400" placeholder="כלב, חתול, פיל, ג'ירפה..."></textarea>
+                    <p class="text-xs text-gray-500 mt-1" data-i18n="wordCountTip">יש להזין לפחות 25 מילים עבור לוח 5x5.</p>
+                </div>
+
+                <div class="mt-8">
+                    <label class="block text-sm font-bold text-gray-700 mb-4" data-i18n="columnTitlesLabel">עריכת כותרות עמודות</label>
+                    <div id="columnInputsContainer" class="grid grid-cols-5 gap-4" style="direction: ltr;"></div>
+                </div>
+
+                <div class="mt-8 flex flex-col md:flex-row gap-6 items-end">
+                    <div class="w-full md:w-1/2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="headerColorLabel">צבע כותרת</label>
+                        <input type="color" id="headerColor" value="#1d4ed8" oninput="updateHeaderColor(); saveSettings()" class="w-full h-12 p-1 border rounded-xl cursor-pointer">
+                    </div>
+                    
+                    <div class="w-full md:w-1/2">
+                        <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="headerOpacityLabel">שקיפות כותרת</label>
+                        <input type="range" id="headerOpacity" min="0" max="1" step="0.1" value="1" oninput="updateHeaderColor(); saveSettings()" class="w-full h-10">
+                    </div>
+                </div>
+
+                <div class="mt-8 border-t pt-6" id="bg-section-trigger">
+                    <button onclick="toggleBgSection()" class="flex items-center text-blue-600 font-bold hover:text-blue-800 transition">
+                        <span class="text-xl mr-2">🖼️</span>
+                        <span data-i18n="addBgImageBtn">הוסף תמונת רקע / לוגו</span>
+                    </button>
+
+                    <div id="bg-settings-wrapper" class="hidden mt-6 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="chooseTheme">ערכות נושא מוכנות</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <button id="preset-birthday" onclick="setBgPreset('birthday')" class="preset-btn">🎂 <span data-i18n="themeBirthday">יום הולדת</span></button>
+                                <button id="preset-summer" onclick="setBgPreset('summer')" class="preset-btn">☀️ <span data-i18n="themeSummer">קיץ</span></button>
+                                <button id="preset-baby" onclick="setBgPreset('baby')" class="preset-btn">👶 <span data-i18n="themeBaby">לידה</span></button>
+                                <button id="preset-party" onclick="setBgPreset('party')" class="preset-btn">🎈 <span data-i18n="themeParty">מסיבה</span></button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 mt-6">
+                            <div>
+                                <label class="custom-file-upload">
+                                    <input type="file" id="imageInputFile" accept="image/*" onchange="handleImageUpload(event)" style="display:none;">
+                                    <span id="file-name-display" data-i18n="uploadLabel">או העלה תמונה מהמכשיר</span>
+                                </label>
+                            </div>
+                            <div>
+                                <button onclick="removeBgImage()" class="w-full py-3 px-4 bg-red-100 text-red-700 font-bold rounded-xl hover:bg-red-200 transition border border-red-200" data-i18n="removeBgImageBtn">
+                                    הסר תמונת רקע 🗑️
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end mb-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1" data-i18n="zoomLabel">זום</label>
+                                <input type="range" id="bgZoom" min="0.5" max="3" step="0.1" value="1" oninput="updateAllBackgroundsLive()" class="w-full">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1" data-i18n="opacityLabel">שקיפות תמונה</label>
+                                <input type="range" id="bgOpacity" min="0.1" max="1" step="0.1" value="0.5" oninput="updateAllBackgroundsLive()" class="w-full">
+                            </div>
+                        </div>
+                        <p class="mt-4 text-xs text-blue-500 font-medium text-center italic mb-6" data-i18n="dragTip">💡 טיפ: ניתן להזיז ולמרכז את התמונה על ידי גרירה ישירות על גבי כרטיסי הבינגו למטה.</p>
+
+                        <div class="border-t pt-6">
+                            <label class="block text-sm font-bold text-gray-700 mb-2" data-i18n="addLogoLabel">הוסף לוגו</label>
+                            <div class="flex gap-3 items-center">
+                                <label class="w-40 flex-none flex items-center justify-center h-10 px-3 transition bg-white border-2 border-gray-300 border-dashed rounded-xl appearance-none cursor-pointer hover:border-blue-400 focus:outline-none">
+                                    <span class="flex items-center space-x-2 w-full justify-center overflow-hidden">
+                                        <span class="font-medium text-gray-600 text-xs truncate" id="logo-file-name" data-i18n="chooseLogo">בחר קובץ לוגו...</span>
+                                    </span>
+                                    <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                                </label>
+                                
+                                <select id="logoPosition" onchange="updateLogoPosition()" class="h-10 border border-gray-300 rounded-xl px-2 bg-gray-50 text-sm font-medium text-gray-700">
+                                    <option value="left" data-i18n="alignLeft">שמאל</option>
+                                    <option value="right" data-i18n="alignRight">ימין</option>
+                                </select>
+
+                                <button id="remove-logo-btn" onclick="removeLogo()" class="hidden bg-red-100 text-red-600 w-10 h-10 rounded-xl hover:bg-red-200 transition font-bold text-sm flex items-center justify-center">X</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-4 mt-10">
+                    <button onclick="forceGenerate()" class="flex-1 bg-green-600 text-white py-4 rounded-xl font-bold text-xl hover:bg-green-700 shadow-lg transition" data-i18n="generateButton">צור כרטיסי בינגו</button>
+                    <button onclick="resetSettings(true)" class="bg-gray-400 text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-500" data-i18n="resetButton">איפוס מלא</button>
+                </div>
+            </div>
+
+            <div id="print-controls" class="hidden no-print text-center mb-10 pt-16">
+                <button onclick="window.print()" class="bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-blue-700" data-i18n="printButton">Print / Save as PDF</button>
+            </div>
+            
+            <div id="output-container" onmousedown="startDrag(event)" ontouchstart="startDrag(event)"></div>
+
+            <div id="content-adsense" class="no-print mt-12 space-y-8">
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4" data-i18n="usesTitle">למה כדאי להשתמש בבינגו בפעילות הבאה שלכם?</h2>
+                    <div class="text-gray-600 text-sm md:text-base space-y-4 leading-relaxed" data-i18n="usesContent"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section-guide" class="page-section bg-white p-6 md:p-10 rounded-2xl shadow-lg max-w-4xl mx-auto mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-blue-800" data-i18n="seoTitle">מדריך: איך ליצור ולהדפיס משחק בינגו בקלות?</h2>
+            <div id="seo-content-area" class="text-gray-700 leading-relaxed space-y-4"></div>
+        </div>
+
+        <div id="section-history" class="page-section bg-white p-6 md:p-10 rounded-2xl shadow-lg max-w-4xl mx-auto mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-blue-800" data-i18n="historyTitle">ההיסטוריה של הבינגו</h2>
+            <div id="history-content-area" class="text-gray-700 leading-relaxed space-y-4"></div>
+        </div>
+
+        <div id="section-about" class="page-section bg-white p-6 md:p-10 rounded-2xl shadow-lg max-w-4xl mx-auto mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-blue-800" data-i18n="aboutTitle">אודות</h2>
+            <div id="about-content-area" class="text-gray-700 leading-loose space-y-6"></div>
+        </div>
+
+        <div id="section-terms" class="page-section bg-white p-6 md:p-10 rounded-2xl shadow-lg max-w-4xl mx-auto mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-blue-800" data-i18n="termsTitle">תנאי שימוש</h2>
+            <div id="terms-content-area" class="text-gray-700 leading-loose space-y-6"></div>
+        </div>
+
+        <div id="section-contact" class="page-section bg-white p-6 md:p-10 rounded-2xl shadow-lg text-center max-w-4xl mx-auto mt-10">
+            <h2 class="text-3xl font-bold mb-6 text-blue-800" data-i18n="contactTitle">צור קשר</h2>
+            <div id="contact-content-area" class="text-gray-700 space-y-4"></div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t py-8 no-print text-center mt-auto">
+        <div class="flex flex-col items-center gap-2">
+            <button onclick="showSection('terms')" class="text-gray-500 hover:text-blue-600 text-sm underline cursor-pointer" data-i18n="navTerms">תנאי שימוש</button>
+            <p class="text-gray-400 text-sm">created by havivon © 2024</p>
+        </div>
+    
+            <div class="mt-3 text-center text-sm">
+              <a class="text-blue-600 underline mx-2" href="./blog.html">Blog</a>
+              <a class="text-blue-600 underline mx-2" href="./privacy.html">Privacy</a>
+              <a class="text-blue-600 underline mx-2" href="./terms.html">Terms</a>
+              <a class="text-blue-600 underline mx-2" href="./about.html">About</a>
+            </div>
+    </footer>
+
+    <script>
+        const TRANSLATIONS = {
+            he: {
+                tagline: 'הדרך הקלה ליצירת כרטיסי בינגו להדפסה',
+                instructionHeader: 'בחר הגדרות ולחץ על "צור כרטיסי בינגו" כדי להתחיל.',
+                navHome: 'בית', navAbout: 'אודות', navGuide: 'מדריך', navHistory: 'היסטוריה', navTerms: 'תנאי שימוש', navContact: 'צור קשר',
+                boardSizeLabel: 'גודל הטבלה', emptyCardsLabel: 'כרטיסיות ריקות', no: 'לא', yes: 'כן',
+                maxNumberLabel: 'טווח מספרים (1-90)', centerOptionLabel: 'משבצת מרכזית',
+                centerOptionNumber: 'רגיל', centerOptionBlank: 'ריק', totalCardsLabel: 'סה"כ כרטיסים',
+                cardsPerPageLabel: 'כרטיסים בעמוד', 
+                headerColorLabel: 'צבע כותרת', headerOpacityLabel: 'שקיפות כותרת',
+                columnTitlesLabel: 'עריכת כותרות עמודות', generateButton: 'צור כרטיסי בינגו',
+                resetButton: 'איפוס מלא', printButton: 'Print / Save as PDF',
+                addBgImageBtn: 'הוסף תמונת רקע / לוגו',
+                uploadLabel: 'או העלה תמונה מהמכשיר',
+                removeBgImageBtn: 'הסר תמונת רקע 🗑️',
+                zoomLabel: 'זום',
+                opacityLabel: 'שקיפות תמונה',
+                dragTip: '💡 טיפ: ניתן להזיז ולמרכז את התמונה על ידי גרירה ישירות על גבי כרטיסי הבינגו למטה.',
+                gameModeLabel: 'סוג משחק', modeNumbers: 'מספרים', modeWords: 'מילים',
+                wordListLabel: 'רשימת מילים (הפרד בפסיק או שורה חדשה)', wordCountTip: 'יש להזין מספיק מילים כדי למלא את הלוח.',
+                addLogoLabel: 'הוסף לוגו', chooseLogo: 'בחר קובץ לוגו...',
+                alignLeft: 'שמאל', alignRight: 'ימין',
+                chooseTheme: 'ערכות נושא מוכנות', themeBirthday: 'יום הולדת', themeSummer: 'קיץ', themeBaby: 'לידה', themeParty: 'מסיבה',
+                
+                usesTitle: 'למה כדאי להשתמש בבינגו בפעילות הבאה שלכם?',
+                usesContent: `<p>בינגו הוא כלי חינוכי וחברתי רב-עוצמה. בין אם מדובר בשיעור בכיתה, אירוע חברה או מסיבת יום הולדת, המשחק מעודד ריכוז, זיהוי תבניות ואינטראקציה חברתית. האתר שלנו מאפשר לכם לייצר לוחות בינגו מותאמים אישית (Custom Bingo) בקלות ובמהירות, ללא צורך בהורדת תוכנה.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-4">
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-blue-900 mb-2">🎓 בינגו למורים וגננות</h3>
+                            <p>השתמשו במצב "מילים" כדי לחזק אוצר מילים בשפה חדשה, ללמוד מושגים במדעים או לתרגל לוח הכפל במצב מספרים. לוחות הבינגו שלנו מיועדים להדפסה חסכונית וברורה.</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-orange-900 mb-2">🎉 בינגו לאירועים חברתיים</h3>
+                            <p>צרו משחק "בינגו אנושי" להכרות בערבי צוות, או בינגו תמונות למסיבות יום הולדת. האפשרות להוסיף לוגו ורקע מאפשרת לכם לשמור על מיתוג האירוע שלכם.</p>
+                        </div>
+                    </div>`,
+
+                seoTitle: 'מדריך: איך ליצור ולהדפיס משחק בינגו בקלות?',
+                seoContent: `<p>משחק הבינגו הוא אחד המשחקים הקלאסיים והאהובים ביותר בעולם, המתאים לכל גיל - מילדים בגן ועד למבוגרים באירועי חברה. הכלי החינמי שלנו, PrintMyBingo, פותח במטרה לאפשר לכם ליצור כרטיסיות משחק מעוצבות ומותאמות אישית תוך שניות, ללא צורך בידע טכני או בהורדת תוכנה.</p>
+                             <h3 class="font-bold text-lg mt-4 text-gray-800">למה להשתמש במחולל הבינגו שלנו?</h3>
+                             <p>בעוד שניתן לקנות משחקי בינגו מוכנים בחנויות, יצירת משחק מותאם אישית משדרגת את החוויה. המערכת שלנו מאפשרת שליטה מלאה על מאפייני המשחק: בחירת גודל הלוח (3x3 לקטנטנים, 4x4 לבינוניים ו-5x5 למשחק המקצועי), הגדרת טווח המספרים בהתאם לרמת הקושי, ואפילו שינוי הכותרות בראש הטבלה לשמות הילדים, נושאי השיעור או כל מילה אחרת.</p>
+                             <h3 class="font-bold text-lg mt-4 text-gray-800">שלבים ליצירת המשחק:</h3>
+                             <ul class="list-disc list-inside space-y-1">
+                                <li>בחרו את גודל הלוח הרצוי (לדוגמה 5x5).</li>
+                                <li>הגדירו את כמות הכרטיסים שתרצו להפיק (המערכת דואגת שכל כרטיס יהיה ייחודי).</li>
+                                <li>לחצו על "צור כרטיסי בינגו" וצפו בתוצאה המיידית.</li>
+                                <li>הדפיסו את הלוחות ישירות מהדפדפן או שמרו כקובץ PDF לשליחה.</li>
+                             </ul>
+                             <p class="mt-4">האתר שלנו מותאם במיוחד למורים, גננות, הורים ומפיקי אירועים המחפשים פתרון מהיר, אסתטי וחינמי לפעילות חברתית מגבשת. אנחנו דואגים שהעיצוב יהיה נקי ונוח להדפסה ביתית חסכונית בדיו.</p>`,
+                
+                historyTitle: 'תולדות הבינגו: מאיטליה ועד העולם',
+                historyContent: `<p>רבים חושבים שהבינגו הוא משחק מודרני, אך שורשיו מגיעים הרחק אל איטליה של המאה ה-16. המשחק החל בשנת 1530 כהגרלה לאומית בשם "Lo Giuoco del Lotto d'Italia", שמתקיימת באיטליה עד היום בכל יום שבת.</p>
+                                 <p>במאה ה-18 המשחק הגיע לצרפת ("Le Lotto"), שם הוא אומץ בעיקר על ידי האליטה החברתית. הגרסה הצרפתית קבעה את המבנה המוכר לנו כיום: כרטיס עם שלוש שורות ותשע עמודות.</p>
+                                 <h3 class="font-bold text-lg mt-4 text-gray-800">איך קיבל הבינגו את שמו?</h3>
+                                 <p>בשנות ה-20 של המאה הקודמת, המשחק הגיע לארצות הברית תחת השם "Beano", מכיוון שהשחקנים השתמשו בשעועית (Beans) כדי לסמן את המספרים. האגדה מספרת שאיש העסקים אדווין לאו (Edwin Lowe) שמע בטעות שחקן נרגש צועק "בינגו!" במקום "בינו!" לאחר שזכה. לאו זיהה את הפוטנציאל, שכר פרופסור למתמטיקה כדי ליצור אלפי שילובים שונים של כרטיסים, והפך את הבינגו ללהיט עולמי שמשוחק עד היום בכנסיות, בתי ספר ומרכזים קהילתיים.</p>`,
+
+                aboutTitle: 'אודות PrintMyBingo',
+                aboutContent: `<p><strong>Print My Bingo</strong> הוא מחולל בינגו קליל ומהיר, בלי הרשמה ובלי התקנות — כדי שתוכל/י ליצור כרטיסי בינגו להדפסה תוך דקות.</p>
+<h3 class="mt-4 font-bold">מה אפשר לעשות כאן</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>ליצור <strong>בינגו מספרים</strong> (קלאסי לערבי קהילה, בתי ספר והתרמות).</li>
+  <li>ליצור <strong>בינגו מילים</strong> לפעילויות בכיתה, לימוד שפה, טריוויה או מסיבות.</li>
+  <li>לבחור גודל לוח (3×3 / 4×4 / 5×5), אופציונלית משבצת FREE במרכז, ולהדפיס או לשמור כ־PDF.</li>
+</ul>
+<h3 class="mt-4 font-bold">למי זה מתאים?</h3>
+<p>למורים, הורים, מפיקי אירועים וצוותים שמחפשים ״בינגו אנושי״ לאייסברייקר. שמרנו את המחולל פשוט כדי להגיע מהר לתוצאה.</p>
+<h3 class="mt-4 font-bold">יצירת קשר</h3>
+<p>לשאלות, בקשות פיצ׳רים או פניות פרסום: <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a>.</p>
+<p class="text-sm text-gray-500 mt-4">עודכן לאחרונה: 2026-02-05</p>`,
+                termsTitle: 'תנאי שימוש',
+                termsContent: `<p>תנאי שימוש אלו מסדירים את השימוש שלך ב־<strong>Print My Bingo</strong>. שימוש באתר מהווה הסכמה לתנאים.</p>
+<h3 class="mt-4 font-bold">1) השירות</h3>
+<p>האתר מספק מחולל בינגו חינמי בדפדפן (מספרים ומילים) עם אפשרות הדפסה או שמירה כ־PDF דרך הדפדפן.</p>
+<h3 class="mt-4 font-bold">2) שימוש מותר</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>אין להשתמש באתר למטרות בלתי חוקיות.</li>
+  <li>אין לנסות לשבש, להעמיס או לבצע הנדסה לאחור.</li>
+  <li>את/ה אחראי/ת לתוכן שמוזן (למשל רשימות מילים) ולאופן השימוש בכרטיסים שנוצרו.</li>
+</ul>
+<h3 class="mt-4 font-bold">3) כתב ויתור</h3>
+<p>השירות ניתן “כפי שהוא” ללא אחריות. איננו אחראים לנזקים שייגרמו כתוצאה מהשימוש באתר.</p>
+<h3 class="mt-4 font-bold">4) שינויים</h3>
+<p>ייתכן שנעדכן את התנאים מעת לעת.</p>
+<p class="text-sm text-gray-500 mt-4">עודכן לאחרונה: 2026-02-05</p>`,
+                contactTitle: 'נשמח לשמוע מכם',
+                contactContent: `<p>אפשר ליצור איתנו קשר במייל לתמיכה, בקשות פיצ׳רים או פניות עסקיות.</p>
+<ul class="list-disc list-inside space-y-2 mt-3">
+  <li><strong>אימייל:</strong> <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a></li>
+  <li><strong>זמן מענה משוער:</strong> 1–3 ימי עסקים</li>
+</ul>
+<p class="text-sm text-gray-500 mt-4">עודכן לאחרונה: 2026-02-05</p>`
+            },
+            en: {
+                tagline: 'The easiest way to create printable bingo cards',
+                instructionHeader: 'Select settings and click "Generate Bingo Cards" to start.',
+                navHome: 'Home', navAbout: 'About', navGuide: 'Guide', navHistory: 'History', navTerms: 'Terms', navContact: 'Contact',
+                boardSizeLabel: 'Board Size', emptyCardsLabel: 'Empty Cards', no: 'No', yes: 'Yes',
+                maxNumberLabel: 'Number Range (1-90)', centerOptionLabel: 'Center Cell',
+                centerOptionNumber: 'Standard', centerOptionBlank: 'Blank', totalCardsLabel: 'Total Cards',
+                cardsPerPageLabel: 'Cards Per Page', 
+                headerColorLabel: 'Header Color', headerOpacityLabel: 'Header Opacity',
+                columnTitlesLabel: 'Edit Column Titles', generateButton: 'Generate Bingo Cards',
+                resetButton: 'Full Reset', printButton: 'Print / Save as PDF',
+                addBgImageBtn: 'Add Background / Logo',
+                uploadLabel: 'Or Upload Image',
+                removeBgImageBtn: 'Remove Background 🗑️',
+                zoomLabel: 'Zoom',
+                opacityLabel: 'Image Opacity',
+                dragTip: '💡 Tip: You can move and center the image by dragging it directly on the generated bingo cards below.',
+                gameModeLabel: 'Game Type', modeNumbers: 'Numbers', modeWords: 'Words',
+                wordListLabel: 'Word List (Comma or new line separated)', wordCountTip: 'Please enter enough words to fill the board.',
+                addLogoLabel: 'Add Logo', chooseLogo: 'Select Logo...',
+                alignLeft: 'Left', alignRight: 'Right',
+                chooseTheme: 'Theme Presets', themeBirthday: 'Birthday', themeSummer: 'Summer', themeBaby: 'Baby/Birth', themeParty: 'Party',
+
+                usesTitle: 'Why use Bingo for your next activity?',
+                usesContent: `<p>Bingo is a powerful social and educational tool. Whether in the classroom, a corporate event, or a birthday party, the game encourages focus, pattern recognition, and social interaction. Our site allows you to create custom bingo cards easily and quickly.</p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-4">
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-blue-900 mb-2">🎓 Bingo for Teachers</h3>
+                            <p>Use "Word Mode" to reinforce vocabulary in a new language, learn science concepts, or practice multiplication tables in number mode.</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-xl">
+                            <h3 class="font-bold text-orange-900 mb-2">🎉 Bingo for Events</h3>
+                            <p>Create "Human Bingo" for team icebreakers or picture bingo for birthday parties. Add a logo and background to brand your event.</p>
+                        </div>
+                    </div>`,
+
+                seoTitle: 'Guide: How to Create and Print a Bingo Game Easily?',
+                seoContent: `
+                    <p>Bingo is one of the most classic and beloved games in the world, suitable for all ages. Our free tool, PrintMyBingo, allows you to create custom game cards in seconds.</p>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">Word Bingo or Numbers?</h3>
+                    <ul class="list-disc list-inside space-y-1 mb-4">
+                        <li><strong>Classic Numbers:</strong> Great for math practice or traditional fun.</li>
+                        <li><strong>Word Bingo (New!):</strong> Perfect for teachers! Input a list of vocabulary words, student names, or holiday terms.</li>
+                    </ul>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">Steps to Create:</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Choose Game Mode (Numbers/Words).</li>
+                        <li>Select Board Size (e.g., 5x5).</li>
+                        <li>Set Number of Cards.</li>
+                        <li>Add a custom Title, Logo, or Background.</li>
+                        <li>Click "Generate" and Print!</li>
+                    </ul>`,
+                
+                historyTitle: 'The History of Bingo',
+                historyContent: `
+                    <p>Many believe Bingo is a modern game, but its roots trace back to Italy in the 16th century. The game began in 1530 as a national lottery called "Lo Giuoco del Lotto d'Italia", which is still played in Italy every Saturday.</p>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">Migration to France and Germany</h3>
+                    <p>In the 18th century, the game reached France ("Le Lotto"), where it was adopted mainly by the social elite. The French version established the structure we recognize today: a card with three rows and nine columns. In 19th-century Germany, the game was used as an educational tool to teach children multiplication tables, spelling, and history.</p>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">From Beano to Bingo</h3>
+                    <p>In the 1920s, the game reached North America under the name "Beano", because players used dried beans to mark the numbers. The legend says that businessman Edwin Lowe heard an excited player yell "Bingo!" instead of "Beano!" by mistake after winning. Lowe recognized the marketing potential and turned it into the hit game we know today.</p>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">The Mathematics Behind the Game</h3>
+                    <p>Lowe hired a mathematics professor from Columbia University, Carl Leffler, to create thousands of different card combinations to reduce the chance of duplicate wins. The work was so intense that rumor has it the professor lost his mind after completing the first 6,000 cards.</p>
+                    <h3 class="font-bold text-lg mt-4 text-gray-800">Cognitive Benefits</h3>
+                    <p>Modern studies show that Bingo is not just a game of luck. For seniors, the game improves short-term memory and processing speed. For children, it enhances number and letter recognition skills, and teaches patience.</p>`,
+
+                aboutTitle: 'About PrintMyBingo',
+                aboutContent: `<p><strong>Print My Bingo</strong> is a lightweight, no-signup bingo card generator designed for one purpose: helping you create printable bingo cards fast.</p>
+<h3 class="mt-4 font-bold">What you can do here</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>Create <strong>number bingo</strong> (great for classic bingo, school events, and fundraising nights).</li>
+  <li>Create <strong>word bingo</strong> for classroom activities, language learning, trivia, or themed parties.</li>
+  <li>Choose a grid size (3×3 / 4×4 / 5×5), optionally use a FREE center, and print or save as PDF.</li>
+</ul>
+<h3 class="mt-4 font-bold">Who uses it?</h3>
+<p>Teachers, parents, event organizers, and teams that want “Human Bingo” icebreakers. The generator stays simple so you can get to printing in minutes.</p>
+<h3 class="mt-4 font-bold">Contact</h3>
+<p>If you have questions, feature requests, or advertising inquiries, email: <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a>.</p>
+<p class="text-sm text-gray-500 mt-4">Last updated: 2026-02-05</p>`,
+                
+                termsTitle: 'Terms of Use',
+                termsContent: `<p>These Terms of Use govern your use of <strong>Print My Bingo</strong>. By using the site, you agree to these terms.</p>
+<h3 class="mt-4 font-bold">1) The service</h3>
+<p>We provide a free, browser-based bingo card generator (numbers and words) that you can print or save as PDF using your browser.</p>
+<h3 class="mt-4 font-bold">2) Acceptable use</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>Do not use the site for illegal purposes.</li>
+  <li>Do not attempt to disrupt, overload, or reverse engineer the service.</li>
+  <li>You are responsible for the content you enter (e.g., word lists) and how you use generated cards.</li>
+</ul>
+<h3 class="mt-4 font-bold">3) Disclaimer</h3>
+<p>The service is provided “as is” without warranties. We are not liable for damages arising from use of the site.</p>
+<h3 class="mt-4 font-bold">4) Changes</h3>
+<p>We may update these terms from time to time.</p>
+<p class="text-sm text-gray-500 mt-4">Last updated: 2026-02-05</p>`,
+                
+                contactTitle: 'Contact Us',
+                contactContent: `<p>You can reach us by email for support, feature requests, or business inquiries.</p>
+<ul class="list-disc list-inside space-y-2 mt-3">
+  <li><strong>Email:</strong> <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a></li>
+  <li><strong>Typical response time:</strong> 1–3 business days</li>
+</ul>
+<p class="text-sm text-gray-500 mt-4">Last updated: 2026-02-05</p>`
+            }
+        };
+
+        let currentLang = (localStorage.getItem('pm_lang') || '').toLowerCase();
+        if(currentLang !== 'he' && currentLang !== 'en') {
+            currentLang = (navigator.language || '').toLowerCase().startsWith('he') ? 'he' : 'en';
+        }
+        let isCardsGenerated = false;
+        let bgState = { src: null, x: 0, y: 0, zoom: 1, opacity: 0.5, isDragging: false, lastX: 0, lastY: 0 };
+        let logoSrc = null;
+        let gameMode = 'numbers'; 
+
+        function initLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            currentLang = browserLang.startsWith('he') ? 'he' : 'en';
+            applyLanguage();
+            // Default position based on language if not set
+            const posSelect = document.getElementById('logoPosition');
+            if(posSelect) posSelect.value = currentLang === 'he' ? 'left' : 'right';
+        }
+
+        function toggleLanguage() { currentLang = currentLang === 'he' ? 'en' : 'he'; localStorage.setItem('pm_lang', currentLang); applyLanguage(); }
+
+        function applyLanguage() {
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'he' ? 'rtl' : 'ltr';
+            document.getElementById('lang-button').textContent = currentLang === 'he' ? 'English' : 'עברית';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (TRANSLATIONS[currentLang][key]) el.innerHTML = TRANSLATIONS[currentLang][key];
+            });
+            document.getElementById('seo-content-area').innerHTML = TRANSLATIONS[currentLang].seoContent;
+            document.getElementById('history-content-area').innerHTML = TRANSLATIONS[currentLang].historyContent;
+            document.getElementById('about-content-area').innerHTML = TRANSLATIONS[currentLang].aboutContent;
+            document.getElementById('terms-content-area').innerHTML = TRANSLATIONS[currentLang].termsContent;
+            document.getElementById('contact-content-area').innerHTML = TRANSLATIONS[currentLang].contactContent;
+            updateColumnInputs();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById('section-' + id).classList.add('active-section');
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            const activeLink = document.getElementById('nav-' + id);
+            if (activeLink) activeLink.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function setGameMode(mode) {
+            gameMode = mode;
+            const numsBtn = document.getElementById('mode-numbers');
+            const wordsBtn = document.getElementById('mode-words');
+            const numInput = document.getElementById('numbers-input-group');
+            const wordInput = document.getElementById('words-input-group');
+
+            if (mode === 'numbers') {
+                numsBtn.classList.replace('bg-white', 'bg-blue-50');
+                numsBtn.classList.add('border-blue-600', 'text-blue-700');
+                numsBtn.classList.remove('text-gray-600', 'border-gray-200');
+                
+                wordsBtn.classList.remove('border-blue-600', 'bg-blue-50', 'text-blue-700');
+                wordsBtn.classList.add('text-gray-600', 'border-gray-200');
+
+                numInput.classList.remove('hidden');
+                wordInput.classList.add('hidden');
+            } else {
+                wordsBtn.classList.replace('bg-white', 'bg-blue-50');
+                wordsBtn.classList.add('border-blue-600', 'text-blue-700');
+                wordsBtn.classList.remove('text-gray-600', 'border-gray-200');
+
+                numsBtn.classList.remove('border-blue-600', 'bg-blue-50', 'text-blue-700');
+                numsBtn.classList.add('text-gray-600', 'border-gray-200');
+
+                numInput.classList.add('hidden');
+                wordInput.classList.remove('hidden');
+            }
+            saveSettings();
+        }
+
+        function setBgPreset(type) {
+            const presets = {
+                'birthday': 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=800&q=80',
+                'summer': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+                'baby': 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', // Baby Theme
+                'party': 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80'
+            };
+            
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('preset-' + type).classList.add('active');
+
+            if (presets[type]) {
+                const img = new Image();
+                img.crossOrigin = "Anonymous";
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    bgState.src = canvas.toDataURL('image/jpeg');
+                    bgState.x = 0; bgState.y = 0; bgState.zoom = 1;
+                    document.getElementById('bgZoom').value = 1;
+                    if (isCardsGenerated) toggleBgImageLive();
+                };
+                img.src = presets[type];
+            }
+        }
+
+        function autoUpdate() { if (isCardsGenerated) generateAllCards(); }
+
+        function saveSettings() {
+            const settings = {
+                boardSize: document.getElementById('boardSize').value,
+                maxNum: document.getElementById('maxNumberInput').value,
+                totalCards: document.getElementById('totalCards').value,
+                centerOpt: document.getElementById('centerOption').value,
+                headerColor: document.getElementById('headerColor').value,
+                wordList: document.getElementById('wordListInput').value,
+                gameMode: gameMode,
+                colTitles: []
+            };
+            for(let i=0; i<5; i++) {
+                let el = document.getElementById(`colTitle${i}`);
+                if(el) settings.colTitles.push(el.value);
+            }
+            localStorage.setItem('bingoSettings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('bingoSettings');
+            if(saved) {
+                const s = JSON.parse(saved);
+                document.getElementById('boardSize').value = s.boardSize || 5;
+                document.getElementById('maxNumberInput').value = s.maxNum || 90;
+                document.getElementById('totalCards').value = s.totalCards || 10;
+                document.getElementById('centerOption').value = s.centerOpt || 'free';
+                document.getElementById('headerColor').value = s.headerColor || '#1d4ed8';
+                document.getElementById('wordListInput').value = s.wordList || '';
+                
+                if (s.gameMode) setGameMode(s.gameMode);
+                
+                handleBoardSizeChange(); 
+                updateHeaderColor();
+
+                if (s.colTitles && s.colTitles.length > 0) {
+                     for(let i=0; i<s.colTitles.length; i++) {
+                        let el = document.getElementById(`colTitle${i}`);
+                        if(el) el.value = s.colTitles[i];
+                    }
+                }
+            }
+        }
+
+        function handleBoardSizeChange() {
+            const size = document.getElementById('boardSize').value;
+            const centerSelect = document.getElementById('centerOption');
+            if (size === "4") { centerSelect.value = "number"; centerSelect.disabled = true; } 
+            else { centerSelect.disabled = false; }
+            updateColumnInputs();
+        }
+
+        function toggleMaxNumberInput() { document.getElementById('maxNumberInput').disabled = document.getElementById('emptyCardsOption').value === 'yes'; }
+
+        function updateColumnInputs() {
+            const size = parseInt(document.getElementById('boardSize').value);
+            const container = document.getElementById('columnInputsContainer');
+            let currentValues = [];
+            for(let i=0; i<5; i++) { let el = document.getElementById(`colTitle${i}`); if(el) currentValues.push(el.value); }
+            
+            container.innerHTML = '';
+            const defaults = size == 5 ? ['B','I','N','G','O'] : (size == 4 ? ['B','I','N','G'] : ['B','N','G']);
+            for (let i = 0; i < size; i++) {
+                let val = (currentValues[i] && i < currentValues.length) ? currentValues[i] : defaults[i];
+                container.innerHTML += `<input type="text" id="colTitle${i}" value="${val}" maxlength="8" oninput="updateColumnTitlesLive(); saveSettings()" class="w-full p-2 border rounded-lg text-center font-bold">`;
+            }
+        }
+
+        function updateColumnTitlesLive() {
+            const size = parseInt(document.getElementById('boardSize').value);
+            let titles = [];
+            for(let i=0; i<size; i++) titles.push(document.getElementById(`colTitle${i}`).value);
+            document.querySelectorAll('.bingo-table').forEach(table => {
+                table.querySelectorAll('th').forEach((th, index) => { if (titles[index] !== undefined) th.textContent = titles[index]; });
+            });
+        }
+
+        function updatePrintLayoutLive() { document.body.className = `print-${document.getElementById('cardsPerPage').value}`; }
+
+        function updateHeaderColor() {
+            const hex = document.getElementById('headerColor').value;
+            const alpha = document.getElementById('headerOpacity').value;
+            let r = parseInt(hex.slice(1,3), 16), g = parseInt(hex.slice(3,5), 16), b = parseInt(hex.slice(5,7), 16);
+            document.documentElement.style.setProperty('--header-color', `rgba(${r},${g},${b},${alpha})`);
+            document.documentElement.style.setProperty('--header-text-color', alpha < 0.5 ? '#1f2937' : 'white');
+        }
+
+        function smoothScrollTo(targetY, duration) {
+            const startY = window.pageYOffset;
+            const distance = targetY - startY;
+            let startTime = null;
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                const run = ease(timeElapsed, startY, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+            function ease(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--; return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+            requestAnimationFrame(animation);
+        }
+
+        function forceGenerate() {
+            isCardsGenerated = true;
+            const success = generateAllCards(); // Returns false if validation failed
+            
+            if (success !== false) {
+                setTimeout(() => {
+                    const bgSettings = document.getElementById('bg-settings-wrapper');
+                    const isBgOpen = !bgSettings.classList.contains('hidden');
+                    if (isBgOpen) {
+                        const target = document.getElementById('bg-section-trigger');
+                        smoothScrollTo(target.offsetTop - 20, 1200);
+                    } else {
+                        const target = document.getElementById('print-controls');
+                        smoothScrollTo(target.offsetTop - 40, 1200); 
+                    }
+                }, 150);
+            }
+        }
+
+        function toggleBgSection() { document.getElementById('bg-settings-wrapper').classList.toggle('hidden'); }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active')); // clear preset
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bgState.src = e.target.result;
+                    document.getElementById('file-name-display').innerText = file.name;
+                    bgState.x = 0; bgState.y = 0; bgState.zoom = 1; 
+                    document.getElementById('bgZoom').value = 1;
+                    if (isCardsGenerated) toggleBgImageLive();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoSrc = e.target.result;
+                    document.getElementById('logo-file-name').innerText = file.name;
+                    document.getElementById('remove-logo-btn').classList.remove('hidden');
+                    if (isCardsGenerated) generateAllCards();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeLogo() {
+            logoSrc = null;
+            document.getElementById('logoInput').value = '';
+            document.getElementById('logo-file-name').innerText = TRANSLATIONS[currentLang].chooseLogo;
+            document.getElementById('remove-logo-btn').classList.add('hidden');
+            if (isCardsGenerated) generateAllCards();
+        }
+
+        function updateLogoPosition() {
+            const pos = document.getElementById('logoPosition').value;
+            document.querySelectorAll('.card-logo').forEach(img => {
+                img.setAttribute('data-pos', pos);
+            });
+        }
+
+        function removeBgImage() {
+            bgState.src = null; bgState.x = 0; bgState.y = 0;
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('imageInputFile').value = '';
+            document.getElementById('file-name-display').innerText = TRANSLATIONS[currentLang].uploadLabel;
+            if (isCardsGenerated) toggleBgImageLive();
+        }
+
+        function toggleBgImageLive() {
+            document.querySelectorAll('.bingo-card').forEach(card => {
+                const existingImg = card.querySelector('.card-bg-image');
+                if (existingImg) existingImg.remove();
+                if (bgState.src) {
+                    card.classList.add('has-bg');
+                    const img = document.createElement('img');
+                    img.src = bgState.src;
+                    img.className = 'card-bg-image';
+                    img.style.opacity = bgState.opacity;
+                    img.style.transform = `translate(-50%, -50%) translate(${bgState.x}px, ${bgState.y}px) scale(${bgState.zoom})`;
+                    card.prepend(img);
+                } else { card.classList.remove('has-bg'); }
+            });
+        }
+
+        function updateAllBackgroundsLive() {
+            bgState.zoom = parseFloat(document.getElementById('bgZoom').value);
+            bgState.opacity = parseFloat(document.getElementById('bgOpacity').value);
+            const transformStr = `translate(-50%, -50%) translate(${bgState.x}px, ${bgState.y}px) scale(${bgState.zoom})`;
+            document.querySelectorAll('.card-bg-image').forEach(img => {
+                img.style.opacity = bgState.opacity;
+                img.style.transform = transformStr;
+            });
+        }
+
+        function startDrag(e) {
+            const card = e.target.closest('.bingo-card');
+            if (!card || !bgState.src) return;
+            e.preventDefault();
+            bgState.isDragging = true;
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+            bgState.lastX = clientX; bgState.lastY = clientY;
+            const moveHandler = (ev) => {
+                if (!bgState.isDragging) return;
+                const cX = ev.type === 'touchmove' ? ev.touches[0].clientX : ev.clientX;
+                const cY = ev.type === 'touchmove' ? ev.touches[0].clientY : ev.clientY;
+                bgState.x += (cX - bgState.lastX); bgState.y += (cY - bgState.lastY);
+                bgState.lastX = cX; bgState.lastY = cY;
+                updateAllBackgroundsLive();
+            };
+            const stopHandler = () => {
+                bgState.isDragging = false;
+                document.removeEventListener('mousemove', moveHandler); document.removeEventListener('mouseup', stopHandler);
+                document.removeEventListener('touchmove', moveHandler); document.removeEventListener('touchend', stopHandler);
+            };
+            document.addEventListener('mousemove', moveHandler); document.addEventListener('mouseup', stopHandler);
+            document.addEventListener('touchmove', moveHandler); document.addEventListener('touchend', stopHandler);
+        }
+
+        function generateAllCards() {
+            const size = parseInt(document.getElementById('boardSize').value);
+            const total = parseInt(document.getElementById('totalCards').value);
+            const centerOpt = document.getElementById('centerOption').value;
+            const isEmpty = document.getElementById('emptyCardsOption').value === 'yes';
+            const logoPos = document.getElementById('logoPosition').value;
+
+            updatePrintLayoutLive();
+            const container = document.getElementById('output-container');
+            
+            // --- Word Bingo Logic ---
+            let wordPool = [];
+            if (gameMode === 'words') {
+                const rawText = document.getElementById('wordListInput').value;
+                wordPool = rawText.split(/[,;\n]+/).map(w => w.trim()).filter(w => w.length > 0);
+                const cellsNeeded = (size * size) - (centerOpt !== 'number' && size % 2 !== 0 ? 1 : 0);
+                
+                if (!isEmpty && wordPool.length < cellsNeeded) {
+                    alert(`יש להזין לפחות ${cellsNeeded} מילים שונות עבור גודל לוח זה.`);
+                    // Scroll to input instead of bottom
+                    document.getElementById('wordListInput').scrollIntoView({behavior: 'smooth', block: 'center'});
+                    return false; // Indicate failure
+                }
+            }
+            
+            // If successful proceed to clear container and generate
+            container.innerHTML = '';
+            document.getElementById('print-controls').classList.remove('hidden');
+
+            // --- Number Bingo Logic Setup ---
+            const maxNum = parseInt(document.getElementById('maxNumberInput').value);
+            const rangePerCol = Math.floor(maxNum / size);
+
+            for (let i = 1; i <= total; i++) {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'bingo-card p-4';
+                
+                // Add BG
+                if(bgState.src) {
+                    cardDiv.classList.add('has-bg');
+                    const img = document.createElement('img');
+                    img.src = bgState.src; img.className = 'card-bg-image';
+                    img.style.opacity = bgState.opacity;
+                    img.style.transform = `translate(-50%, -50%) translate(${bgState.x}px, ${bgState.y}px) scale(${bgState.zoom})`;
+                    cardDiv.appendChild(img);
+                }
+
+                // Add Logo
+                if (logoSrc) {
+                    const logo = document.createElement('img');
+                    logo.src = logoSrc;
+                    logo.className = 'card-logo';
+                    logo.setAttribute('data-pos', logoPos);
+                    cardDiv.appendChild(logo);
+                }
+
+                let titles = [];
+                for(let t=0; t<size; t++) titles.push(document.getElementById(`colTitle${t}`).value);
+                
+                // --- Generate Matrix ---
+                let cardColumns = [];
+                
+                if (gameMode === 'numbers') {
+                    for (let c = 0; c < size; c++) {
+                        let colNums = [];
+                        if (!isEmpty) {
+                            let min = (c * rangePerCol) + 1;
+                            let max = (c === size - 1) ? maxNum : (c + 1) * rangePerCol;
+                            let pool = []; for (let n = min; n <= max; n++) pool.push(n);
+                            for (let j = 0; j < size; j++) colNums.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+                            colNums.sort((a, b) => a - b);
+                        } else { colNums = new Array(size).fill(""); }
+                        cardColumns.push(colNums);
+                    }
+                } else {
+                    // Word Mode Matrix Generation
+                    if (!isEmpty) {
+                        let currentPool = [...wordPool];
+                        // Fisher-Yates Shuffle
+                        for (let k = currentPool.length - 1; k > 0; k--) {
+                            const j = Math.floor(Math.random() * (k + 1));
+                            [currentPool[k], currentPool[j]] = [currentPool[j], currentPool[k]];
+                        }
+                        
+                        let wordIdx = 0;
+                        for (let c = 0; c < size; c++) {
+                            let colWords = [];
+                            for (let r = 0; r < size; r++) {
+                                colWords.push(currentPool[wordIdx] || "");
+                                wordIdx++;
+                            }
+                            cardColumns.push(colWords);
+                        }
+                    } else {
+                        for(let c=0; c<size; c++) cardColumns.push(new Array(size).fill(""));
+                    }
+                }
+
+                let tableHtml = `<div class="text-center font-bold mb-2 text-gray-400" style="position:relative; z-index:10;"># ${i}</div><table class="bingo-table"><thead><tr>`;
+                titles.forEach(t => tableHtml += `<th>${t}</th>`);
+                tableHtml += `</tr></thead><tbody>`;
+                const centerIdx = Math.floor(size / 2);
+                for (let r = 0; r < size; r++) {
+                    tableHtml += `<tr>`;
+                    for (let c = 0; c < size; c++) {
+                        const isCenter = (size !== 4 && r === centerIdx && c === centerIdx);
+                        let cellContent = cardColumns[c][r];
+                        
+                        if (isCenter) {
+                            if (centerOpt === 'free') cellContent = "FREE";
+                            else if (centerOpt === 'blank') cellContent = "";
+                        }
+                        
+                        tableHtml += `<td class="${isCenter && centerOpt === 'free' ? 'free-cell' : ''}">${cellContent}</td>`;
+                    }
+                    tableHtml += `</tr>`;
+                }
+                tableHtml += `</tbody></table>`;
+                const tableWrapper = document.createElement('div');
+                tableWrapper.innerHTML = tableHtml;
+                while(tableWrapper.firstChild) cardDiv.appendChild(tableWrapper.firstChild);
+                container.appendChild(cardDiv);
+            }
+            return true;
+        }
+
+        function resetSettings(full = false) { 
+            isCardsGenerated = false; bgState.src = null; logoSrc = null;
+            document.getElementById('output-container').innerHTML = '';
+            document.getElementById('print-controls').classList.add('hidden');
+            document.getElementById('bg-settings-wrapper').classList.add('hidden');
+            
+            if (full) {
+                localStorage.removeItem('bingoSettings');
+                location.reload();
+            } else {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+        
+        window.onload = function() {
+            initLanguage();
+            loadSettings();
+        };
+    </script>
+</body>
+</html>

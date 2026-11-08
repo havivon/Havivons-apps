@@ -83,12 +83,18 @@
     "printmybingo": {
       "category": "web",
       "order": 9,
-      "open": "https://www.printmybingo.com/",
       "remote": {
         "kind": "release",
         "repo": "havivon/printmybingo-site",
         "asset": ".apk",
-        "site_zip": true
+        "host": {
+          "to": "web/printmybingo",
+          "drop": ["CNAME", "ads.txt", "blog/blog"],
+          "rewrite": {"https://printmybingo.com/": "https://havivon.github.io/Havivons-apps/web/printmybingo/"},
+          "strip_tracking": true,
+          "relative_links": true,
+          "zip": "printmybingo-site.zip"
+        }
       }
     },
     "pdf": {

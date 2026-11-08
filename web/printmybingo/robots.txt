@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://havivon.github.io/Havivons-apps/web/printmybingo/sitemap.xml

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of Use | Print My Bingo</title>
+<meta name="description" content="Terms of Use for Print My Bingo.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://havivon.github.io/Havivons-apps/web/printmybingo/terms.html">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/terms.html" hreflang="x-default">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/terms.html" hreflang="en">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/terms.html" hreflang="he">
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<header class="bg-white border-b">
+  <div class="max-w-6xl mx-auto p-4 flex items-center justify-between">
+    <a href="./index.html" class="font-bold text-blue-700" data-i18n="back">← Print My Bingo</a>
+    <div class="flex items-center gap-4 text-sm">
+      <nav class="hidden sm:flex gap-4">
+        <a class="underline" href="./blog.html" data-i18n="navBlog">Blog</a>
+        <a class="underline" href="./privacy.html" data-i18n="navPrivacy">Privacy</a>
+        <a class="underline" href="./terms.html" data-i18n="navTerms">Terms</a>
+        <a class="underline" href="./about.html" data-i18n="navAbout">About</a>
+      </nav>
+      <button id="langBtn" class="px-3 py-1 border rounded-lg bg-white">עברית</button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-4">
+  <article class="bg-white border rounded-2xl p-6 md:p-10 shadow-sm">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-blue-800 mb-4" id="h1"></h1>
+    <div id="content" class="prose max-w-none prose-p:leading-relaxed prose-li:leading-relaxed prose-headings:text-gray-900"></div>
+  </article>
+</main>
+
+<footer class="text-center text-sm text-gray-500 py-10">
+  © 2026 Print My Bingo • <a class="underline" href="./sitemap.xml">Sitemap</a>
+</footer>
+
+<script>
+const T = {
+  en: {
+    title: "Terms of Use | Print My Bingo",
+    desc: "Terms of Use for Print My Bingo.",
+    h1: "Terms of Use | Print My Bingo",
+    navBlog:"Blog", navPrivacy:"Privacy", navTerms:"Terms", navAbout:"About",
+    back:"← Print My Bingo",
+    body: `<p>These Terms of Use govern your use of <strong>Print My Bingo</strong>. By using the site, you agree to these terms.</p>
+<h3 class="mt-4 font-bold">1) The service</h3>
+<p>We provide a free, browser-based bingo card generator (numbers and words) that you can print or save as PDF using your browser.</p>
+<h3 class="mt-4 font-bold">2) Acceptable use</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>Do not use the site for illegal purposes.</li>
+  <li>Do not attempt to disrupt, overload, or reverse engineer the service.</li>
+  <li>You are responsible for the content you enter (e.g., word lists) and how you use generated cards.</li>
+</ul>
+<h3 class="mt-4 font-bold">3) Disclaimer</h3>
+<p>The service is provided “as is” without warranties. We are not liable for damages arising from use of the site.</p>
+<h3 class="mt-4 font-bold">4) Changes</h3>
+<p>We may update these terms from time to time.</p>
+<p class="text-sm text-gray-500 mt-4">Last updated: 2026-02-05</p>`
+  },
+  he: {
+    title: "תנאי שימוש | Print My Bingo",
+    desc: "תנאי שימוש של Print My Bingo.",
+    h1: "תנאי שימוש | Print My Bingo",
+    navBlog:"בלוג", navPrivacy:"פרטיות", navTerms:"תנאי שימוש", navAbout:"אודות",
+    back:"← Print My Bingo",
+    body: `<p>תנאי שימוש אלו מסדירים את השימוש שלך ב־<strong>Print My Bingo</strong>. שימוש באתר מהווה הסכמה לתנאים.</p>
+<h3 class="mt-4 font-bold">1) השירות</h3>
+<p>האתר מספק מחולל בינגו חינמי בדפדפן (מספרים ומילים) עם אפשרות הדפסה או שמירה כ־PDF דרך הדפדפן.</p>
+<h3 class="mt-4 font-bold">2) שימוש מותר</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>אין להשתמש באתר למטרות בלתי חוקיות.</li>
+  <li>אין לנסות לשבש, להעמיס או לבצע הנדסה לאחור.</li>
+  <li>את/ה אחראי/ת לתוכן שמוזן (למשל רשימות מילים) ולאופן השימוש בכרטיסים שנוצרו.</li>
+</ul>
+<h3 class="mt-4 font-bold">3) כתב ויתור</h3>
+<p>השירות ניתן “כפי שהוא” ללא אחריות. איננו אחראים לנזקים שייגרמו כתוצאה מהשימוש באתר.</p>
+<h3 class="mt-4 font-bold">4) שינויים</h3>
+<p>ייתכן שנעדכן את התנאים מעת לעת.</p>
+<p class="text-sm text-gray-500 mt-4">עודכן לאחרונה: 2026-02-05</p>`
+  }
+};
+
+function getInitialLang(){
+  const saved = (localStorage.getItem('pm_lang') || '').toLowerCase();
+  if(saved === 'he' || saved === 'en') return saved;
+  return (navigator.language || '').toLowerCase().startsWith('he') ? 'he' : 'en';
+}
+
+let lang = getInitialLang();
+
+function apply(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
+  document.title = T[lang].title;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute('content', T[lang].desc);
+  document.getElementById('h1').textContent = T[lang].h1;
+  document.getElementById('content').innerHTML = T[lang].body;
+  document.getElementById('langBtn').textContent = (lang === 'he') ? 'English' : 'עברית';
+  for(const el of document.querySelectorAll('[data-i18n]')){
+    const k = el.getAttribute('data-i18n');
+    if(T[lang][k]) el.textContent = T[lang][k];
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', () => {
+  lang = (lang === 'he') ? 'en' : 'he';
+  localStorage.setItem('pm_lang', lang);
+  apply();
+});
+
+apply();
+</script>
+</body>
+</html>

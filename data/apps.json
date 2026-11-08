@@ -99,7 +99,7 @@
       "id": "printmybingo",
       "category": "web",
       "order": 9,
-      "open": "https://www.printmybingo.com/",
+      "open": "web/printmybingo/",
       "updated": "2026-10-18",
       "download": {
         "url": "https://github.com/havivon/printmybingo-site/releases/download/app-latest/PrintMyBingo.apk",
@@ -108,7 +108,8 @@
       },
       "version": null,
       "site_download": {
-        "url": "https://github.com/havivon/printmybingo-site/archive/refs/heads/main.zip",
+        "url": "downloads/printmybingo-site.zip",
+        "size": 47444,
         "type": "zip"
       }
     },

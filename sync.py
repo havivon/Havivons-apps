@@ -8,6 +8,7 @@ Reads sync-sources.json, copies the newest build into downloads/, copies hosted
 web apps into web/<id>/, and writes version / date / size into data/apps.json.
 """
 import glob
+import io
 import json
 import os
 import re
@@ -150,13 +151,65 @@ def sync_remote(app_id, src, entry):
         repo = github(api)
         entry["updated"] = repo["pushed_at"][:10]
         entry.setdefault("download", None)
-    if r.get("site_zip"):
-        # the whole site as GitHub's archive of the default branch: always the latest commit
-        branch = github(api)["default_branch"]
-        entry["site_download"] = {"url": f"https://github.com/{r['repo']}/archive/refs/heads/{branch}.zip", "type": "zip"}
+    if r.get("host"):
+        host_repo(app_id, r, entry)
     else:
         entry.pop("site_download", None)
     print(f"  {app_id}: {r['repo']} (v{entry.get('version')}, {entry.get('updated')})")
+
+
+TRACKING = [  # Google Analytics + AdSense snippets; they have no use on a copy outside the original domain
+    r'<script[^>]*googletagmanager\.com[^>]*>\s*</script>\s*',
+    r'<script>\s*window\.dataLayer[\s\S]*?</script>\s*',
+    r'<script[^>]*adsbygoogle[^>]*>\s*</script>\s*',
+    r'<ins class="adsbygoogle"[\s\S]*?</ins>\s*',
+    r'<script>\s*\(adsbygoogle[\s\S]*?</script>\s*',
+]
+
+
+def host_repo(app_id, r, entry):
+    """Copy a site repo's default branch into web/<id>/ and zip that copy for download."""
+    host = r["host"]
+    branch = github(f"https://api.github.com/repos/{r['repo']}")["default_branch"]
+    req = urllib.request.Request(f"https://github.com/{r['repo']}/archive/refs/heads/{branch}.zip", headers={"User-Agent": "havivons-apps-sync"})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        archive = zipfile.ZipFile(io.BytesIO(resp.read()))
+    dest_dir = os.path.join(ROOT, host["to"])
+    shutil.rmtree(dest_dir, ignore_errors=True)
+    for info in archive.infolist():
+        rel = info.filename.split("/", 1)[1] if "/" in info.filename else ""
+        if info.is_dir() or not rel or rel in host.get("drop", []):
+            continue
+        data = archive.read(info)
+        if os.path.splitext(rel)[1] in (".html", ".xml", ".txt", ".js", ".css"):
+            text = data.decode("utf-8")
+            for old, new in host.get("rewrite", {}).items():
+                text = text.replace(old, new)
+            if host.get("strip_tracking"):
+                for pattern in TRACKING:
+                    text = re.sub(pattern, "", text)
+            if host.get("relative_links") and rel.endswith(".html"):
+                # "/blog.html" only works at a domain root; make it relative to this file
+                prefix = "../" * rel.count("/") or "./"
+                text = re.sub(r"""((?:href|src|action)=["'])/(?=["'])""", lambda m: m.group(1) + prefix + "index.html", text)  # opened from disk, "./" is a folder listing
+                text = re.sub(r"""((?:href|src|action)=["'])/(?!/)""", lambda m: m.group(1) + prefix, text)
+            data = text.encode("utf-8")
+        out = os.path.join(dest_dir, rel)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, "wb") as f:
+            f.write(data)
+    entry["open"] = host["to"].rstrip("/") + "/"
+    if host.get("zip"):
+        # fixed timestamps, so an unchanged site gives a byte-identical zip and no commit
+        zip_path = os.path.join(ROOT, "downloads", host["zip"])
+        os.makedirs(os.path.dirname(zip_path), exist_ok=True)
+        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+            for base, _, files in sorted(os.walk(dest_dir)):
+                for name in sorted(files):
+                    path = os.path.join(base, name)
+                    z.writestr(zipfile.ZipInfo(os.path.relpath(path, dest_dir).replace(os.sep, "/"), (2000, 1, 1, 0, 0, 0)),
+                               open(path, "rb").read(), zipfile.ZIP_DEFLATED)
+        entry["site_download"] = {"url": f"downloads/{host['zip']}", "size": os.path.getsize(zip_path), "type": "zip"}
 
 
 def main(argv):

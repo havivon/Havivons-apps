@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About | Print My Bingo</title>
+<meta name="description" content="About Print My Bingo and how to use it.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://havivon.github.io/Havivons-apps/web/printmybingo/about.html">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/about.html" hreflang="x-default">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/about.html" hreflang="en">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/about.html" hreflang="he">
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<header class="bg-white border-b">
+  <div class="max-w-6xl mx-auto p-4 flex items-center justify-between">
+    <a href="./index.html" class="font-bold text-blue-700" data-i18n="back">← Print My Bingo</a>
+    <div class="flex items-center gap-4 text-sm">
+      <nav class="hidden sm:flex gap-4">
+        <a class="underline" href="./blog.html" data-i18n="navBlog">Blog</a>
+        <a class="underline" href="./privacy.html" data-i18n="navPrivacy">Privacy</a>
+        <a class="underline" href="./terms.html" data-i18n="navTerms">Terms</a>
+        <a class="underline" href="./about.html" data-i18n="navAbout">About</a>
+      </nav>
+      <button id="langBtn" class="px-3 py-1 border rounded-lg bg-white">עברית</button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-4">
+  <article class="bg-white border rounded-2xl p-6 md:p-10 shadow-sm">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-blue-800 mb-4" id="h1"></h1>
+    <div id="content" class="prose max-w-none prose-p:leading-relaxed prose-li:leading-relaxed prose-headings:text-gray-900"></div>
+  </article>
+</main>
+
+<footer class="text-center text-sm text-gray-500 py-10">
+  © 2026 Print My Bingo • <a class="underline" href="./sitemap.xml">Sitemap</a>
+</footer>
+
+<script>
+const T = {
+  en: {
+    title: "About | Print My Bingo",
+    desc: "About Print My Bingo and how to use it.",
+    h1: "About | Print My Bingo",
+    navBlog:"Blog", navPrivacy:"Privacy", navTerms:"Terms", navAbout:"About",
+    back:"← Print My Bingo",
+    body: `<p><strong>Print My Bingo</strong> is a lightweight, no-signup bingo card generator designed for one purpose: helping you create printable bingo cards fast.</p>
+<h3 class="mt-4 font-bold">What you can do here</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>Create <strong>number bingo</strong> (great for classic bingo, school events, and fundraising nights).</li>
+  <li>Create <strong>word bingo</strong> for classroom activities, language learning, trivia, or themed parties.</li>
+  <li>Choose a grid size (3×3 / 4×4 / 5×5), optionally use a FREE center, and print or save as PDF.</li>
+</ul>
+<h3 class="mt-4 font-bold">Who uses it?</h3>
+<p>Teachers, parents, event organizers, and teams that want “Human Bingo” icebreakers. The generator stays simple so you can get to printing in minutes.</p>
+<h3 class="mt-4 font-bold">Contact</h3>
+<p>If you have questions, feature requests, or advertising inquiries, email: <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a>.</p>
+<p class="text-sm text-gray-500 mt-4">Last updated: 2026-02-05</p>`
+  },
+  he: {
+    title: "אודות | Print My Bingo",
+    desc: "אודות Print My Bingo ואיך משתמשים.",
+    h1: "אודות | Print My Bingo",
+    navBlog:"בלוג", navPrivacy:"פרטיות", navTerms:"תנאי שימוש", navAbout:"אודות",
+    back:"← Print My Bingo",
+    body: `<p><strong>Print My Bingo</strong> הוא מחולל בינגו קליל ומהיר, בלי הרשמה ובלי התקנות — כדי שתוכל/י ליצור כרטיסי בינגו להדפסה תוך דקות.</p>
+<h3 class="mt-4 font-bold">מה אפשר לעשות כאן</h3>
+<ul class="list-disc list-inside space-y-2">
+  <li>ליצור <strong>בינגו מספרים</strong> (קלאסי לערבי קהילה, בתי ספר והתרמות).</li>
+  <li>ליצור <strong>בינגו מילים</strong> לפעילויות בכיתה, לימוד שפה, טריוויה או מסיבות.</li>
+  <li>לבחור גודל לוח (3×3 / 4×4 / 5×5), אופציונלית משבצת FREE במרכז, ולהדפיס או לשמור כ־PDF.</li>
+</ul>
+<h3 class="mt-4 font-bold">למי זה מתאים?</h3>
+<p>למורים, הורים, מפיקי אירועים וצוותים שמחפשים ״בינגו אנושי״ לאייסברייקר. שמרנו את המחולל פשוט כדי להגיע מהר לתוצאה.</p>
+<h3 class="mt-4 font-bold">יצירת קשר</h3>
+<p>לשאלות, בקשות פיצ׳רים או פניות פרסום: <a class="underline text-blue-700" href="mailto:havivontm@gmail.com">havivontm@gmail.com</a>.</p>
+<p class="text-sm text-gray-500 mt-4">עודכן לאחרונה: 2026-02-05</p>`
+  }
+};
+
+function getInitialLang(){
+  const saved = (localStorage.getItem('pm_lang') || '').toLowerCase();
+  if(saved === 'he' || saved === 'en') return saved;
+  return (navigator.language || '').toLowerCase().startsWith('he') ? 'he' : 'en';
+}
+
+let lang = getInitialLang();
+
+function apply(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
+  document.title = T[lang].title;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute('content', T[lang].desc);
+  document.getElementById('h1').textContent = T[lang].h1;
+  document.getElementById('content').innerHTML = T[lang].body;
+  document.getElementById('langBtn').textContent = (lang === 'he') ? 'English' : 'עברית';
+  for(const el of document.querySelectorAll('[data-i18n]')){
+    const k = el.getAttribute('data-i18n');
+    if(T[lang][k]) el.textContent = T[lang][k];
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', () => {
+  lang = (lang === 'he') ? 'en' : 'he';
+  localStorage.setItem('pm_lang', lang);
+  apply();
+});
+
+apply();
+</script>
+</body>
+</html>

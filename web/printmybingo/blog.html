@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bingo Blog | Print My Bingo</title>
+<meta name="description" content="Bingo guides and printable game ideas.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://havivon.github.io/Havivons-apps/web/printmybingo/blog.html">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/blog.html" hreflang="x-default">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/blog.html" hreflang="en">
+<link rel="alternate" href="https://havivon.github.io/Havivons-apps/web/printmybingo/blog.html" hreflang="he">
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Print My Bingo Blog",
+  "url": "https://havivon.github.io/Havivons-apps/web/printmybingo/blog.html"
+}
+</script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<header class="bg-white border-b">
+  <div class="max-w-6xl mx-auto p-4 flex items-center justify-between">
+    <a href="./index.html" class="font-bold text-blue-700" data-i18n="back">← Print My Bingo</a>
+    <div class="flex items-center gap-4 text-sm">
+      <nav class="hidden sm:flex gap-4">
+        <a class="underline" href="./blog.html" data-i18n="navBlog">Blog</a>
+        <a class="underline" href="./privacy.html" data-i18n="navPrivacy">Privacy</a>
+        <a class="underline" href="./terms.html" data-i18n="navTerms">Terms</a>
+        <a class="underline" href="./about.html" data-i18n="navAbout">About</a>
+      </nav>
+      <button id="langBtn" class="px-3 py-1 border rounded-lg bg-white">עברית</button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-4">
+  <article class="bg-white border rounded-2xl p-6 md:p-10 shadow-sm">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-blue-800 mb-4" id="h1"></h1>
+    <div id="content" class="prose max-w-none prose-p:leading-relaxed prose-li:leading-relaxed prose-headings:text-gray-900"></div>
+  </article>
+</main>
+
+<footer class="text-center text-sm text-gray-500 py-10">
+  © 2026 Print My Bingo • <a class="underline" href="./sitemap.xml">Sitemap</a>
+</footer>
+
+<script>
+const T = {
+  en: {
+    title: "Bingo Blog | Print My Bingo",
+    desc: "Bingo guides and printable game ideas.",
+    h1: "Bingo Blog | Print My Bingo",
+    navBlog:"Blog", navPrivacy:"Privacy", navTerms:"Terms", navAbout:"About",
+    back:"← Print My Bingo",
+    body: `<p>Guides and ideas for teachers, parents, and event organizers. Choose a topic below.</p><div class='grid md:grid-cols-2 gap-6 mt-6'><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/classroom-bingo.html'><h2 class='text-xl font-bold mb-2'>Classroom Bingo Activities (Teachers’ Guide)</h2><p>Teacher-friendly classroom bingo activities for vocabulary, math, science, and review games.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/fundraising-bingo-night.html'><h2 class='text-xl font-bold mb-2'>Fundraising Bingo Night: Step-by-Step Plan</h2><p>How to run a fundraising bingo night: rules, prizes, and printing unique cards.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/birthday-party-bingo.html'><h2 class='text-xl font-bold mb-2'>Birthday Party Bingo (Kids): Themes & Word Lists</h2><p>Printable birthday bingo ideas for kids: themes, word lists, and quick rules.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/human-bingo-icebreaker.html'><h2 class='text-xl font-bold mb-2'>Human Bingo Icebreaker: Best Prompts</h2><p>Human Bingo prompts for team-building, onboarding, and workshops.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/print-bingo-cards-pdf.html'><h2 class='text-xl font-bold mb-2'>How to Print Bingo Cards as PDF (High Quality)</h2><p>Printing tips for clean bingo PDFs: margins, scale, orientation, troubleshooting.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/bingo-rules-variations.html'><h2 class='text-xl font-bold mb-2'>Bingo Rules & Variations (Quick Guide)</h2><p>Classic bingo rules, patterns, speed rounds, and fairness tips.</p></a></div>`
+  },
+  he: {
+    title: "בלוג בינגו | Print My Bingo",
+    desc: "מדריכי בינגו ורעיונות להדפסה.",
+    h1: "בלוג בינגו | Print My Bingo",
+    navBlog:"בלוג", navPrivacy:"פרטיות", navTerms:"תנאי שימוש", navAbout:"אודות",
+    back:"← Print My Bingo",
+    body: `<p>מדריכים ורעיונות למורים, הורים ומפיקי אירועים. בחרו נושא:</p><div class='grid md:grid-cols-2 gap-6 mt-6'><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/classroom-bingo.html'><h2 class='text-xl font-bold mb-2'>בינגו בכיתה (מדריך למורים)</h2><p>פעילויות בינגו לכיתה: אוצר מילים, מתמטיקה, מדעים ומשחקי חזרה.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/fundraising-bingo-night.html'><h2 class='text-xl font-bold mb-2'>ערב בינגו להתרמה: תוכנית צעד-אחר-צעד</h2><p>איך להרים ערב בינגו להתרמה: חוקים, פרסים והדפסת כרטיסים ייחודיים.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/birthday-party-bingo.html'><h2 class='text-xl font-bold mb-2'>בינגו ליום הולדת: ערכות נושא ורשימות</h2><p>רעיונות לבינגו יום הולדת לילדים: ערכות נושא, רשימות מילים וחוקים מהירים.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/human-bingo-icebreaker.html'><h2 class='text-xl font-bold mb-2'>בינגו אנושי: משפטים לאייסברייקר</h2><p>משפטים לבינגו אנושי לגיבוש צוות, אונבורדינג וסדנאות.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/print-bingo-cards-pdf.html'><h2 class='text-xl font-bold mb-2'>איך להדפיס בינגו ל-PDF באיכות גבוהה</h2><p>טיפים להדפסה נקייה ל-PDF: שוליים, קנה מידה, כיוון ופתרון תקלות.</p></a><a class='block border rounded-2xl p-5 hover:shadow-sm bg-gray-50' href='./blog/bingo-rules-variations.html'><h2 class='text-xl font-bold mb-2'>חוקי בינגו ווריאציות (מדריך מהיר)</h2><p>חוקי בינגו, תבניות ניצחון, סבבים מהירים וטיפים להוגנות.</p></a></div>`
+  }
+};
+
+function getInitialLang(){
+  const saved = (localStorage.getItem('pm_lang') || '').toLowerCase();
+  if(saved === 'he' || saved === 'en') return saved;
+  return (navigator.language || '').toLowerCase().startsWith('he') ? 'he' : 'en';
+}
+
+let lang = getInitialLang();
+
+function apply(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'he') ? 'rtl' : 'ltr';
+  document.title = T[lang].title;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if(metaDesc) metaDesc.setAttribute('content', T[lang].desc);
+  document.getElementById('h1').textContent = T[lang].h1;
+  document.getElementById('content').innerHTML = T[lang].body;
+  document.getElementById('langBtn').textContent = (lang === 'he') ? 'English' : 'עברית';
+  for(const el of document.querySelectorAll('[data-i18n]')){
+    const k = el.getAttribute('data-i18n');
+    if(T[lang][k]) el.textContent = T[lang][k];
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', () => {
+  lang = (lang === 'he') ? 'en' : 'he';
+  localStorage.setItem('pm_lang', lang);
+  apply();
+});
+
+apply();
+</script>
+</body>
+</html>

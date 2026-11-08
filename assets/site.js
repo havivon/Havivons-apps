@@ -98,7 +98,7 @@ function actionButtons(app, { compact = false } = {}) {
     out.push(`<a class="btn btn-primary" href="${esc(withVersion(app.download.url, app))}" download><i data-lucide="download"></i>${label}${size}</a>`);
   }
   if (app.site_download) {
-    out.push(`<a class="btn btn-ghost" href="${esc(app.site_download.url)}" download><i data-lucide="folder-down"></i>הורדת האתר (ZIP)</a>`);
+    out.push(`<a class="btn btn-ghost" href="${esc(withVersion(app.site_download.url, app))}" download><i data-lucide="folder-down"></i>הורדת האתר (ZIP)${app.site_download.size ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.site_download.size)}</span>` : ''}</a>`);
   }
   if (app.open) {
     const cls = app.download ? 'btn btn-ghost' : 'btn btn-primary';

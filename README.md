@@ -32,6 +32,7 @@ python sync.py --push pigeon    # כולל commit + push
 
 אפליקציה חדשה: להוסיף ל-`sync-sources.json`, ל-`data/content.json` ול-`data/screens.json`, ולהריץ sync.
 `"hidden": "<סיבה>"` מוריד אפליקציה מהאתר בלי למחוק את ההגדרות שלה.
+אתר שיושב בריפו משלו (Print My Bingo): `remote.host` מעתיק את הענף הראשי ל-`web/<id>/`, מסיר Analytics ופרסומות, הופך קישורים לקישורים יחסיים ואורז ZIP להורדה.
 
 ## צילומי מסך
 
