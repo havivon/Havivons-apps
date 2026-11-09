@@ -90,8 +90,14 @@
         "asset": ".apk",
         "host": {
           "to": "web/printmybingo",
-          "drop": ["CNAME", "ads.txt", "blog/blog"],
-          "rewrite": {"https://printmybingo.com/": "https://havivon.github.io/Havivons-apps/web/printmybingo/"},
+          "drop": [
+            "CNAME",
+            "ads.txt",
+            "blog/blog"
+          ],
+          "rewrite": {
+            "https://printmybingo.com/": "https://havivon.github.io/Havivons-apps/web/printmybingo/"
+          },
           "strip_tracking": true,
           "relative_links": true
         }
@@ -171,6 +177,17 @@
       "host": {
         "from": "Architext_Pro.html",
         "to": "web/architext/index.html"
+      }
+    },
+    "zmanei-tfila": {
+      "category": "web",
+      "order": 13,
+      "repo": "havivon/zmaneitfila",
+      "open": "https://havivon.github.io/zmaneitfila/",
+      "remote": {
+        "kind": "release",
+        "repo": "havivon/zmaneitfila",
+        "asset": ".apk"
       }
     }
   }

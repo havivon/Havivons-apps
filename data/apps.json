@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-08",
+  "generated": "2026-11-09",
   "apps": [
     {
       "id": "pigeon",
@@ -143,6 +143,20 @@
         "type": "html"
       },
       "open": "web/hidon/"
+    },
+    {
+      "id": "zmanei-tfila",
+      "category": "web",
+      "order": 13,
+      "open": "https://havivon.github.io/zmaneitfila/",
+      "repo": "https://github.com/havivon/zmaneitfila",
+      "version": "1.0.24",
+      "updated": "2026-10-10",
+      "download": {
+        "url": "https://github.com/havivon/zmaneitfila/releases/download/1.0.24/zmanei-tfila-1.0.24.apk",
+        "size": 2125129,
+        "type": "apk"
+      }
     },
     {
       "id": "tamlelan",

@@ -333,5 +333,26 @@
         "caption": "סיכום השינויים בעיצוב שקיעה"
       }
     ]
+  },
+  "zmanei-tfila": {
+    "icon": "apps/zmanei-tfila/icon.png",
+    "screens": [
+      {
+        "src": "apps/zmanei-tfila/screens/01.webp",
+        "caption": "המסך הראשי: הלוח עם זמני התפילות"
+      },
+      {
+        "src": "apps/zmanei-tfila/screens/02.webp",
+        "caption": "בחירת שעה בבורר של 24 שעות"
+      },
+      {
+        "src": "apps/zmanei-tfila/screens/03.webp",
+        "caption": "עיצוב: ערכות צבע, פריסה ותמונה"
+      },
+      {
+        "src": "apps/zmanei-tfila/screens/04.webp",
+        "caption": "תצוגה מקדימה של הלוח לפני השיתוף"
+      }
+    ]
   }
 }
