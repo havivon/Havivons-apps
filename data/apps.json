@@ -1,16 +1,16 @@
 {
-  "generated": "2026-11-10",
+  "generated": "2026-11-11",
   "apps": [
     {
       "id": "pigeon",
       "category": "android",
       "order": 1,
       "repo": "https://github.com/havivon/Pigeon",
-      "version": "0.6.2",
-      "updated": "2026-11-10",
+      "version": "0.6.3",
+      "updated": "2026-11-11",
       "download": {
         "url": "downloads/pigeon.apk",
-        "size": 21314578,
+        "size": 21314582,
         "type": "apk"
       }
     },
