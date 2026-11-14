@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>חידון המשפחה הגדול</title>
-  <meta name="description" content="חידון משפחתי על פרשת השבוע לשולחן השבת — כל ילד מקבל חמש שאלות ברמה שלו. מוכן להדפסה על דפי A4.">
+  <meta name="description" content="חידון משפחתי על פרשת השבוע לשולחן השבת — כל ילד מקבל עד חמש שאלות ברמה שלו. מוכן להדפסה על דפי A4.">
   <meta name="theme-color" content="#1d2b53">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d2b53'/%3E%3Crect x='5' y='5' width='54' height='54' rx='10' fill='none' stroke='%23d9a62e' stroke-width='2'/%3E%3Crect x='19' y='28' width='8' height='24' rx='2' fill='%23f6efe0'/%3E%3Crect x='37' y='28' width='8' height='24' rx='2' fill='%23f6efe0'/%3E%3Cpath d='M23 13c4 5 4 8 0 11-4-3-4-6 0-11z' fill='%23f2b33d'/%3E%3Cpath d='M41 13c4 5 4 8 0 11-4-3-4-6 0-11z' fill='%23f2b33d'/%3E%3C/svg%3E">
 
@@ -255,7 +255,8 @@ button, select, input { font: inherit; color: inherit; }
 .text-input,
 .kid-name,
 .kid-gender,
-.kid-level {
+.kid-level,
+.kid-count {
   display: block;
   width: 100%;
   min-width: 0;
@@ -270,11 +271,11 @@ button, select, input { font: inherit; color: inherit; }
 }
 .text-input::placeholder, .kid-name::placeholder { color: #8a92a6; font-weight: 400; }
 .text-input:hover, .kid-name:hover,
-.kid-gender:hover, .kid-level:hover { border-color: var(--ink-soft); }
+.kid-gender:hover, .kid-level:hover, .kid-count:hover { border-color: var(--ink-soft); }
 .text-input:focus-visible, .kid-name:focus-visible,
-.kid-gender:focus-visible, .kid-level:focus-visible { border-color: var(--velvet); outline-offset: 1px; }
+.kid-gender:focus-visible, .kid-level:focus-visible, .kid-count:focus-visible { border-color: var(--velvet); outline-offset: 1px; }
 
-.kid-gender, .kid-level {
+.kid-gender, .kid-level, .kid-count {
   -webkit-appearance: none;
   appearance: none;
   padding-left: 2rem;
@@ -293,10 +294,10 @@ button, select, input { font: inherit; color: inherit; }
 
 .kid-row {
   display: grid;
-  grid-template-columns: minmax(8rem, 1.7fr) minmax(5.5rem, .7fr) minmax(8.5rem, 1.2fr) 2.75rem;
+  grid-template-columns: minmax(8rem, 1.7fr) minmax(5.5rem, .7fr) minmax(8.5rem, 1.2fr) minmax(4.75rem, .5fr) 2.75rem;
   grid-template-areas:
-    "name  gender level remove"
-    "error error  error error";
+    "name  gender level count remove"
+    "error error  error error error";
   align-items: end;
   gap: 0 .5rem;
   padding: .5rem .75rem .5rem .5rem;
@@ -309,6 +310,7 @@ button, select, input { font: inherit; color: inherit; }
 .kid-field-name   { grid-area: name; }
 .kid-field-gender { grid-area: gender; }
 .kid-field-level  { grid-area: level; }
+.kid-field-count  { grid-area: count; }
 .kid-label {
   display: block;
   margin-bottom: .2rem;
@@ -844,11 +846,11 @@ button, select, input { font: inherit; color: inherit; }
 /* ---------- responsive ---------- */
 @media (max-width: 640px) {
   .kid-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) 2.75rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, .45fr) 2.75rem;
     grid-template-areas:
-      "name   name  remove"
-      "gender level level"
-      "error  error error";
+      "name   name  name  remove"
+      "gender level count count"
+      "error  error error error";
     gap: .45rem .5rem;
     padding: .55rem .6rem .6rem .5rem;
   }
@@ -1094,7 +1096,7 @@ button, select, input { font: inherit; color: inherit; }
             <div id="kids-list" class="kids-list"></div>
             <div class="kids-foot">
               <button type="button" id="add-kid-btn" class="btn btn-add">+ הוספת ילד/ה</button>
-              <p class="field-hint" id="levels-hint">רמות: גן · קלים · בינוניים · מתקדמים · מומחים — מהקל לקשה. כל ילד מקבל חמש שאלות ברמה שלו.</p>
+              <p class="field-hint" id="levels-hint">רמות: גן · קלים · בינוניים · מתקדמים · מומחים — מהקל לקשה. לכל ילד בוחרים גם כמה שאלות יקבל, מאחת עד חמש (ברירת המחדל: חמש).</p>
             </div>
           </fieldset>
         </form>
@@ -1146,7 +1148,7 @@ button, select, input { font: inherit; color: inherit; }
         <rect x="104" y="80" width="44" height="12" rx="4" fill="none" stroke="var(--line-strong)" stroke-width="1.2" stroke-dasharray="3 2"/>
       </svg>
       <h2 class="empty-title">בחרו פרשה ולחצו על „צור שאלון לפרשה“</h2>
-      <p class="empty-text">כל ילד מקבל חמש שאלות ברמה שלו, מעורבבות עם השאלות של האחים. בכל עמוד מודפס יש עשר שאלות, ואפשר ליצור שאלון חדש כמה פעמים שרוצים.</p>
+      <p class="empty-text">כל ילד מקבל עד חמש שאלות ברמה שלו, מעורבבות עם השאלות של האחים. בכל עמוד מודפס יש עשר שאלות, ואפשר ליצור שאלון חדש כמה פעמים שרוצים.</p>
     </section>
 
     <div id="quiz" class="quiz"></div>
@@ -21040,7 +21042,8 @@ button, select, input { font: inherit; color: inherit; }
   };
   const NEW_KID_LEVEL = "easy"; // level preselected on a newly added kid row
   const GENDERS = ["m", "f"];
-  const PER_KID = 5;
+  const PER_KID = 5;  // most questions a kid can get, and the preselected count of a kid row
+  const MIN_PER_KID = 1;
   const PAGE_SIZE = 10;
   const MIN_KIDS = 1;
   const MAX_KIDS = 8;
@@ -21140,8 +21143,17 @@ button, select, input { font: inherit; color: inherit; }
     return levelForAge(typeof k.age === "number" || typeof k.age === "string" ? k.age : NaN);
   }
 
+  /** Questions for a kid: an integer 1–5 (number or numeric string); anything else → 5. */
+  function kidCount(k) {
+    const c = typeof k.count === "string" && k.count.trim() !== "" ? Number(k.count) : k.count;
+    return typeof c === "number" && c === Math.floor(c) && c >= MIN_PER_KID && c <= PER_KID ? c : PER_KID;
+  }
+
+  const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+
   /**
-   * Validates raw family input ({ name, kids:[{ name, gender, level }] }).
+   * Validates raw family input ({ name, kids:[{ name, gender, level, count }] }); a missing or bad
+   * count is 5 (never an error — the form offers 1–5 only).
    * Returns { ok, family, familyError, kidErrors } where family is normalised (trimmed names) and
    * kidErrors[i] is an array of { field: "name"|"level", msg } (Hebrew).
    */
@@ -21168,7 +21180,7 @@ button, select, input { font: inherit; color: inherit; }
       const gender = k.gender === "f" ? "f" : "m";
       const level = kidLevel(k);
       if (!level) errs.push({ field: "level", msg: "נא לבחור רמה" });
-      out.kids.push({ name: name, gender: gender, level: level });
+      out.kids.push({ name: name, gender: gender, level: level, count: kidCount(k) });
       kidErrors.push(errs);
     });
     let countError = null;
@@ -21228,72 +21240,97 @@ button, select, input { font: inherit; color: inherit; }
   }
 
   /**
-   * Kid order for N kids × 5 cards (array of kid indices), built from 5 "rounds" of N cards:
-   * each round holds every kid exactly once, in a fresh random order, and a round never starts with
-   * the kid that ended the previous one. So each kid's cards are spread evenly over the whole quiz
-   * (consecutive cards of a kid are at most 2N-1 apart, never bunched at the end), no two adjacent
-   * cards share a kid, and per-page counts differ by at most 1 (a page holds whole rounds plus part
-   * of one, with each kid at most once in that part).
+   * Kid order (array of kid indices) for kids with counts[k] cards each (1–5), built from 5 "rounds":
+   * a kid with 5 cards is in every round, a kid with c < 5 in c rounds spaced evenly over the five
+   * (with a random offset), and each round lists its kids in a fresh random order, never starting
+   * with the kid that ended the previous round. So every kid's cards are spread over the whole quiz
+   * in proportion to its count (never bunched at the end), and no two adjacent cards share a kid
+   * unless the counts make that unavoidable (one kid holding more than half of the cards).
    * With 1 kid the order is trivially that kid (its questions are shuffled anyway).
-   * When a page holds the tail of one round and the head of another (6+ kids), the two pieces can
-   * give one kid 3 cards on the page and another 1, so orders are re-drawn until every page is
-   * balanced (≥ 5% of draws pass even for 8 kids, so ORDER_ATTEMPTS never runs out in practice).
+   * Rounds that straddle a page can unbalance it (e.g. 6+ kids: one kid 3 cards on a page and
+   * another 1), so orders are re-drawn until validateOrder passes (≥ 5% of draws pass in the worst
+   * case, 8 kids × 5, so ORDER_ATTEMPTS never runs out in practice).
+   * When every kid has 5 cards this is the v3 order exactly (same seed → same quiz).
    */
   const ORDER_ATTEMPTS = 1000;
-  function roundRobin(n, rng) {
+  function roundsOf(c, rng) {
+    if (c >= PER_KID) return range(PER_KID);
+    const u = rng();
+    return range(c).map((j) => Math.floor((j + u) * PER_KID / c));
+  }
+  function roundRobin(counts, rng) {
+    const members = range(PER_KID).map(() => []);
+    counts.forEach((c, k) => roundsOf(c, rng).forEach((r) => members[r].push(k)));
     const seq = [];
-    for (let r = 0; r < PER_KID; r++) {
-      const round = shuffleInPlace(range(n), rng);
-      if (seq.length && round[0] === seq[seq.length - 1]) {
-        const j = 1 + randInt(rng, n - 1);
+    members.forEach((m) => {
+      const round = shuffleInPlace(m.slice(), rng);
+      if (seq.length && round.length > 1 && round[0] === seq[seq.length - 1]) {
+        const j = 1 + randInt(rng, round.length - 1);
         const t = round[0]; round[0] = round[j]; round[j] = t;
       }
       seq.push.apply(seq, round);
-    }
+    });
     return seq;
   }
-  function buildOrder(n, rng) {
-    if (n === 1) return range(PER_KID).map(() => 0);
-    let seq = roundRobin(n, rng);
-    for (let i = 1; i < ORDER_ATTEMPTS && !validateOrder(seq, n).ok; i++) seq = roundRobin(n, rng);
+  function buildOrder(counts, rng) {
+    if (counts.length === 1) return range(counts[0]).map(() => 0);
+    let seq = roundRobin(counts, rng);
+    for (let i = 1; i < ORDER_ATTEMPTS && !validateOrder(seq, counts).ok; i++) seq = roundRobin(counts, rng);
     return seq;
   }
 
   /**
    * Checks an order (array of kid indices, or of cards with .kid) against the SPEC rules.
-   * nKids defaults to (highest index + 1). Returns { ok, errors: string[] }.
+   * kids: the per-kid card counts (array), or a kid count meaning 5 cards each; defaults to
+   * (highest index + 1) kids × 5. Returns { ok, errors: string[] }.
    */
-  function validateOrder(seq, nKids) {
+  function validateOrder(seq, kidsArg) {
     const kids = (Array.isArray(seq) ? seq : []).map((x) => (x && typeof x === "object" ? x.kid : x));
-    const n = typeof nKids === "number" ? nKids : kids.reduce((m, k) => (typeof k === "number" && k + 1 > m ? k + 1 : m), 0);
+    const counts = Array.isArray(kidsArg) ? kidsArg.slice()
+      : range(typeof kidsArg === "number" ? kidsArg : kids.reduce((m, k) => (typeof k === "number" && k + 1 > m ? k + 1 : m), 0)).map(() => PER_KID);
+    const n = counts.length;
     const errors = [];
-    const total = n * PER_KID;
+    const total = sum(counts);
     if (n < MIN_KIDS || n > MAX_KIDS) errors.push("kid count " + n + " outside 1-8");
+    counts.forEach((c, k) => { if (!(c >= MIN_PER_KID && c <= PER_KID && c === Math.floor(c))) errors.push("kid " + k + " asks for " + c + " cards (1-5)"); });
     if (kids.length !== total) errors.push("expected " + total + " cards, got " + kids.length);
     const totals = range(n).map(() => 0);
+    let adjacent = 0;
     kids.forEach((k, i) => {
       if (typeof k !== "number" || k < 0 || k >= n || k !== Math.floor(k)) { errors.push("bad kid index " + k + " at card " + (i + 1)); return; }
       totals[k]++;
-      if (n >= 2 && i > 0 && kids[i - 1] === k) errors.push("cards " + i + " and " + (i + 1) + " are both kid " + k);
+      if (n >= 2 && i > 0 && kids[i - 1] === k) adjacent++;
     });
-    totals.forEach((c, k) => { if (c !== PER_KID) errors.push("kid " + k + " has " + c + " cards (need " + PER_KID + ")"); });
+    totals.forEach((c, k) => { if (c !== counts[k]) errors.push("kid " + k + " has " + c + " cards (need " + counts[k] + ")"); });
     if (n >= 2) {
-      // Spread: every kid appears in the first N cards and the last N, and never waits 2N+ cards.
+      // Adjacent cards of one kid only when unavoidable: a kid with m > total/2 cards forces 2m-total-1.
+      const forced = Math.max(0, 2 * Math.max.apply(null, counts) - total - 1);
+      if (adjacent > forced) errors.push(adjacent + " pairs of adjacent cards share a kid (unavoidable: " + forced + ")");
+      // Spread: a kid with c cards sits in rounds about 5/c apart (w = ⌈5/c⌉, rounds hold ≤ N cards),
+      // so it appears within the first w·N cards and the last w·N, and never waits (w+1)·N cards.
+      // With 5 cards each (w = 1): in the first N, in the last N, gaps ≤ 2N-1.
       range(n).forEach((k) => {
         const pos = [];
         kids.forEach((x, i) => { if (x === k) pos.push(i); });
         if (!pos.length) return;
-        if (pos[0] >= n) errors.push("kid " + k + " first appears at card " + (pos[0] + 1));
-        if (pos[pos.length - 1] < kids.length - n) errors.push("kid " + k + " last appears at card " + (pos[pos.length - 1] + 1));
+        const w = Math.ceil(PER_KID / counts[k]);
+        if (pos[0] >= w * n) errors.push("kid " + k + " first appears at card " + (pos[0] + 1));
+        if (pos[pos.length - 1] < kids.length - w * n) errors.push("kid " + k + " last appears at card " + (pos[pos.length - 1] + 1));
         for (let i = 1; i < pos.length; i++) {
-          if (pos[i] - pos[i - 1] > 2 * n - 1) errors.push("kid " + k + " waits from card " + (pos[i - 1] + 1) + " to " + (pos[i] + 1));
+          if (pos[i] - pos[i - 1] > (w + 1) * n - 1) errors.push("kid " + k + " waits from card " + (pos[i - 1] + 1) + " to " + (pos[i] + 1));
         }
       });
+      // Pages: equal counts → per-page counts differ by at most 1; otherwise each kid's count on a
+      // page is within 1.5 of its share (counts[k] × page size / total).
+      const equal = counts.every((c) => c === counts[0]);
       for (let p = 0; p * PAGE_SIZE < kids.length; p++) {
         const slice = kids.slice(p * PAGE_SIZE, (p + 1) * PAGE_SIZE);
-        const counts = range(n).map((k) => slice.filter((x) => x === k).length);
-        const max = Math.max.apply(null, counts), min = Math.min.apply(null, counts);
-        if (max - min > 1) errors.push("page " + (p + 1) + " uneven: " + counts.join("/"));
+        const onPage = range(n).map((k) => slice.filter((x) => x === k).length);
+        if (equal) {
+          if (Math.max.apply(null, onPage) - Math.min.apply(null, onPage) > 1) errors.push("page " + (p + 1) + " uneven: " + onPage.join("/"));
+        } else if (onPage.some((c, k) => Math.abs(c - counts[k] * slice.length / total) >= 1.5)) {
+          errors.push("page " + (p + 1) + " uneven: " + onPage.join("/") + " for counts " + counts.join("/"));
+        }
       }
     }
     return { ok: errors.length === 0, errors: errors };
@@ -21301,11 +21338,11 @@ button, select, input { font: inherit; color: inherit; }
 
   /* ------------------------------------------------------------------ generator */
   /**
-   * generateQuiz(data, rng, family[, intros]) → array of 5·N cards:
+   * generateQuiz(data, rng, family[, intros]) → array of cards, kid.count (1–5) per kid:
    *   { num, page, kid (index), kidName, gender, level (kid's), qLevel (pool the question came from),
    *     intro, q, source, options: [{ letter, text, correct, funny }] x4 }   // options[3] = funny
    * data: parasha data object or array of them (combined); a missing level pool (e.g. no `expert`
-   * yet) counts as empty and is borrowed around. family: { name, kids:[{ name, gender, level }] }.
+   * yet) counts as empty and is borrowed around. family: { name, kids:[{ name, gender, level, count }] }.
    * Throws Error with a Hebrew message when no quiz can be made.
    */
   function generateQuiz(data, rng, family, intros) {
@@ -21314,14 +21351,15 @@ button, select, input { font: inherit; color: inherit; }
     if (!v.ok) throw new Error("פרטי המשפחה אינם תקינים — בדקו את שמות הילדים וגילם.");
     const kids = v.family.kids;
     const n = kids.length;
-    const total = n * PER_KID;
+    const counts = kids.map((k) => k.count);
+    const total = sum(counts);
 
     // 1. questions per kid (own level first, round-robin among kids sharing it; then borrow)
     const pools = mergePools(data);
     const avail = LEVELS.reduce((a, l) => a + pools[l].length, 0);
     if (avail < total) {
       throw new Error("בפרשה הזאת יש רק " + avail + " שאלות, ולשאלון של " + n + " ילדים צריך " + total +
-        ". נסו פרשה אחרת או פחות ילדים.");
+        ". נסו פרשה אחרת, פחות ילדים או פחות שאלות לכל ילד.");
     }
     const left = {};
     LEVELS.forEach((l) => { left[l] = shuffleInPlace(pools[l].slice(), rng); });
@@ -21332,7 +21370,7 @@ button, select, input { font: inherit; color: inherit; }
       while (moved) {
         moved = false;
         mine.forEach((i) => {
-          if (got[i].length < PER_KID && left[l].length) { got[i].push({ item: left[l].pop(), level: l }); moved = true; }
+          if (got[i].length < counts[i] && left[l].length) { got[i].push({ item: left[l].pop(), level: l }); moved = true; }
         });
       }
     });
@@ -21341,24 +21379,24 @@ button, select, input { font: inherit; color: inherit; }
     while (moved) {
       moved = false;
       borrowers.forEach((i) => {
-        if (got[i].length >= PER_KID) return;
+        if (got[i].length >= counts[i]) return;
         const from = BORROW[kids[i].level].find((l) => left[l].length > 0);
         if (from) { got[i].push({ item: left[from].pop(), level: from }); moved = true; }
       });
     }
     got.forEach((g) => shuffleInPlace(g, rng));
 
-    // 2. intros: 5 distinct per kid, from the kid's level × gender templates
+    // 2. intros: one distinct per card of the kid, from the kid's level × gender templates
     const introSrc = intros || root.HIDON_INTROS;
-    const introsFor = kids.map((k) => {
+    const introsFor = kids.map((k, i) => {
       const list = introTemplates(introSrc, k.level, k.gender).map((t) => t.split("{name}").join(k.name));
       const uniq = list.filter((s, i) => list.indexOf(s) === i);
-      if (uniq.length < PER_KID) throw new Error("חסרים משפטי פתיחה לרמה " + LEVEL_LABELS[k.level] + ".");
-      return shuffleInPlace(uniq, rng).slice(0, PER_KID);
+      if (uniq.length < counts[i]) throw new Error("חסרים משפטי פתיחה לרמה " + LEVEL_LABELS[k.level] + ".");
+      return shuffleInPlace(uniq, rng).slice(0, counts[i]);
     });
 
     // 3. order + options
-    const order = buildOrder(n, rng);
+    const order = buildOrder(counts, rng);
     const used = kids.map(() => 0);
     return order.map((ki, i) => {
       const j = used[ki]++;
@@ -21439,7 +21477,7 @@ button, select, input { font: inherit; color: inherit; }
   }
 
   /**
-   * Stored family → form model { name, kids:[{ name, gender, level }] }, migrating v2 data:
+   * Stored family → form model { name, kids:[{ name, gender, level, count }] }, migrating v2 data:
    * a kid with level "auto" (or no valid level) gets the level its stored age maps to (≤5 gan,
    * 6–7 easy, 8–9 intermediate, 10+ advanced); without a usable age it gets NEW_KID_LEVEL. The age
    * is dropped. Returns { family, migrated } or null when there is nothing usable.
@@ -21454,7 +21492,8 @@ button, select, input { font: inherit; color: inherit; }
       return {
         name: typeof k.name === "string" ? k.name.slice(0, NAME_MAX) : "",
         gender: GENDERS.indexOf(k.gender) !== -1 ? k.gender : "m",
-        level: kidLevel({ level: k.level, age: age }) || NEW_KID_LEVEL
+        level: kidLevel({ level: k.level, age: age }) || NEW_KID_LEVEL,
+        count: kidCount(k)
       };
     });
     return { family: { name: typeof obj.name === "string" ? obj.name.slice(0, FAMILY_MAX) : "", kids: kids }, migrated: migrated };
@@ -21626,7 +21665,7 @@ button, select, input { font: inherit; color: inherit; }
     let readyStatus = null;                           // status to restore if the family is changed back
 
     function familySig(fam) {
-      return JSON.stringify({ n: fam.name, k: fam.kids.map((k) => [k.name, k.gender, k.level]) });
+      return JSON.stringify({ n: fam.name, k: fam.kids.map((k) => [k.name, k.gender, k.level, k.count]) });
     }
 
     function saveNow() {
@@ -21637,7 +21676,8 @@ button, select, input { font: inherit; color: inherit; }
         kids: model.kids.map((k) => ({
           name: cleanText(k.name),
           gender: k.gender,
-          level: k.level
+          level: k.level,
+          count: kidCount(k)
         }))
       };
       storageSet(FAMILY_KEY, JSON.stringify(out));
@@ -21690,7 +21730,13 @@ button, select, input { font: inherit; color: inherit; }
 
       row.appendChild(field("kid-field-name", "שם", name));
       row.appendChild(field("kid-field-gender", "מין", gender));
+      const count = el("select", "kid-count");
+      count.id = "kid-count-" + i;
+      for (let c = MIN_PER_KID; c <= PER_KID; c++) count.appendChild(new Option(String(c), String(c)));
+      count.value = String(kidCount(kid));
+
       row.appendChild(field("kid-field-level", "רמה", level));
+      row.appendChild(field("kid-field-count", "שאלות", count));
       row.appendChild(rm);
       row.appendChild(err);
       return row;
@@ -21745,7 +21791,7 @@ button, select, input { font: inherit; color: inherit; }
       if (ui.summary) {
         const n = model.kids.length;
         ui.summary.textContent = n === 0 ? "עוד לא נוספו ילדים"
-          : (n === 1 ? "ילד אחד" : n + " ילדים") + " · " + n * PER_KID + " שאלות";
+          : (n === 1 ? "ילד אחד" : n + " ילדים") + " · " + sum(model.kids.map(kidCount)) + " שאלות";
       }
       return v;
     }
@@ -21813,6 +21859,7 @@ button, select, input { font: inherit; color: inherit; }
         if (t.classList.contains("kid-name")) { kid.name = t.value; touched[i].name = true; }
         else if (t.classList.contains("kid-gender")) kid.gender = t.value === "f" ? "f" : "m";
         else if (t.classList.contains("kid-level")) { kid.level = LEVELS.indexOf(t.value) !== -1 ? t.value : kid.level; touched[i].level = true; }
+        else if (t.classList.contains("kid-count")) kid.count = kidCount({ count: t.value });
         else return;
         familyChanged();
       };
@@ -21836,7 +21883,7 @@ button, select, input { font: inherit; color: inherit; }
     if (ui.addKid) {
       ui.addKid.addEventListener("click", () => {
         if (model.kids.length >= MAX_KIDS) return;
-        model.kids.push({ name: "", gender: "m", level: NEW_KID_LEVEL });
+        model.kids.push({ name: "", gender: "m", level: NEW_KID_LEVEL, count: PER_KID });
         touched.push(mark(false)); // a fresh empty row is not an error until a generate attempt
         renderKids();
         familyChanged();

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-11",
+  "generated": "2026-11-14",
   "apps": [
     {
       "id": "pigeon",
@@ -136,10 +136,10 @@
       "category": "game",
       "order": 12,
       "version": null,
-      "updated": "2026-11-07",
+      "updated": "2026-11-14",
       "download": {
         "url": "downloads/hidon.html",
-        "size": 998266,
+        "size": 1001594,
         "type": "html"
       },
       "open": "web/hidon/"
