@@ -354,5 +354,9 @@
         "caption": "תצוגה מקדימה של הלוח לפני השיתוף"
       }
     ]
+  },
+  "clipboard": {
+    "icon": "apps/clipboard/icon.png",
+    "screens": []
   }
 }

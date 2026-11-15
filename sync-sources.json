@@ -189,6 +189,14 @@
         "repo": "havivon/zmaneitfila",
         "asset": ".apk"
       }
+    },
+    "clipboard": {
+      "category": "desktop",
+      "order": 17,
+      "path": "F:/My Projects/ClipBoard",
+      "artifact": [
+        "Installer/Output/ClipBoardTopPro_Setup_*.exe"
+      ]
     }
   }
 }
