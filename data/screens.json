@@ -357,6 +357,23 @@
   },
   "clipboard": {
     "icon": "apps/clipboard/icon.png",
-    "screens": []
+    "screens": [
+      {
+        "src": "apps/clipboard/screens/01.webp",
+        "caption": "רשימת ההיסטוריה: פריטים נעוצים למעלה, טקסט ותמונות"
+      },
+      {
+        "src": "apps/clipboard/screens/02.webp",
+        "caption": "חיפוש מסנן את הרשימה תוך כדי הקלדה"
+      },
+      {
+        "src": "apps/clipboard/screens/03.webp",
+        "caption": "מצב כהה"
+      },
+      {
+        "src": "apps/clipboard/screens/04.webp",
+        "caption": "הגדרות: מספר פריטים, הפעלה עם Windows, שפה וקיצור מקשים"
+      }
+    ]
   }
 }
