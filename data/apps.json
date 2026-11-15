@@ -6,11 +6,11 @@
       "category": "android",
       "order": 1,
       "repo": "https://github.com/havivon/Pigeon",
-      "version": "0.8.1",
+      "version": "0.8.2",
       "updated": "2026-11-15",
       "download": {
         "url": "downloads/pigeon.apk",
-        "size": 21460346,
+        "size": 21460350,
         "type": "apk"
       }
     },
