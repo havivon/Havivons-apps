@@ -109,14 +109,19 @@
       "id": "pdf",
       "category": "web",
       "order": 10,
-      "version": null,
+      "version": "2.0.0",
       "updated": "2026-11-16",
       "download": {
         "url": "downloads/pdf.html",
         "size": 3400129,
         "type": "html"
       },
-      "open": "web/pdf/"
+      "open": "web/pdf/",
+      "apk": {
+        "url": "downloads/pdf.apk",
+        "size": 3091692,
+        "type": "apk"
+      }
     },
     {
       "id": "mahjong",

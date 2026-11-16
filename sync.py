@@ -113,6 +113,21 @@ def sync_local(app_id, src, entry):
         entry["download"] = {"url": f"downloads/{name}", "size": os.path.getsize(dest), "type": ext.lstrip(".") if not src.get("zip") else "zip"}
         print(f"  {app_id}: {os.path.relpath(art, base)} -> downloads/{name} (v{version}, {entry['updated']})")
 
+    # a web tool that also ships as an Android app: a second download next to the main one
+    apk = newest_artifact(base, src.get("apk", []))
+    if apk:
+        os.makedirs(os.path.join(ROOT, "downloads"), exist_ok=True)
+        dest = os.path.join(ROOT, "downloads", f"{app_id}.apk")
+        shutil.copy2(apk, dest)
+        entry["apk"] = {"url": f"downloads/{app_id}.apk", "size": os.path.getsize(dest), "type": "apk"}
+        if not entry.get("version"):
+            m = re.search(r"(\d+\.\d+(?:\.\d+)*)\.apk$", os.path.basename(apk))
+            entry["version"] = apk_version(apk) or (m.group(1) if m else None)
+        entry["updated"] = max(entry.get("updated") or "", day(os.path.getmtime(apk)))
+        print(f"  {app_id}: {os.path.relpath(apk, base)} -> downloads/{app_id}.apk (v{entry.get('version')})")
+    else:
+        entry.pop("apk", None)
+
     host = src.get("host")
     if host and host.get("files"):
         # multi-file web app: copy the listed files/globs into a fresh web/<id>/

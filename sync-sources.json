@@ -113,7 +113,10 @@
       "host": {
         "from": "PDF.html",
         "to": "web/pdf/index.html"
-      }
+      },
+      "apk": [
+        "PDF Creator/dist/PDF-Creator-*.apk"
+      ]
     },
     "mahjong": {
       "category": "game",

@@ -100,6 +100,9 @@ function actionButtons(app, { compact = false } = {}) {
     const size = app.download.size && !compact ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.download.size)}</span>` : '';
     out.push(`<a class="btn btn-primary" href="${esc(withVersion(app.download.url, app))}" download><i data-lucide="download"></i>${label}${size}</a>`);
   }
+  if (app.apk) {
+    out.push(`<a class="btn btn-ghost" href="${esc(withVersion(app.apk.url, app))}" download><i data-lucide="smartphone"></i>אפליקציה לאנדרואיד (APK)${app.apk.size && !compact ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.apk.size)}</span>` : ''}</a>`);
+  }
   if (app.site_download) {
     out.push(`<a class="btn btn-ghost" href="${esc(withVersion(app.site_download.url, app))}" download><i data-lucide="folder-down"></i>הורדת האתר (ZIP)${app.site_download.size ? ` <span class="opacity-75 text-sm">· ${fmtSize(app.site_download.size)}</span>` : ''}</a>`);
   }
@@ -131,7 +134,7 @@ async function renderHome() {
   let filter = 'all';
 
   document.getElementById('count-all').textContent = apps.length;
-  document.getElementById('count-android').textContent = apps.filter((a) => a.store || a.download?.type === 'apk').length;
+  document.getElementById('count-android').textContent = apps.filter((a) => a.store || a.apk || a.download?.type === 'apk').length;
   document.getElementById('count-web').textContent = apps.filter((a) => a.open).length;
 
   const chips = document.getElementById('chips');
