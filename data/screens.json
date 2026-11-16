@@ -305,7 +305,7 @@
     "screens": [
       {
         "src": "apps/reply-forward/screens/01.webp",
-        "caption": "המחשה: כפתורי Reply +Attach ו-Reply All +Attach ברצועת הכלים של Outlook"
+        "caption": "המחשה: הכפתורים \"השב + צרופות\" ו\"השב לכולם + צרופות\" ברצועת הכלים של Outlook"
       }
     ]
   },
