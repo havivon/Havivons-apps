@@ -171,7 +171,13 @@
       "id": "reply-forward",
       "category": "desktop",
       "order": 15,
-      "download": null
+      "download": {
+        "url": "downloads/reply-forward.zip",
+        "size": 69042,
+        "type": "zip"
+      },
+      "version": null,
+      "updated": "2026-11-16"
     },
     {
       "id": "architext",

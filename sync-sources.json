@@ -162,9 +162,7 @@
       "order": 15,
       "path": "F:/My Projects/Replay and Forward",
       "artifact": [
-        "publish/*.zip",
-        "publish/setup.exe",
-        "*.msi"
+        "ReplyForwardAttachments/dist/ReplyAttach-*.zip"
       ]
     },
     "architext": {
