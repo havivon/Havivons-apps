@@ -301,7 +301,7 @@
     ]
   },
   "reply-forward": {
-    "icon": "apps/reply-forward/icon.png",
+    "icon": "apps/reply-forward/icon-v2.png",
     "screens": [
       {
         "src": "apps/reply-forward/screens/01.webp",
