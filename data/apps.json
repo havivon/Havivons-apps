@@ -191,10 +191,10 @@
       "category": "desktop",
       "order": 17,
       "version": null,
-      "updated": "2026-11-15",
+      "updated": "2026-11-16",
       "download": {
         "url": "downloads/clipboard.exe",
-        "size": 2497606,
+        "size": 2498026,
         "type": "exe"
       }
     }
