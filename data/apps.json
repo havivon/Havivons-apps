@@ -110,10 +110,10 @@
       "category": "web",
       "order": 10,
       "version": null,
-      "updated": "2026-11-02",
+      "updated": "2026-11-16",
       "download": {
         "url": "downloads/pdf.html",
-        "size": 4019088,
+        "size": 3400129,
         "type": "html"
       },
       "open": "web/pdf/"
