@@ -40,11 +40,11 @@
       "id": "zochrim",
       "category": "android",
       "order": 4,
-      "version": "2.5",
-      "updated": "2026-11-07",
+      "version": "2.6",
+      "updated": "2026-11-17",
       "download": {
         "url": "downloads/zochrim.apk",
-        "size": 2661825,
+        "size": 2668569,
         "type": "apk"
       }
     },
