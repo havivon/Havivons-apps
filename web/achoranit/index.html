@@ -151,7 +151,19 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 .lvl[data-l=medium]{color:#ffeab3;background:rgba(255,209,102,.13);border-color:rgba(255,209,102,.45)}
 .lvl[data-l=hard]{color:#ffd3c7;background:rgba(255,107,74,.14);border-color:rgba(255,107,74,.5)}
 .lvl:empty{display:none}
-.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.meta{display:flex;flex-direction:column;align-items:center;gap:8px}
+.meta:empty{display:none}
+.m-round{font-size:17px;font-weight:600;color:var(--muted)}
+.m-pts{font-size:17px;font-weight:700;color:var(--gold)}
+.rec-row{display:flex;align-items:center;justify-content:center;gap:20px}
+.side{display:flex;flex-direction:column;align-items:center;gap:8px;width:86px;font-size:15px;color:var(--muted);text-align:center}
+.roundbtn{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface2);transition:transform .12s}
+.roundbtn:active{transform:scale(.94)}
+.roundbtn svg{width:30px;height:30px}
+.roundbtn.rev{background:rgba(51,225,212,.14);border-color:rgba(51,225,212,.5);color:#c8fbf6}
+.roundbtn.mine{background:rgba(181,140,255,.14);border-color:rgba(181,140,255,.5);color:#e4d6ff}
+.roundbtn:disabled{opacity:.3;pointer-events:none}
+.roundbtn.playing{box-shadow:0 0 0 3px currentColor inset}
 
 /* ---------- board ---------- */
 .board{list-style:none;margin:0;padding:0;display:grid;gap:10px;width:100%}
@@ -254,7 +266,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="handoff">
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2></h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <div class="chips" id="hoChips"><span class="lvl" id="hoRound" data-l=""></span></div>
+      <div class="meta" id="hoMeta"></div>
       <p class="eyebrow">הטלפון עובר אל</p>
       <h1 class="big-name" id="hoName"></h1>
       <p class="lead" id="hoText"></p>
@@ -266,7 +278,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="speak">
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2>המשפט הסודי</h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <span class="lvl" id="speakLvl" data-l=""></span>
+      <div class="meta" id="speakMeta"></div>
       <p class="eyebrow">אמרו בקול:</p>
       <div class="phrase-card pop"><p id="speakPhrase"></p></div>
       <div class="count" id="speakCount"><span id="speakNum"></span></div>
@@ -283,11 +295,11 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="secret">
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2 id="secretTitle">המשפט הסודי</h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <span class="lvl" id="secretLvl" data-l=""></span>
+      <div class="meta" id="secretMeta"></div>
       <p class="eyebrow" id="secretLead">אמרו את המשפט הזה בקול:</p>
       <div class="phrase-card"><p id="phrase"></p></div>
       <button class="btn" id="dice" style="max-width:260px"><svg><use href="#i-dice"/></svg>תביאו משפט אחר</button>
-      <div class="seg full hidden" id="soloLevels"><button data-lv="easy">קל</button><button data-lv="medium">בינוני</button><button data-lv="hard">קשה</button></div>
+      <div class="seg full hidden" id="soloLevels"><button data-lv="easy">קלה</button><button data-lv="medium">בינונית</button><button data-lv="hard">קשה</button></div>
       <p class="hint c" id="secretHint">🙈 שאר השחקנים לא מציצים!</p>
     </div>
     <div class="foot"><button class="btn xl primary" id="toRecord"><svg><use href="#i-mic"/></svg>לאולפן!</button></div>
@@ -316,14 +328,16 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="imitate">
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>חקו את ההפוך</h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <button class="btn xl rev" data-play="origRev" data-cv="wi"><svg><use href="#i-rev"/></svg>תנו לשמוע את הג׳יבריש</button>
-      <div class="seg full" id="speedSeg"><button data-speed="1">רגיל</button><button data-speed="0.8">רגוע</button><button data-speed="0.6">צב 🐢</button></div>
       <div class="wave" id="wv-wi"><canvas id="wi"></canvas><div class="empty"></div></div>
+      <div class="seg full" id="speedSeg"><button data-speed="1">רגיל</button><button data-speed="0.8">רגוע</button><button data-speed="0.6">צב 🐢</button></div>
       <div class="rec-wrap">
-        <button class="recbtn" data-rec="imit" aria-label="הקלטת חיקוי"><svg><use href="#i-mic"/></svg></button>
+        <div class="rec-row">
+          <div class="side"><button class="roundbtn rev" data-play="origRev" data-cv="wi" aria-label="השמעה חוזרת של ההקלטה ההפוכה"><svg><use href="#i-rev"/></svg></button><span>השמעה חוזרת</span></div>
+          <button class="recbtn" data-rec="imit" aria-label="הקלטת חיקוי"><svg><use href="#i-mic"/></svg></button>
+          <div class="side"><button class="roundbtn mine" data-play="imit" data-cv="wi" aria-label="השמעת החיקוי שלי"><svg><use href="#i-play"/></svg></button><span>איך יצא לי?</span></div>
+        </div>
         <div class="rec-label" id="lbl-imit"></div>
       </div>
-      <button class="btn" data-play="imit" data-cv="wi"><svg><use href="#i-play"/></svg>איך יצא לי?</button>
     </div>
     <div class="foot"><button class="btn xl gold" id="flip"><svg><use href="#i-flip"/></svg>הפוך על הפוך!</button></div>
   </section>
@@ -357,7 +371,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="reveal">
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2>חשיפת הסוד</h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <span class="lvl" id="revLvl" data-l=""></span>
+      <div class="meta" id="revMeta"></div>
       <p class="eyebrow">המשפט הסודי היה:</p>
       <div class="phrase-card pop"><p id="resPhrase"></p></div>
       <p class="lead" id="revLead"></p>
@@ -443,7 +457,7 @@ const PHRASES = {
   hard: ['הכלב של השכנים נובח כל הלילה','אני רוצה עוד חתיכה של עוגה','הפיל הכחול אכל בננה צהובה','מי שם את המפתחות במקרר','השעון המעורר צלצל מוקדם מדי','גנן גידל דגן בגן','הדג הזהב שוחה במים קרים','סבא קנה לי אופניים חדשים','התרנגול קם לפני השמש','הג׳ירפה לא מצאה את המשקפיים','החתול השחור קפץ על השולחן','מחר בבוקר אנחנו נוסעים לים','הקוף גנב בננה מהסל','אני לא מוצא את הגרב השנייה','המורה ביקשה לפתוח את הספר','הפיצה הגיעה בדיוק בזמן','הרכבת יצאה מהתחנה באיחור','הגשם לא מפסיק לרדת היום','סבתא אופה עוגיות עם שוקולד','הפינגווין החליק על הקרח','מישהו השאיר את המקרר פתוח','הבלון האדום עף לשמיים','אני רוצה גלידה עם הרבה תוספות','הנהג עצר ברמזור האדום','הצב ניצח את הארנב במרוץ','השכן מתופף כל הבוקר','הטלפון צלצל באמצע הסרט','הדוב ישן כל החורף','מי אכל את כל הבמבה','מחר יש מבחן בחשבון','התרנגולת הטילה ביצה זהובה','הילדים בנו ארמון בחול','שרה שרה שיר שמח','הקיפוד הלך לאיבוד ביער','האוטובוס עבר לנו מול האף','הפרפר נחת על האף של הכלב']
 };
 const LEVELS = ['easy', 'medium', 'hard'];
-const LEVEL_NAME = { easy: 'קל', medium: 'בינוני', hard: 'קשה' };
+const LEVEL_NAME = { easy: 'קלה', medium: 'בינונית', hard: 'קשה' };
 const LEVEL_POINTS = { easy: 10, medium: 20, hard: 30 };
 
 let actx = null;
@@ -849,6 +863,7 @@ function go(id, back) {
   current = id;
   to.querySelector('.body').scrollTop = 0;
   render();
+  if (id === 'imitate' && !bufs.imit) setTimeout(() => { if (current === 'imitate' && !rec && !playing && bufs.origRev) play('origRev', 'wi'); }, 420);
 }
 function openModal(id) { $('#' + id).classList.remove('hidden'); }
 function closeModals() { $$('.modal').forEach(m => m.classList.add('hidden')); }
@@ -907,8 +922,7 @@ function speakTick(elapsed, max) {
 function renderSpeak() {
   const st = speakState, box = $('#speakCount'), num = $('#speakNum'), lab = $('#speakLabel');
   $('#speakPhrase').textContent = phrase;
-  $('#speakLvl').dataset.l = turnLevel;
-  $('#speakLvl').textContent = `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳ לניחוש`;
+  fillMeta($('#speakMeta'), false);
   box.classList.toggle('rec', st === 'rec');
   lab.classList.toggle('rec', st === 'rec');
   if (st === 'count') {
@@ -941,6 +955,15 @@ function newPhrase() {
   usedPhrases.add(phrase);
 }
 const roundOf = t => Math.floor(t / Math.max(1, players.length));
+// Round, level and points on separate lines (party only).
+function fillMeta(el, showRound) {
+  el.textContent = '';
+  if (mode !== 'party') return;
+  const add = (cls, text) => { const sp = document.createElement('span'); sp.className = cls; sp.textContent = text; el.appendChild(sp); return sp; };
+  if (showRound) add('m-round', `סבב ${roundOf(turnNo) + 1} מתוך ${rounds}`);
+  add('lvl', `רמה ${LEVEL_NAME[turnLevel]}`).dataset.l = turnLevel;
+  add('m-pts', `${LEVEL_POINTS[turnLevel]} נקודות לניחוש נכון`);
+}
 function resetRound() {
   compareToken++; comparing = false; stopPlay(true);
   bufs.orig = bufs.origRev = bufs.imit = bufs.result = null;
@@ -1041,8 +1064,7 @@ function render() {
   const who = handoffStage === 'speaker' ? speakerIdx : guesserIdx;
   if (party && players[who]) {
     $('#hoName').textContent = players[who].name;
-    $('#hoRound').dataset.l = turnLevel;
-    $('#hoRound').textContent = `סבב ${roundOf(turnNo) + 1} מתוך ${rounds} · רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳`;
+    fillMeta($('#hoMeta'), true);
     $('#hoText').textContent = handoffStage === 'speaker'
       ? 'תורך להקליט משפט סודי. אחרי הלחיצה יופיע המשפט, ותוך 5 שניות ההקלטה מתחילה. כל השאר: לא להציץ!'
       : `יש הקלטה סודית מ${players[speakerIdx].name}. תורך להקשיב לה הפוך, לחקות אותה ולנחש מה נאמר.`;
@@ -1052,8 +1074,7 @@ function render() {
   $('#phrase').textContent = phrase;
   $('#secretTitle').textContent = party ? 'המשפט הסודי' : 'המשפט לאתגר';
   $('#secretHint').classList.toggle('hidden', !party);
-  $('#secretLvl').dataset.l = party ? turnLevel : level;
-  $('#secretLvl').textContent = party ? `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳ לניחוש` : '';
+  fillMeta($('#secretMeta'), false);
   $('#soloLevels').classList.toggle('hidden', party);
 
   // record
@@ -1079,8 +1100,8 @@ function render() {
   $('#soloFoot').classList.toggle('hidden', party);
   $('#partyFoot').classList.toggle('hidden', !party);
   $('#resPhrase').textContent = phrase;
-  $('#revLvl').dataset.l = turnLevel;
-  $('#revLvl').textContent = `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳`;
+  fillMeta($('#revMeta'), false);
+  $('#resTitle').textContent = party ? 'מנחשים' : 'הרגע של האמת';
   $('#gotIt').disabled = $('#missed').disabled = judged;
   $('#gotItTxt').textContent = `בול! \u2066+${LEVEL_POINTS[turnLevel]}\u2069`;
   $$('[data-act=compare]').forEach(b => { b.disabled = !bufs.result || !!rec; b.classList.toggle('playing', comparing); });
