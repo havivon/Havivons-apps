@@ -198,6 +198,20 @@
       "artifact": [
         "Installer/Output/ClipClop_Setup_*.exe"
       ]
+    },
+    "achoranit": {
+      "category": "game",
+      "order": 18,
+      "repo": "havivon/reverse-audio-game",
+      "remote": {
+        "kind": "file",
+        "repo": "havivon/reverse-audio-game",
+        "file": "dist/achoranit.apk",
+        "host": {
+          "to": "web/achoranit",
+          "dir": "web"
+        }
+      }
     }
   }
 }

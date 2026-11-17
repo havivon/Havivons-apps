@@ -191,7 +191,7 @@ TRACKING = [  # Google Analytics + AdSense snippets; they have no use on a copy 
 
 
 def host_repo(app_id, r, entry):
-    """Copy a site repo's default branch into web/<id>/ and zip that copy for download."""
+    """Copy a site repo's default branch (or its host["dir"] folder) into web/<id>/ and zip that copy for download."""
     host = r["host"]
     branch = github(f"https://api.github.com/repos/{r['repo']}")["default_branch"]
     req = urllib.request.Request(f"https://github.com/{r['repo']}/archive/refs/heads/{branch}.zip", headers={"User-Agent": "havivons-apps-sync"})
@@ -201,6 +201,11 @@ def host_repo(app_id, r, entry):
     shutil.rmtree(dest_dir, ignore_errors=True)
     for info in archive.infolist():
         rel = info.filename.split("/", 1)[1] if "/" in info.filename else ""
+        if host.get("dir"):  # host only one folder of the repo (e.g. the web build next to Android sources)
+            sub = host["dir"].strip("/") + "/"
+            if not rel.startswith(sub):
+                continue
+            rel = rel[len(sub):]
         if info.is_dir() or not rel or rel in host.get("drop", []):
             continue
         data = archive.read(info)

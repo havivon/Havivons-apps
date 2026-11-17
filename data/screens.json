@@ -375,5 +375,26 @@
         "caption": "הגדרות: מספר פריטים, הפעלה עם Windows, שפה וקיצור מקשים"
       }
     ]
+  },
+  "achoranit": {
+    "icon": "apps/achoranit/icon.png",
+    "screens": [
+      {
+        "src": "apps/achoranit/screens/01.webp",
+        "caption": "המסך הראשי עם משפט לאתגר"
+      },
+      {
+        "src": "apps/achoranit/screens/02.webp",
+        "caption": "הקלטת המשפט המקורי"
+      },
+      {
+        "src": "apps/achoranit/screens/03.webp",
+        "caption": "השמעה הפוכה וחיקוי"
+      },
+      {
+        "src": "apps/achoranit/screens/04.webp",
+        "caption": "ציון דמיון וטבלת שחקנים"
+      }
+    ]
   }
 }

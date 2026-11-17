@@ -208,6 +208,19 @@
         "size": 2498026,
         "type": "exe"
       }
+    },
+    {
+      "id": "achoranit",
+      "category": "game",
+      "order": 18,
+      "repo": "https://github.com/havivon/reverse-audio-game",
+      "updated": "2026-11-17",
+      "download": {
+        "url": "https://github.com/havivon/reverse-audio-game/raw/ccr-6ad00546-3cvlg6/dist/achoranit.apk",
+        "size": 70589,
+        "type": "apk"
+      },
+      "open": "web/achoranit/"
     }
   ]
 }

@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>אחורנית</title>
+<meta name="description" content="משחק אודיו הפוך: הקליטו, הפכו, חקו — ונחשו מה נאמר.">
+<meta name="theme-color" content="#0d0b14">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0b14; --bg2:#15111f; --surface:rgba(255,255,255,.045); --surface2:rgba(255,255,255,.08);
+  --line:rgba(255,255,255,.09); --text:#f4f0fb; --muted:#a69fbb;
+  --fwd:#ff6b4a; --rev:#33e1d4; --imit:#b58cff; --gold:#ffd166; --danger:#ff4d6d;
+  --radius:20px;
+  --font:'Rubik','Noto Sans Hebrew','Segoe UI',system-ui,sans-serif;
+  --display:'Secular One','Rubik','Noto Sans Hebrew',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+.glow{position:fixed;inset:-20vmax;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(40vmax 30vmax at 85% 10%, rgba(255,107,74,.16), transparent 60%),
+    radial-gradient(40vmax 30vmax at 10% 60%, rgba(51,225,212,.12), transparent 60%),
+    radial-gradient(30vmax 25vmax at 60% 100%, rgba(181,140,255,.12), transparent 60%);}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;user-select:none;-webkit-user-select:none}
+
+.top{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:22px 16px 6px;display:flex;align-items:center;gap:14px}
+.logo{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(30px,7vw,46px);line-height:1;display:flex;align-items:center;gap:10px;letter-spacing:.5px}
+.logo .f{color:var(--fwd)}
+.logo .r{color:var(--rev);opacity:.9}
+.logo .sep{width:3px;height:.9em;border-radius:3px;background:linear-gradient(var(--fwd),var(--rev))}
+.tag{color:var(--muted);font-size:14px;margin-top:6px}
+.top .spacer{flex:1}
+
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:10px 16px 40px;display:grid;gap:16px;grid-template-columns:1fr}
+@media (min-width:960px){
+  .wrap{grid-template-columns:minmax(0,1fr) 340px;align-items:start}
+  .side{grid-column:2;grid-row:1 / span 2;position:sticky;top:16px}
+  .main{grid-column:1}
+}
+.main,.side{display:grid;gap:16px;min-width:0}
+@media (max-width:959px){ .side{display:contents} #phraseCard{order:-1} .main{order:0} .side>.card:not(#phraseCard){order:1} }
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:opacity .3s, transform .3s, border-color .3s}
+.card.locked{opacity:.45}
+.card.locked .actions{pointer-events:none}
+.card.active{border-color:rgba(255,255,255,.18)}
+
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;font-size:13px;color:var(--muted);line-height:1.45}
+.how b{display:block;color:var(--text);font-size:14px;margin-bottom:3px}
+.how i{font-style:normal;font-family:var(--display);font-size:20px;display:block;margin-bottom:2px}
+.how div:nth-child(1) i{color:var(--fwd)} .how div:nth-child(2) i{color:var(--rev)} .how div:nth-child(3) i{color:var(--gold)}
+
+.step-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.step-num{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-family:var(--display);font-size:18px;background:var(--surface2)}
+#s1 .step-num{color:var(--fwd)} #s2 .step-num{color:var(--imit)} #s3 .step-num{color:var(--gold)}
+.step-head h2{margin:0;font-size:18px;font-weight:700}
+.hint{margin:2px 0 0;color:var(--muted);font-size:13px}
+.dur{margin-inline-start:auto;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;direction:ltr}
+
+.wave{position:relative;height:96px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);overflow:hidden;direction:ltr}
+.wave canvas{position:absolute;inset:8px 10px;width:calc(100% - 20px);height:calc(100% - 16px)}
+.wave .empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:13px;direction:rtl}
+.wave.has .empty,.wave.live .empty{display:none}
+
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface2);font-weight:500;font-size:15px;
+  transition:transform .12s, background .2s, border-color .2s, opacity .2s}
+.btn:hover{background:rgba(255,255,255,.13)}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.35;pointer-events:none}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.fwd{color:#ffd8cf;border-color:rgba(255,107,74,.35)}
+.btn.rev{color:#c8fbf6;border-color:rgba(51,225,212,.35)}
+.btn.gold{color:#fff0c9;border-color:rgba(255,209,102,.4)}
+.btn.playing{background:rgba(255,255,255,.18)}
+.btn.icon{width:44px;padding:0}
+.btn.ghost{background:transparent}
+.btn.rec{background:linear-gradient(135deg,#ff5f5f,#ff3d71);border:none;color:#fff;font-weight:700;box-shadow:0 6px 22px rgba(255,61,113,.3)}
+.btn.rec.on{animation:pulse 1.1s infinite;background:linear-gradient(135deg,#ff3d71,#c21f4a)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,61,113,.55)}100%{box-shadow:0 0 0 16px rgba(255,61,113,0)}}
+.btn.big{min-height:52px;font-size:16px;padding:0 22px}
+.time{font-variant-numeric:tabular-nums;direction:ltr;display:inline-block}
+
+.result-row{display:flex;gap:18px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10}
+.ring .bgc{stroke:rgba(255,255,255,.08)}
+.ring .fg{stroke:url(#rg);stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:34px;line-height:1}
+.ring .num small{display:block;font-family:var(--font);font-size:11px;color:var(--muted);margin-top:4px}
+.verdict{flex:1;min-width:170px}
+.verdict h3{margin:0 0 4px;font-size:20px}
+.verdict p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}
+.award{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hidden{display:none !important}
+
+.eyebrow{font-size:12px;letter-spacing:.08em;color:var(--muted);font-weight:500}
+.phrase-top{display:flex;align-items:center;justify-content:space-between}
+.phrase-text{font-family:var(--display);font-size:clamp(24px,5vw,30px);line-height:1.25;margin:10px 0 14px;min-height:1.3em;transition:filter .3s;cursor:pointer;word-break:break-word}
+.phrase-text.secret{filter:blur(12px);user-select:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;font-size:13px;color:var(--muted)}
+.chip.on{background:var(--surface2);color:var(--text);border-color:rgba(255,255,255,.22)}
+
+.side h3{margin:0 0 10px;font-size:16px}
+.plist{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}
+.plist li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(0,0,0,.18);border:1px solid transparent}
+.plist li.cur{border-color:rgba(255,209,102,.45);background:rgba(255,209,102,.07)}
+.plist .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plist .pts{font-variant-numeric:tabular-nums;font-weight:700;color:var(--gold)}
+.plist .x{border:none;background:none;color:var(--muted);font-size:18px;width:28px;height:28px;border-radius:8px}
+.plist .x:hover{background:var(--surface2)}
+.plist .turn{font-size:11px;color:var(--gold)}
+.padd{display:flex;gap:8px}
+.padd input{flex:1;min-width:0;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);padding:0 12px;outline:none}
+.padd input:focus{border-color:rgba(255,255,255,.3)}
+.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.small-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.small-actions .btn{min-height:36px;font-size:13px;padding:0 12px}
+
+.speed{display:flex;align-items:center;gap:12px}
+.speed input{flex:1;accent-color:var(--rev)}
+.speed output{font-variant-numeric:tabular-nums;min-width:44px;text-align:center;direction:ltr}
+
+details.rules summary{cursor:pointer;font-weight:500;list-style:none}
+details.rules summary::-webkit-details-marker{display:none}
+details.rules summary::after{content:'+';float:left;color:var(--muted)}
+details.rules[open] summary::after{content:'−'}
+details.rules ol{margin:10px 0 0;padding-inline-start:20px;color:var(--muted);font-size:13px;line-height:1.7}
+
+footer{position:relative;z-index:1;text-align:center;color:var(--muted);font-size:12px;padding:0 16px 30px}
+
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;z-index:50;
+  background:#1f1a2c;border:1px solid var(--line);padding:12px 18px;border-radius:14px;font-size:14px;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+
+@media (max-width:520px){
+  .how{grid-template-columns:1fr}
+  .how div{display:flex;gap:10px;align-items:baseline}
+  .how i{display:inline}
+  .card{padding:15px}
+  .btn{padding:0 13px;font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<canvas id="confetti"></canvas>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b4a"/><stop offset="1" stop-color="#ffd166"/></linearGradient>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-rev" viewBox="0 0 24 24"><path d="M16 5.5v13L5.5 12z" fill="currentColor"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><circle cx="9" cy="15" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 8h14l-4-4M20 16H6l4 4"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div>
+    <h1 class="logo"><span class="f">אחורנית</span><span class="sep"></span><span class="r">תינרוחא</span></h1>
+    <div class="tag">הקליטו · הפכו · חקו · נחשו</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="main">
+    <div class="how">
+      <div><i>1</i><b>הקליטו</b>אמרו משפט, והוא יתנגן לכם מהסוף להתחלה.</div>
+      <div><i>2</i><b>חקו את ההפוך</b>הקשיבו לג׳יבריש ההפוך ונסו לחקות אותו כמה שיותר מדויק.</div>
+      <div><i>3</i><b>הפכו שוב</b>החיקוי שלכם מתהפך — ואם הצלחתם, תשמעו את המשפט המקורי!</div>
+    </div>
+
+    <section class="card step active" id="s1">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <div><h2>ההקלטה המקורית</h2><p class="hint">אמרו את המשפט בקול ברור (עד 15 שניות)</p></div>
+        <span class="dur" id="d1"></span>
+      </div>
+      <div class="wave" id="wv1"><canvas id="w1"></canvas><div class="empty">עוד אין הקלטה — לחצו על "הקלטה"</div></div>
+      <div class="actions">
+        <button class="btn rec" data-rec="orig"><svg><use href="#i-mic"/></svg><span>הקלטה</span></button>
+        <button class="btn fwd" data-play="orig" data-cv="w1" disabled><svg><use href="#i-play"/></svg>רגיל</button>
+        <button class="btn rev" data-play="origRev" data-cv="w1" disabled><svg><use href="#i-rev"/></svg>הפוך</button>
+        <label class="btn ghost icon" title="טעינת קובץ שמע" aria-label="טעינת קובץ שמע"><svg><use href="#i-up"/></svg><input type="file" id="file" accept="audio/*" hidden></label>
+      </div>
+    </section>
+
+    <section class="card step locked" id="s2">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <div><h2>חקו את ההפוך</h2><p class="hint">הקשיבו להקלטה ההפוכה והקליטו את עצמכם מחקים אותה</p></div>
+        <span class="dur" id="d2"></span>
+      </div>
+      <div class="wave" id="wv2"><canvas id="w2"></canvas><div class="empty">החיקוי שלכם יופיע כאן</div></div>
+      <div class="actions">
+        <button class="btn rev" data-play="origRev" data-cv="w2" disabled><svg><use href="#i-rev"/></svg>שמעו את ההפוך</button>
+        <button class="btn rec" data-rec="imit" disabled><svg><use href="#i-mic"/></svg><span>הקלטת חיקוי</span></button>
+        <button class="btn" data-play="imit" data-cv="w2" disabled><svg><use href="#i-play"/></svg>החיקוי שלי</button>
+      </div>
+    </section>
+
+    <section class="card step locked" id="s3">
+      <div class="step-head">
+        <span class="step-num">3</span>
+        <div><h2>הרגע של האמת</h2><p class="hint">החיקוי שלכם, הפוך בחזרה. נשמע כמו המקור?</p></div>
+        <span class="dur" id="d3"></span>
+      </div>
+      <div class="wave" id="wv3"><canvas id="w3"></canvas><div class="empty">התוצאה תופיע כאן</div></div>
+      <div class="actions">
+        <button class="btn gold big" data-play="result" data-cv="w3" disabled><svg><use href="#i-play"/></svg>השמעת התוצאה</button>
+        <button class="btn" id="compare" disabled><svg><use href="#i-swap"/></svg>מקור מול תוצאה</button>
+        <button class="btn icon ghost" id="shareRes" title="שיתוף התוצאה" aria-label="שיתוף התוצאה" disabled><svg><use href="#i-share"/></svg></button>
+      </div>
+      <div class="result-row hidden" id="scoreBox">
+        <div class="ring">
+          <svg viewBox="0 0 120 120"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="fg" id="ringFg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
+          <div class="num"><div><span id="scoreNum">0</span><small>דמיון</small></div></div>
+        </div>
+        <div class="verdict">
+          <h3 id="verdictT"></h3>
+          <p id="verdictP"></p>
+          <div class="award hidden" id="awardBox">
+            <button class="btn gold" id="award"></button>
+            <button class="btn" id="guessed">ניחש נכון · ‎+50</button>
+          </div>
+        </div>
+      </div>
+      <div class="actions" style="margin-top:16px">
+        <button class="btn" id="newRound"><svg><use href="#i-redo"/></svg>סבב חדש</button>
+      </div>
+    </section>
+  </div>
+
+  <aside class="side">
+    <section class="card" id="phraseCard">
+      <div class="phrase-top">
+        <span class="eyebrow">משפט לאתגר</span>
+        <button class="btn icon ghost" id="eye" title="הסתרה / הצגה" aria-label="הסתרה או הצגה של המשפט"><svg><use href="#i-eye"/></svg></button>
+      </div>
+      <p class="phrase-text" id="phrase"></p>
+      <div class="actions" style="margin-top:0">
+        <button class="btn" id="dice"><svg><use href="#i-dice"/></svg>משפט חדש</button>
+        <div class="chips" id="levels">
+          <button class="chip on" data-lv="easy">קל</button>
+          <button class="chip" data-lv="medium">בינוני</button>
+          <button class="chip" data-lv="hard">קשה</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>שחקנים</h3>
+      <ul class="plist" id="plist"></ul>
+      <p class="muted" id="pempty">הוסיפו שחקנים כדי לשחק במצב קבוצתי ולצבור נקודות.</p>
+      <form class="padd" id="padd" autocomplete="off">
+        <input id="pname" maxlength="16" placeholder="שם שחקן">
+        <button class="btn" type="submit">הוספה</button>
+      </form>
+      <div class="small-actions">
+        <button class="btn ghost" id="resetScores">איפוס ניקוד</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>מהירות השמעה</h3>
+      <div class="speed">
+        <input type="range" id="speed" min="0.5" max="1.5" step="0.05" value="1">
+        <output id="speedOut">1.00×</output>
+      </div>
+      <p class="muted" style="margin:8px 0 0">האטה עוזרת לחקות קטעים הפוכים קשים.</p>
+    </section>
+
+    <section class="card">
+      <details class="rules">
+        <summary>חוקי המשחק הקבוצתי</summary>
+        <ol>
+          <li>שחקן א׳ מקבל משפט סודי (הסתירו אותו בלחיצה על העין) ומקליט אותו.</li>
+          <li>שחקן ב׳ שומע רק את הגרסה ההפוכה ומקליט חיקוי שלה.</li>
+          <li>האפליקציה הופכת את החיקוי — וכולם שומעים את התוצאה.</li>
+          <li>שחקן ב׳ מנסה לנחש את המשפט: ניחוש נכון = ‎+50, ובנוסף ניקוד לפי אחוז הדמיון.</li>
+          <li>לוחצים "סבב חדש" והתור עובר לשחקן הבא.</li>
+        </ol>
+      </details>
+    </section>
+  </aside>
+</div>
+
+<footer>כל ההקלטות נשמרות רק במכשיר שלכם ולא נשלחות לשום מקום.</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+const MAX_REC = 15;
+const COLORS = { orig: '#ff6b4a', origRev: '#33e1d4', imit: '#b58cff', result: '#ffd166' };
+const CANVAS_DEFAULT = { w1: 'orig', w2: 'imit', w3: 'result' };
+const PHRASES = {
+  easy: ['במבה','בננה','ג׳ירפה','אבטיח','מסטיק','שוקו','פיצה','קרמבו','פלאפל','מטריה','אוטובוס','טלפון','מלפפון','תפוז','ארנב','פרפר','שוקולד','דובדבן','היפופוטם','קנגורו','ספגטי','מקרר','אופניים','תרנגול','פינגווין','מסוק','קיפוד','לימונדה'],
+  medium: ['בוקר טוב','תפוח אדמה','יום הולדת שמח','פיתה עם חומוס','חתול על הגג','מכונת כביסה','שוקו חם','רכבת לחיפה','מטוס נייר','כדור פורח','גלידת וניל','מלך הג׳ונגל','ארוחת ערב','סוכריה על מקל','צב ים','עוגת שוקולד','שלום לכולם','לילה טוב','קפה עם חלב','דג זהב'],
+  hard: ['הכלב של השכנים נובח כל הלילה','אני רוצה עוד חתיכה של עוגה','הפיל הכחול אכל בננה צהובה','מי שם את המפתחות במקרר','השעון המעורר צלצל מוקדם מדי','גנן גידל דגן בגן','הדג הזהב שוחה במים קרים','סבא קנה לי אופניים חדשים','התרנגול קם לפני השמש','הג׳ירפה לא מצאה את המשקפיים']
+};
+
+let actx = null;
+const bufs = { orig: null, origRev: null, imit: null, result: null };
+let rec = null, recPending = false, playing = null, speed = 1, lastScore = null, awarded = { score: false, guess: false };
+let compareToken = 0, comparing = false;
+let level = 'easy', phraseHidden = false;
+const isAndroidApp = !!(window.AndroidBridge && window.AndroidBridge.shareWav);
+const NA = window.NativeAudio && typeof window.NativeAudio.startRecording === 'function' ? window.NativeAudio : null;
+
+/* ---------- storage ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('achoranit.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem('achoranit.' + k, JSON.stringify(v)); } catch {} }
+};
+let players = store.get('players', []);
+let turn = store.get('turn', 0);
+
+/* ---------- clips (mono Float32 PCM) ---------- */
+function makeClip(data, sampleRate) { return { data, sampleRate, length: data.length, duration: data.length / sampleRate }; }
+function ctx() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+// Decode a compressed file into raw channels. In the app we avoid opening an output stream.
+function decodeAudio(ab) {
+  const c = NA && window.OfflineAudioContext ? new OfflineAudioContext(1, 1, 44100) : ctx();
+  return new Promise((res, rej) => {
+    const p = c.decodeAudioData(ab, res, rej);
+    if (p && p.then) p.then(res, rej);
+  }).then(b => ({ channels: Array.from({ length: b.numberOfChannels }, (_, k) => b.getChannelData(k)), sampleRate: b.sampleRate }));
+}
+function trimBounds(x, sr) {
+  const f = Math.max(1, Math.round(sr * 0.01));
+  const nf = Math.floor(x.length / f);
+  if (nf < 3) return [0, x.length];
+  const r = new Float32Array(nf); let mx = 0;
+  for (let j = 0; j < nf; j++) {
+    let s = 0;
+    for (let i = j * f, e = i + f; i < e; i++) s += x[i] * x[i];
+    r[j] = Math.sqrt(s / f); if (r[j] > mx) mx = r[j];
+  }
+  const thr = Math.max(mx * 0.1, 0.002);
+  let a = 0; while (a < nf && r[a] < thr) a++;
+  let b = nf - 1; while (b > a && r[b] < thr) b--;
+  if (a >= b) return [0, x.length];
+  const pad = Math.round(sr * 0.12);
+  const s = Math.max(0, a * f - pad), e = Math.min(x.length, (b + 1) * f + pad);
+  if (e - s < sr * 0.25) return [0, x.length];
+  return [s, e];
+}
+// raw {channels, sampleRate} -> mono, trimmed, normalized clip with short fades
+function prepare(raw, maxSec = 30) {
+  const { channels, sampleRate: sr } = raw, ch = channels.length, n = channels[0].length;
+  let mono;
+  if (ch === 1) mono = channels[0];
+  else { mono = new Float32Array(n); for (let k = 0; k < ch; k++) { const d = channels[k]; for (let i = 0; i < n; i++) mono[i] += d[i] / ch; } }
+  let [s, e] = trimBounds(mono, sr);
+  e = Math.min(e, s + Math.round(maxSec * sr));
+  const seg = mono.subarray(s, e);
+  let peak = 0; for (let i = 0; i < seg.length; i++) { const a = Math.abs(seg[i]); if (a > peak) peak = a; }
+  const g = peak > 0.001 ? Math.min(0.9 / peak, 12) : 1;
+  const out = new Float32Array(seg.length);
+  const fade = Math.min(Math.round(sr * 0.006), seg.length >> 2);
+  for (let i = 0; i < seg.length; i++) {
+    let v = seg[i] * g;
+    if (i < fade) v *= i / fade; else if (i > seg.length - fade) v *= (seg.length - i) / fade;
+    out[i] = v;
+  }
+  return makeClip(out, sr);
+}
+function reverse(c) {
+  const n = c.length, d = new Float32Array(n);
+  for (let i = 0; i < n; i++) d[i] = c.data[n - 1 - i];
+  return makeClip(d, c.sampleRate);
+}
+function setBuffer(key, clip) {
+  bufs[key] = clip;
+  if (key === 'orig') {
+    bufs.origRev = reverse(clip);
+    bufs.imit = bufs.result = null; lastScore = null;
+  }
+  if (key === 'imit') {
+    bufs.result = reverse(clip);
+    awarded = { score: false, guess: false };
+    try { lastScore = similarity(bufs.orig, bufs.origRev, bufs.result); } catch (e) { console.error(e); lastScore = null; }
+    render();
+    showScore();
+    $('#s3').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => play('result', 'w3'), 450);
+    return;
+  }
+  render();
+}
+
+/* ---------- PCM16 <-> base64 (native bridge) ---------- */
+function bytesToB64(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function floatToB64(f) {
+  const bytes = new Uint8Array(f.length * 2), v = new DataView(bytes.buffer);
+  for (let i = 0; i < f.length; i++) v.setInt16(i * 2, Math.max(-1, Math.min(1, f[i])) * 0x7fff, true);
+  return bytesToB64(bytes);
+}
+function b64ToFloat(b64) {
+  const bin = atob(b64), n = bin.length >> 1, out = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let s = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8);
+    if (s >= 0x8000) s -= 0x10000;
+    out[i] = s / 32768;
+  }
+  return out;
+}
+
+/* ---------- audio engines ---------- */
+// Browser: getUserMedia + MediaRecorder for capture, Web Audio for playback.
+const WebEngine = {
+  name: 'web', _r: null, _src: null, _cache: new WeakMap(),
+  async startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder)
+      throw new Error('הדפדפן הזה לא תומך בהקלטה. אפשר לטעון קובץ שמע במקום.');
+    const c = ctx();
+    let stream;
+    try {
+      // voice-call filters off: they distort the reversed gibberish we want to capture faithfully
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+    } catch (e) { throw new Error('אין גישה למיקרופון. אשרו הרשאת מיקרופון ונסו שוב.'); }
+    const src = c.createMediaStreamSource(stream);
+    const an = c.createAnalyser(); an.fftSize = 1024; src.connect(an);
+    const types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus', 'audio/aac'];
+    const mime = MediaRecorder.isTypeSupported ? types.find(t => MediaRecorder.isTypeSupported(t)) || '' : '';
+    const opts = mime ? { mimeType: mime, audioBitsPerSecond: 256000 } : { audioBitsPerSecond: 256000 };
+    let mr; try { mr = new MediaRecorder(stream, opts); } catch { mr = new MediaRecorder(stream); }
+    const chunks = [];
+    mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    const done = new Promise(res => { mr.onstop = () => res(new Blob(chunks, { type: mr.mimeType || mime || 'audio/webm' })); });
+    mr.start(100);
+    this._r = { stream, src, an, mr, done, buf: new Uint8Array(an.fftSize) };
+  },
+  level() {
+    const r = this._r; if (!r) return 0;
+    r.an.getByteTimeDomainData(r.buf);
+    let s = 0; for (let i = 0; i < r.buf.length; i++) { const v = (r.buf[i] - 128) / 128; s += v * v; }
+    return Math.sqrt(s / r.buf.length);
+  },
+  async stopRecording() {
+    const r = this._r; this._r = null; if (!r) return null;
+    try { r.mr.stop(); } catch {}
+    const blob = await r.done;
+    r.stream.getTracks().forEach(t => t.stop());
+    try { r.src.disconnect(); } catch {}
+    return decodeAudio(await blob.arrayBuffer());
+  },
+  play(key, clip, rate, onEnded) {
+    this.stop();
+    const c = ctx();
+    let b = this._cache.get(clip);
+    if (!b) { b = c.createBuffer(1, clip.length, clip.sampleRate); b.getChannelData(0).set(clip.data); this._cache.set(clip, b); }
+    const s = c.createBufferSource();
+    s.buffer = b; s.playbackRate.value = rate; s.connect(c.destination);
+    s.onended = () => { if (this._src === s) { this._src = null; onEnded(); } };
+    this._src = s; s.start();
+  },
+  stop() { const s = this._src; this._src = null; if (s) { try { s.onended = null; s.stop(); } catch {} } }
+};
+
+// Android app: raw 44.1kHz PCM via AudioRecord, playback via AudioTrack (window.NativeAudio).
+const nativeCbs = {}; let nativeSeq = 0;
+const NativeEngine = {
+  name: 'native', _loaded: {}, _id: 0,
+  async startRecording() {
+    if (!NA.hasMicPermission()) {
+      const ok = await new Promise(res => { nativeCbs.permission = res; NA.requestMicPermission(); });
+      if (!ok) throw new Error('אין גישה למיקרופון. אפשר לאשר אותה בהגדרות האפליקציה ← הרשאות.');
+    }
+    if (!NA.startRecording()) throw new Error('לא הצלחנו להפעיל את המיקרופון');
+  },
+  level() { return NA.getLevel(); },
+  async stopRecording() {
+    const s = NA.stopRecording(), i = s.indexOf(':');
+    return { channels: [b64ToFloat(s.slice(i + 1))], sampleRate: +s.slice(0, i) };
+  },
+  play(key, clip, rate, onEnded) {
+    this.stop();
+    if (this._loaded[key] !== clip) { NA.load(key, floatToB64(clip.data), clip.sampleRate); this._loaded[key] = clip; }
+    const id = ++nativeSeq; this._id = id;
+    nativeCbs['end' + id] = onEnded;
+    NA.play(key, rate, id);
+  },
+  stop() { if (this._id) { delete nativeCbs['end' + this._id]; this._id = 0; } NA.stop(); }
+};
+window.__nativeAudioEvent = (type, value) => {
+  if (type === 'permission') { const cb = nativeCbs.permission; delete nativeCbs.permission; if (cb) cb(!!value); }
+  else if (type === 'ended') { const cb = nativeCbs['end' + value]; delete nativeCbs['end' + value]; if (cb) cb(); }
+  else if (type === 'pause') { if (rec) stopRec(); stopPlay(); }
+};
+const engine = NA ? NativeEngine : WebEngine;
+
+/* ---------- recording ---------- */
+async function startRec(slot) {
+  if (rec || recPending) return;
+  stopPlay();
+  recPending = true; render();
+  try { await engine.startRecording(); }
+  catch (e) { recPending = false; render(); toast(e.message || 'ההקלטה נכשלה'); return; }
+  recPending = false;
+  const cv = slot === 'orig' ? 'w1' : 'w2';
+  rec = { slot, t0: performance.now(), levels: [], cv };
+  rec.timer = setTimeout(stopRec, MAX_REC * 1000);
+  $('#wv' + cv.slice(1)).classList.add('live');
+  render();
+  liveLoop(rec);
+}
+async function stopRec() {
+  if (!rec || rec.stopping) return;
+  const r = rec; r.stopping = true;
+  clearTimeout(r.timer);
+  let raw = null, err = null;
+  try { raw = await engine.stopRecording(); } catch (e) { err = e; }
+  rec = null;
+  $('#wv' + r.cv.slice(1)).classList.remove('live');
+  if (err || !raw || !raw.channels[0].length) { if (err) console.error(err); toast('לא הצלחנו לעבד את ההקלטה'); render(); return; }
+  if (performance.now() - r.t0 < 400 || raw.channels[0].length < raw.sampleRate * 0.3) { toast('ההקלטה קצרה מדי — נסו שוב'); render(); return; }
+  setBuffer(r.slot, prepare(raw));
+}
+function liveLoop(r) {
+  if (rec !== r || r.stopping) return;
+  r.levels.push(engine.level());
+  drawLive($('#' + r.cv), r.levels);
+  const t = (performance.now() - r.t0) / 1000;
+  const lbl = $(`[data-rec="${r.slot}"] span`);
+  if (lbl) lbl.innerHTML = `עצירה <span class="time">${fmt(t)}</span>`;
+  requestAnimationFrame(() => liveLoop(r));
+}
+
+/* ---------- playback ---------- */
+function play(key, cv, onEnd, keepCompare) {
+  const clip = bufs[key]; if (!clip || rec) return;
+  if (!keepCompare) { compareToken++; comparing = false; }
+  stopPlay(true);
+  const p = { key, cv, t0: performance.now(), dur: clip.duration / speed * 1000 };
+  playing = p;
+  try {
+    engine.play(key, clip, speed, () => {
+      if (playing !== p) return;
+      playing = null; redraw(cv); render();
+      if (onEnd) onEnd();
+    });
+  } catch (e) { console.error(e); playing = null; toast('ההשמעה נכשלה'); render(); return; }
+  render();
+  tick(p);
+}
+function stopPlay(silent) {
+  if (!playing) return;
+  const p = playing; playing = null;
+  engine.stop();
+  redraw(p.cv);
+  if (!silent) render();
+}
+function tick(p) {
+  if (playing !== p) return;
+  const prog = Math.max(0, Math.min(1, (performance.now() - p.t0) / p.dur));
+  drawWave($('#' + p.cv), bufs[p.key], COLORS[p.key], prog);
+  requestAnimationFrame(() => tick(p));
+}
+function compare() {
+  if (comparing) { compareToken++; comparing = false; stopPlay(); return; }
+  const t = ++compareToken; comparing = true;
+  play('orig', 'w1', () => {
+    setTimeout(() => {
+      if (t !== compareToken || rec) return;
+      play('result', 'w3', () => { if (t === compareToken) { comparing = false; render(); } }, true);
+    }, 350);
+  }, true);
+}
+
+/* ---------- drawing ---------- */
+const peakCache = new WeakMap();
+function peaks(buf, n) {
+  let m = peakCache.get(buf);
+  if (m && m.n === n) return m.p;
+  const d = buf.data, step = d.length / n, p = new Float32Array(n); let mx = 0;
+  for (let i = 0; i < n; i++) {
+    let v = 0; const a = Math.floor(i * step), b = Math.min(d.length, Math.floor((i + 1) * step));
+    for (let j = a; j < b; j++) { const x = Math.abs(d[j]); if (x > v) v = x; }
+    p[i] = v; if (v > mx) mx = v;
+  }
+  if (mx > 0) for (let i = 0; i < n; i++) p[i] /= mx;
+  peakCache.set(buf, { n, p });
+  return p;
+}
+function setup(cv) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+  return { g, w, h };
+}
+function bar(g, x, y, w, h) {
+  const r = Math.min(w / 2, h / 2);
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.fill();
+}
+function alpha(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
+function drawWave(cv, buf, color, progress = -1) {
+  const { g, w, h } = setup(cv); if (!buf || !w) return;
+  const bw = 3, gap = 2, n = Math.max(8, Math.floor((w + gap) / (bw + gap)));
+  const p = peaks(buf, n), mid = h / 2;
+  for (let i = 0; i < n; i++) {
+    const amp = Math.max(3, Math.pow(p[i], 0.8) * h * 0.95);
+    g.fillStyle = progress < 0 || (i + 0.5) / n <= progress ? color : alpha(color, 0.25);
+    bar(g, i * (bw + gap), mid - amp / 2, bw, amp);
+  }
+  if (progress >= 0) { g.fillStyle = '#fff'; g.fillRect(Math.min(w - 2, progress * w), 0, 2, h); }
+}
+function drawLive(cv, levels) {
+  const { g, w, h } = setup(cv);
+  const bw = 3, gap = 2, n = Math.floor((w + gap) / (bw + gap));
+  const start = Math.max(0, levels.length - n), mid = h / 2;
+  g.fillStyle = '#ff3d71';
+  for (let i = start; i < levels.length; i++) {
+    const amp = Math.max(3, Math.min(1, Math.pow(levels[i] * 5, 0.7)) * h * 0.95);
+    bar(g, (i - start) * (bw + gap), mid - amp / 2, bw, amp);
+  }
+}
+function redraw(cv) {
+  if (rec && rec.cv === cv) return;
+  const key = CANVAS_DEFAULT[cv];
+  drawWave($('#' + cv), bufs[key], COLORS[key]);
+}
+
+/* ---------- similarity scoring (MFCC + DTW) ---------- */
+function fftInPlace(re, im) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
+    if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; }
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) {
+      let cr = 1, ci = 0;
+      for (let j = 0; j < len / 2; j++) {
+        const a = i + j, b = a + len / 2;
+        const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+        const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
+      }
+    }
+  }
+}
+const melCache = {};
+function melBank(N, sr, nb = 26, fmin = 100, fmax = 6000) {
+  const key = N + ':' + sr; if (melCache[key]) return melCache[key];
+  const mel = f => 2595 * Math.log10(1 + f / 700), inv = m => 700 * (Math.pow(10, m / 2595) - 1);
+  const top = Math.min(fmax, sr / 2), m0 = mel(fmin), m1 = mel(top), pts = [];
+  for (let i = 0; i < nb + 2; i++) pts.push(Math.floor((N + 1) * inv(m0 + (m1 - m0) * i / (nb + 1)) / sr));
+  const bank = [];
+  for (let b = 1; b <= nb; b++) {
+    const a = pts[b - 1], c = pts[b], d = pts[b + 1], w = [];
+    for (let k = a; k <= d; k++) w.push(k < c ? (k - a) / Math.max(1, c - a) : (d - k) / Math.max(1, d - c));
+    bank.push({ a, w });
+  }
+  return (melCache[key] = bank);
+}
+function features(buf) {
+  const x = buf.data, sr = buf.sampleRate;
+  const N = sr > 32000 ? 1024 : 512, hop = N >> 1, bank = melBank(N, sr), NC = 13;
+  const win = new Float32Array(N); for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+  const re = new Float64Array(N), im = new Float64Array(N), pw = new Float64Array(N / 2 + 1), mels = new Float64Array(bank.length);
+  const M = [], T = []; let maxMel = 0, maxTot = 0;
+  for (let s = 0; s + N <= x.length; s += hop) {
+    for (let i = 0; i < N; i++) { re[i] = x[s + i] * win[i]; im[i] = 0; }
+    fftInPlace(re, im);
+    let tot = 0;
+    for (let k = 0; k <= N / 2; k++) { pw[k] = re[k] * re[k] + im[k] * im[k]; tot += pw[k]; }
+    const m = new Float64Array(bank.length);
+    for (let b = 0; b < bank.length; b++) {
+      let e = 0; const { a, w } = bank[b];
+      for (let k = 0; k < w.length; k++) e += pw[a + k] * w[k];
+      m[b] = e; if (e > maxMel) maxMel = e;
+    }
+    M.push(m); T.push(tot); if (tot > maxTot) maxTot = tot;
+  }
+  // Floor ~50dB below the loudest moment, so pauses compare equal whether they hold
+  // digital silence or room noise.
+  const melFloor = maxMel * 1e-5 + 1e-12, totFloor = maxTot * 1e-5 + 1e-12;
+  const C = [], E = [];
+  for (let f = 0; f < M.length; f++) {
+    for (let b = 0; b < bank.length; b++) mels[b] = Math.log(M[f][b] + melFloor);
+    const c = new Float32Array(NC - 1);
+    for (let n = 1; n < NC; n++) {
+      let v = 0; for (let b = 0; b < mels.length; b++) v += mels[b] * Math.cos(Math.PI * n * (b + 0.5) / mels.length);
+      c[n - 1] = v;
+    }
+    C.push(c); E.push(Math.log(T[f] + totFloor));
+  }
+  if (C.length) { // cepstral mean normalization
+    const mean = new Float32Array(NC - 1);
+    for (const c of C) for (let i = 0; i < c.length; i++) mean[i] += c[i] / C.length;
+    for (const c of C) for (let i = 0; i < c.length; i++) c[i] -= mean[i];
+  }
+  return { C, E };
+}
+function dtw(A, B) {
+  const n = A.length, m = B.length; if (!n || !m) return Infinity;
+  let prev = new Float64Array(m + 1).fill(Infinity), cur = new Float64Array(m + 1); prev[0] = 0;
+  for (let i = 1; i <= n; i++) {
+    cur[0] = Infinity; const a = A[i - 1];
+    for (let j = 1; j <= m; j++) {
+      const b = B[j - 1]; let d = 0;
+      for (let k = 0; k < a.length; k++) { const t = a[k] - b[k]; d += t * t; }
+      d = Math.sqrt(d);
+      cur[j] = d + Math.min(prev[j], cur[j - 1], prev[j - 1]);
+    }
+    [prev, cur] = [cur, prev];
+  }
+  return prev[m] / (n + m);
+}
+function resample(arr, n) {
+  const out = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    const t = i * (arr.length - 1) / (n - 1), a = Math.floor(t), b = Math.min(arr.length - 1, a + 1);
+    out[i] = arr[a] + (arr[b] - arr[a]) * (t - a);
+  }
+  return out;
+}
+function pearson(a, b) {
+  const n = a.length; let ma = 0, mb = 0;
+  for (let i = 0; i < n; i++) { ma += a[i] / n; mb += b[i] / n; }
+  let num = 0, da = 0, db = 0;
+  for (let i = 0; i < n; i++) { const x = a[i] - ma, y = b[i] - mb; num += x * y; da += x * x; db += y * y; }
+  return da && db ? num / Math.sqrt(da * db) : 0;
+}
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+// Compare result to the original, using the original-reversed as a "wrong answer" baseline.
+function similarity(orig, origRev, result) {
+  const fo = features(orig), fr = features(result), fb = features(origRev);
+  if (fo.C.length < 2 || fr.C.length < 2) return 0;
+  const d = dtw(fo.C, fr.C), dBad = dtw(fo.C, fb.C);
+  const ratio = dBad > 0 ? d / dBad : 1;
+  const spec = clamp((1.1 - ratio) / 0.65, 0, 1);
+  const env = clamp(pearson(resample(fo.E, 64), resample(fr.E, 64)), 0, 1);
+  const dur = Math.min(orig.duration, result.duration) / Math.max(orig.duration, result.duration);
+  const s = 0.55 * spec + 0.3 * env + 0.15 * dur;
+  return Math.round(100 * Math.pow(clamp(s, 0, 1), 0.85));
+}
+
+/* ---------- score UI ---------- */
+function verdict(s) {
+  if (s >= 85) return ['מדהים! 🤯', 'כמעט אי אפשר להבדיל בין התוצאה למקור.'];
+  if (s >= 70) return ['קרוב מאוד!', 'עוד ניסיון אחד וזה מושלם.'];
+  if (s >= 50) return ['לא רע בכלל', 'אפשר לזהות את המשפט — נסו להאט את המהירות ולחקות שוב.'];
+  if (s >= 30) return ['יש על מה לעבוד', 'הקשיבו שוב להפוך ושימו לב לסדר ההברות.'];
+  return ['שפה של חייזרים 👽', 'זה נשמע כמו משהו אחר לגמרי… עוד ניסיון?'];
+}
+function showScore() {
+  const box = $('#scoreBox');
+  if (lastScore == null) { box.classList.add('hidden'); return; }
+  box.classList.remove('hidden');
+  const fg = $('#ringFg'), C = 314.16;
+  fg.style.strokeDashoffset = C;
+  requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = C * (1 - lastScore / 100); }));
+  const el = $('#scoreNum'), t0 = performance.now(), target = lastScore;
+  (function step(t) {
+    const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = Math.round(target * e);
+    if (k < 1) requestAnimationFrame(step);
+  })(t0);
+  const [h, p] = verdict(lastScore);
+  $('#verdictT').textContent = h; $('#verdictP').textContent = p;
+  if (lastScore >= 70) confetti();
+}
+
+/* ---------- confetti ---------- */
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = $('#confetti'), g = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ['#ff6b4a', '#33e1d4', '#ffd166', '#b58cff', '#fff'];
+  const ps = Array.from({ length: 140 }, () => ({
+    x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .45,
+    vx: (Math.random() - .5) * 14, vy: -Math.random() * 14 - 4, r: Math.random() * 6 + 3,
+    a: Math.random() * 6, va: (Math.random() - .5) * .3, c: cols[(Math.random() * cols.length) | 0]
+  }));
+  const t0 = performance.now();
+  (function f(t) {
+    g.clearRect(0, 0, cv.width, cv.height);
+    for (const p of ps) {
+      p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = p.c; g.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); g.restore();
+    }
+    if (t - t0 < 2600) requestAnimationFrame(f); else g.clearRect(0, 0, cv.width, cv.height);
+  })(t0);
+}
+
+/* ---------- WAV export / share ---------- */
+function toWav(buf) {
+  const d = buf.data, n = d.length, sr = buf.sampleRate;
+  const ab = new ArrayBuffer(44 + n * 2), v = new DataView(ab);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); ws(8, 'WAVE'); ws(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  ws(36, 'data'); v.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, clamp(d[i], -1, 1) * 0x7fff, true);
+  return new Blob([ab], { type: 'audio/wav' });
+}
+async function shareResult() {
+  if (!bufs.result) return;
+  // original then result, joined by a short gap
+  const a = bufs.orig, b = bufs.result, gap = Math.round(a.sampleRate * 0.6);
+  const d = new Float32Array(a.length + gap + b.length);
+  d.set(a.data, 0); d.set(b.data, a.length + gap);
+  const blob = toWav(makeClip(d, a.sampleRate)), name = 'achoranit.wav';
+  if (isAndroidApp) {
+    window.AndroidBridge.shareWav(bytesToB64(new Uint8Array(await blob.arrayBuffer())), name);
+    return;
+  }
+  const file = new File([blob], name, { type: 'audio/wav' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: 'אחורנית' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  const url = URL.createObjectURL(blob), a2 = document.createElement('a');
+  a2.href = url; a2.download = name; document.body.appendChild(a2); a2.click(); a2.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+/* ---------- phrases ---------- */
+function newPhrase() {
+  const list = PHRASES[level], cur = $('#phrase').textContent;
+  let p; do { p = list[(Math.random() * list.length) | 0]; } while (list.length > 1 && p === cur);
+  $('#phrase').textContent = p;
+}
+function setHidden(h) { phraseHidden = h; $('#phrase').classList.toggle('secret', h); }
+
+/* ---------- players ---------- */
+function savePlayers() { store.set('players', players); store.set('turn', turn); }
+function renderPlayers() {
+  const ul = $('#plist'); ul.textContent = '';
+  if (turn >= players.length) turn = 0;
+  players.forEach((p, i) => {
+    const li = document.createElement('li'); if (i === turn) li.className = 'cur';
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = p.name;
+    if (i === turn) { const t = document.createElement('span'); t.className = 'turn'; t.textContent = ' · בתור'; nm.appendChild(t); }
+    const pts = document.createElement('span'); pts.className = 'pts'; pts.textContent = p.score;
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'הסרת ' + p.name);
+    x.onclick = () => { players.splice(i, 1); if (turn > i || turn >= players.length) turn = Math.max(0, turn - 1); savePlayers(); render(); };
+    nm.onclick = () => { turn = i; savePlayers(); render(); };
+    li.append(nm, pts, x); ul.appendChild(li);
+  });
+  $('#pempty').classList.toggle('hidden', players.length > 0);
+}
+
+/* ---------- render ---------- */
+function fmt(t) { const s = Math.floor(t); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+function render() {
+  const has1 = !!bufs.orig, has2 = !!bufs.result;
+  $('#s2').classList.toggle('locked', !has1);
+  $('#s3').classList.toggle('locked', !has2);
+  $('#s1').classList.toggle('active', !has1);
+  $('#s2').classList.toggle('active', has1 && !has2);
+  $('#s3').classList.toggle('active', has2);
+  const onCv = cv => !!(playing && playing.cv === cv);
+  $('#wv1').classList.toggle('has', has1 || onCv('w1'));
+  $('#wv2').classList.toggle('has', !!bufs.imit || onCv('w2'));
+  $('#wv3').classList.toggle('has', has2 || onCv('w3'));
+  $('#d1').textContent = has1 ? bufs.orig.duration.toFixed(1) + 's' : '';
+  $('#d2').textContent = bufs.imit ? bufs.imit.duration.toFixed(1) + 's' : '';
+  $('#d3').textContent = has2 ? bufs.result.duration.toFixed(1) + 's' : '';
+
+  $$('[data-play]').forEach(b => {
+    const on = playing && playing.key === b.dataset.play && playing.cv === b.dataset.cv;
+    b.disabled = !bufs[b.dataset.play] || !!rec;
+    b.classList.toggle('playing', !!on);
+    b.querySelector('use').setAttribute('href', on ? '#i-stop' : (b.dataset.play === 'origRev' ? '#i-rev' : '#i-play'));
+  });
+  $$('[data-rec]').forEach(b => {
+    const slot = b.dataset.rec, on = rec && rec.slot === slot;
+    b.disabled = (slot === 'imit' && !has1) || (!!rec && !on) || recPending;
+    b.classList.toggle('on', !!on);
+    b.querySelector('use').setAttribute('href', on ? '#i-stop' : '#i-mic');
+    if (!on) {
+      const again = slot === 'orig' ? has1 : !!bufs.imit;
+      b.querySelector('span').textContent = slot === 'orig' ? (again ? 'הקלטה מחדש' : 'הקלטה') : (again ? 'חיקוי חדש' : 'הקלטת חיקוי');
+    }
+  });
+  $('#compare').disabled = !has2 || !!rec;
+  $('#compare').classList.toggle('playing', comparing);
+  $('#shareRes').disabled = !has2 || !!rec;
+  $('#file').disabled = !!rec;
+
+  if (lastScore == null) $('#scoreBox').classList.add('hidden');
+  const showAward = players.length > 0 && lastScore != null;
+  $('#awardBox').classList.toggle('hidden', !showAward);
+  if (showAward) {
+    const p = players[turn];
+    $('#award').textContent = `‎+${lastScore} ל${p.name}`;
+    $('#award').disabled = awarded.score;
+    $('#guessed').disabled = awarded.guess;
+  }
+  renderPlayers();
+  for (const cv of ['w1', 'w2', 'w3']) if (!(playing && playing.cv === cv)) redraw(cv);
+}
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const pb = e.target.closest('[data-play]');
+  if (pb) {
+    const on = playing && playing.key === pb.dataset.play && playing.cv === pb.dataset.cv;
+    if (on) { compareToken++; comparing = false; stopPlay(); } else play(pb.dataset.play, pb.dataset.cv);
+    return;
+  }
+  const rb = e.target.closest('[data-rec]');
+  if (rb) { if (rec && rec.slot === rb.dataset.rec) stopRec(); else startRec(rb.dataset.rec); }
+});
+$('#compare').onclick = compare;
+$('#shareRes').onclick = shareResult;
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try { stopPlay(); setBuffer('orig', prepare(await decodeAudio(await f.arrayBuffer()))); toast('הקובץ נטען (עד 30 שניות)'); }
+  catch { toast('לא הצלחנו לקרוא את הקובץ'); }
+};
+$('#newRound').onclick = () => {
+  compareToken++; comparing = false; stopPlay(true);
+  bufs.orig = bufs.origRev = bufs.imit = bufs.result = null; lastScore = null;
+  if (players.length) turn = (turn + 1) % players.length;
+  savePlayers(); newPhrase(); render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+$('#award').onclick = () => {
+  if (!players.length || lastScore == null || awarded.score) return;
+  players[turn].score += lastScore; awarded.score = true; savePlayers(); render(); toast(`${players[turn].name} קיבל/ה ${lastScore} נקודות`);
+};
+$('#guessed').onclick = () => {
+  if (!players.length || awarded.guess) return;
+  players[turn].score += 50; awarded.guess = true; savePlayers(); render(); toast(`ניחוש נכון! ‎+50 ל${players[turn].name}`);
+};
+$('#padd').onsubmit = e => {
+  e.preventDefault();
+  const name = $('#pname').value.trim(); if (!name) return;
+  if (players.length >= 12) { toast('אפשר עד 12 שחקנים'); return; }
+  players.push({ name, score: 0 }); $('#pname').value = ''; savePlayers(); render();
+};
+$('#resetScores').onclick = () => { players.forEach(p => p.score = 0); turn = 0; savePlayers(); render(); };
+$('#dice').onclick = newPhrase;
+$('#eye').onclick = () => setHidden(!phraseHidden);
+$('#phrase').onclick = () => { if (phraseHidden) setHidden(false); };
+$('#levels').onclick = e => {
+  const c = e.target.closest('[data-lv]'); if (!c) return;
+  level = c.dataset.lv; $$('#levels .chip').forEach(x => x.classList.toggle('on', x === c)); newPhrase();
+};
+$('#speed').oninput = e => {
+  speed = +e.target.value; $('#speedOut').textContent = speed.toFixed(2) + '×';
+  if (playing) stopPlay();
+};
+document.addEventListener('keydown', e => {
+  if (e.code !== 'Space' || e.target.closest('input,button,select,textarea')) return;
+  e.preventDefault();
+  if (rec) stopRec(); else startRec(bufs.orig ? 'imit' : 'orig');
+});
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(render, 120); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) { if (rec) stopRec(); stopPlay(); } });
+
+newPhrase();
+render();
+})();
+</script>
+</body>
+</html>
