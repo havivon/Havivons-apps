@@ -135,19 +135,14 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 .mini-phrase b{color:var(--text);font-family:var(--display);font-weight:400;font-size:22px}
 
 /* ---------- result ---------- */
-.score-row{display:flex;gap:18px;align-items:center;width:100%}
-.ring{position:relative;width:132px;height:132px;flex:none}
-.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:10}
-.ring .bgc{stroke:rgba(255,255,255,.08)}
-.ring .fg{stroke:url(#rg);stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
-.ring .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-family:var(--display);font-size:40px;line-height:1}
-.ring .num small{display:block;font-family:var(--font);font-size:13px;color:var(--muted);margin-top:4px}
-.verdict{flex:1;text-align:start}
-.verdict h3{margin:0 0 6px;font-size:23px}
-.verdict p{margin:0;color:var(--muted);font-size:16px;line-height:1.5}
 .box{width:100%;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:22px;background:var(--surface);border:1px solid var(--line);text-align:center}
 .hidden{display:none !important}
+.lvl{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:16px;font-weight:700;border:1px solid}
+.lvl[data-l=easy]{color:#bff5dc;background:rgba(61,220,151,.14);border-color:rgba(61,220,151,.45)}
+.lvl[data-l=medium]{color:#ffeab3;background:rgba(255,209,102,.13);border-color:rgba(255,209,102,.45)}
+.lvl[data-l=hard]{color:#ffd3c7;background:rgba(255,107,74,.14);border-color:rgba(255,107,74,.5)}
+.lvl:empty{display:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 
 /* ---------- board ---------- */
 .board{list-style:none;margin:0;padding:0;display:grid;gap:10px;width:100%}
@@ -220,9 +215,9 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
       <p class="tag">אומרים · הופכים · מחקים · מנחשים</p>
     </div>
     <div class="foot">
-      <button class="btn xl primary" id="goParty"><svg><use href="#i-users"/></svg>משחק קבוצתי</button>
-      <button class="btn xl" id="goSolo"><svg><use href="#i-mic"/></svg>אימון לבד</button>
-      <button class="link" id="howBtn">איך משחקים?</button>
+      <button class="btn xl primary" id="goParty"><svg><use href="#i-users"/></svg>משחק חברים</button>
+      <button class="btn xl" id="goSolo"><svg><use href="#i-mic"/></svg>אימון סולו</button>
+      <button class="link" id="howBtn">רגע, איך משחקים?</button>
     </div>
   </section>
 
@@ -234,18 +229,15 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
       <p class="empty-players" id="pempty">עוד אין שחקנים. הוסיפו לפחות שניים.</p>
       <form class="add" id="padd" autocomplete="off">
         <input id="pname" maxlength="16" placeholder="שם שחקן" enterkeyhint="done">
-        <button class="btn" type="submit" aria-label="הוספת שחקן"><svg><use href="#i-plus"/></svg>הוספה</button>
+        <button class="btn" type="submit" aria-label="הוספת שחקן"><svg><use href="#i-plus"/></svg>צרפו</button>
       </form>
-      <div class="opt"><span>רמת קושי</span>
-        <div class="seg" id="levels"><button data-lv="easy">קל</button><button data-lv="medium">בינוני</button><button data-lv="hard">קשה</button></div>
-      </div>
       <div class="opt"><span>סבבים</span>
         <div class="stepper"><button id="rMinus" aria-label="פחות סבבים">−</button><output id="roundsOut">1</output><button id="rPlus" aria-label="יותר סבבים">+</button></div>
       </div>
       <p class="hint" id="roundsHint"></p>
     </div>
     <div class="foot">
-      <button class="btn xl primary" id="startGame"><svg><use href="#i-play"/></svg>התחלת משחק</button>
+      <button class="btn xl primary" id="startGame"><svg><use href="#i-play"/></svg>יוצאים לדרך!</button>
     </div>
   </section>
 
@@ -253,25 +245,27 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="handoff">
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2></h2><span class="pill" data-turn></span></header>
     <div class="body center">
+      <div class="chips" id="hoChips"><span class="lvl" id="hoRound" data-l=""></span></div>
       <div class="avatar" id="hoAvatar"></div>
       <p class="eyebrow">הטלפון עובר אל</p>
       <h1 class="big-name" id="hoName"></h1>
       <p class="lead" id="hoText"></p>
     </div>
-    <div class="foot"><button class="btn xl primary" id="hoGo">יאללה, מתחילים<svg><use href="#i-next"/></svg></button></div>
+    <div class="foot"><button class="btn xl primary" id="hoGo">הטלפון אצלי!<svg><use href="#i-next"/></svg></button></div>
   </section>
 
   <!-- SECRET PHRASE -->
   <section class="screen hidden" id="secret">
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2 id="secretTitle">המשפט הסודי</h2><span class="pill" data-turn></span></header>
     <div class="body center">
+      <span class="lvl" id="secretLvl" data-l=""></span>
       <p class="eyebrow" id="secretLead">אמרו את המשפט הזה בקול:</p>
       <div class="phrase-card"><p id="phrase"></p></div>
-      <button class="btn" id="dice" style="max-width:260px"><svg><use href="#i-dice"/></svg>משפט אחר</button>
+      <button class="btn" id="dice" style="max-width:260px"><svg><use href="#i-dice"/></svg>תביאו משפט אחר</button>
       <div class="seg full hidden" id="soloLevels"><button data-lv="easy">קל</button><button data-lv="medium">בינוני</button><button data-lv="hard">קשה</button></div>
       <p class="hint c" id="secretHint">🙈 שאר השחקנים לא מציצים!</p>
     </div>
-    <div class="foot"><button class="btn xl primary" id="toRecord"><svg><use href="#i-mic"/></svg>להקלטה</button></div>
+    <div class="foot"><button class="btn xl primary" id="toRecord"><svg><use href="#i-mic"/></svg>לאולפן!</button></div>
   </section>
 
   <!-- RECORD ORIGINAL -->
@@ -297,16 +291,16 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <section class="screen hidden" id="imitate">
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>חקו את ההפוך</h2><span class="pill" data-turn></span></header>
     <div class="body center">
-      <button class="btn xl rev" data-play="origRev" data-cv="wi"><svg><use href="#i-rev"/></svg>שמעו את ההקלטה ההפוכה</button>
-      <div class="seg full" id="speedSeg"><button data-speed="1">רגיל</button><button data-speed="0.8">איטי</button><button data-speed="0.6">איטי מאוד</button></div>
+      <button class="btn xl rev" data-play="origRev" data-cv="wi"><svg><use href="#i-rev"/></svg>תנו לשמוע את הג׳יבריש</button>
+      <div class="seg full" id="speedSeg"><button data-speed="1">רגיל</button><button data-speed="0.8">רגוע</button><button data-speed="0.6">צב 🐢</button></div>
       <div class="wave" id="wv-wi"><canvas id="wi"></canvas><div class="empty"></div></div>
       <div class="rec-wrap">
         <button class="recbtn" data-rec="imit" aria-label="הקלטת חיקוי"><svg><use href="#i-mic"/></svg></button>
         <div class="rec-label" id="lbl-imit"></div>
       </div>
-      <button class="btn" data-play="imit" data-cv="wi"><svg><use href="#i-play"/></svg>החיקוי שלי</button>
+      <button class="btn" data-play="imit" data-cv="wi"><svg><use href="#i-play"/></svg>איך יצא לי?</button>
     </div>
-    <div class="foot"><button class="btn xl gold" id="flip"><svg><use href="#i-flip"/></svg>להפוך!</button></div>
+    <div class="foot"><button class="btn xl gold" id="flip"><svg><use href="#i-flip"/></svg>הפוך על הפוך!</button></div>
   </section>
 
   <!-- RESULT -->
@@ -314,33 +308,26 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>הרגע של האמת</h2><span class="pill" data-turn></span></header>
     <div class="body center">
       <div class="wave has" id="wv-wres"><canvas id="wres"></canvas></div>
-      <button class="btn xl gold" data-play="result" data-cv="wres"><svg><use href="#i-play"/></svg>השמעת התוצאה</button>
-      <div class="score-row">
-        <div class="ring">
-          <svg viewBox="0 0 120 120"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="fg" id="ringFg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/></svg>
-          <div class="num"><div><span id="scoreNum">0</span><small>דמיון</small></div></div>
-        </div>
-        <div class="verdict"><h3 id="verdictT"></h3><p id="verdictP"></p></div>
-      </div>
+      <button class="btn xl gold" data-play="result" data-cv="wres"><svg><use href="#i-play"/></svg>מה יצא?!</button>
       <div class="box hidden" id="guessBox">
         <p class="lead" id="guessLead"></p>
-        <button class="btn xl" id="reveal"><svg><use href="#i-eye"/></svg>חשיפת המשפט</button>
+        <button class="btn xl" id="reveal"><svg><use href="#i-eye"/></svg>חשפו את הסוד</button>
         <div class="hidden" id="revealed" style="display:flex;flex-direction:column;gap:12px">
           <div class="phrase-card small"><p id="resPhrase"></p></div>
           <div class="row2">
-            <button class="btn xl ok" id="gotIt"><svg><use href="#i-check"/></svg>ניחוש נכון</button>
-            <button class="btn xl no" id="missed"><svg><use href="#i-x"/></svg>לא הפעם</button>
+            <button class="btn xl ok" id="gotIt"><svg><use href="#i-check"/></svg><span id="gotItTxt">בול!</span></button>
+            <button class="btn xl no" id="missed"><svg><use href="#i-x"/></svg>פספוס</button>
           </div>
         </div>
       </div>
       <div class="row2" id="extraRow">
-        <button class="btn" id="compare"><svg><use href="#i-swap"/></svg>השוואה</button>
-        <button class="btn" id="shareRes"><svg><use href="#i-share"/></svg>שיתוף</button>
+        <button class="btn" id="compare"><svg><use href="#i-swap"/></svg>מקור מול חיקוי</button>
+        <button class="btn" id="shareRes"><svg><use href="#i-share"/></svg>שתפו צחוק</button>
       </div>
     </div>
     <div class="foot" id="soloFoot">
       <div class="row2">
-        <button class="btn xl" id="again"><svg><use href="#i-redo"/></svg>חיקוי חוזר</button>
+        <button class="btn xl" id="again"><svg><use href="#i-redo"/></svg>עוד ניסיון</button>
         <button class="btn xl primary" id="nextPhrase"><svg><use href="#i-dice"/></svg>משפט חדש</button>
       </div>
     </div>
@@ -351,8 +338,8 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2>טבלת ניקוד</h2><span class="pill" data-turn></span></header>
     <div class="body"><ol class="board" id="boardList"></ol></div>
     <div class="foot">
-      <button class="btn xl primary" id="nextTurn">התור הבא<svg><use href="#i-next"/></svg></button>
-      <button class="link" id="endGame">סיום המשחק</button>
+      <button class="btn xl primary" id="nextTurn">קדימה, ממשיכים<svg><use href="#i-next"/></svg></button>
+      <button class="link" id="endGame">סיימנו להיום</button>
     </div>
   </section>
 
@@ -365,8 +352,8 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
       <ol class="board" id="finalList"></ol>
     </div>
     <div class="foot">
-      <button class="btn xl primary" id="rematch"><svg><use href="#i-redo"/></svg>משחק חוזר</button>
-      <button class="btn xl" id="toHome"><svg><use href="#i-home"/></svg>לתפריט הראשי</button>
+      <button class="btn xl primary" id="rematch"><svg><use href="#i-redo"/></svg>סיבוב נקמה!</button>
+      <button class="btn xl" id="toHome"><svg><use href="#i-home"/></svg>הביתה</button>
     </div>
   </section>
 </div>
@@ -383,9 +370,10 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     </ol>
     <h4>משחק קבוצתי</h4>
     <ol>
-      <li>בכל תור שחקן אחד מקבל משפט סודי ומקליט אותו.</li>
-      <li>השחקן הבא שומע רק את הגרסה ההפוכה, מחקה אותה ומנסה לנחש מה נאמר.</li>
-      <li>המחקה מקבל נקודות לפי אחוז הדמיון, ועוד 50 על ניחוש נכון. גם המקליט מקבל 25 כשמנחשים נכון.</li>
+      <li>בוחרים כמה סבבים לשחק. בכל סבב כל שחקן מחקה פעם אחת.</li>
+      <li>בכל תור שחקן אחד מקבל משפט סודי ומקליט אותו. השחקן הבא שומע רק את הגרסה ההפוכה, מחקה אותה ומנסה לנחש מה נאמר.</li>
+      <li>לכל סבב מוגרלת רמת קושי, זהה לכל השחקנים, והרמות מתחלקות שווה בין הסבבים.</li>
+      <li>ניחוש נכון שווה 10 נקודות ברמה קלה, 20 בבינונית ו־30 בקשה. מי שצובר הכי הרבה מנצח!</li>
     </ol>
     <button class="btn xl primary" data-close>הבנתי</button>
   </div>
@@ -394,8 +382,8 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
   <div class="sheet">
     <h3 id="exitT">לצאת מהמשחק?</h3>
     <p class="hint" style="font-size:17px">הניקוד של המשחק הזה לא יישמר.</p>
-    <button class="btn xl no" id="exitYes">כן, לצאת</button>
-    <button class="btn xl" data-close>המשך לשחק</button>
+    <button class="btn xl no" id="exitYes">כן, יוצאים</button>
+    <button class="btn xl" data-close>לא! ממשיכים לשחק</button>
   </div>
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -410,14 +398,17 @@ const MAX_REC = 15;
 const COLORS = { orig: '#ff6b4a', origRev: '#33e1d4', imit: '#b58cff', result: '#ffd166' };
 const AVATAR_COLORS = ['#ff8a65', '#33e1d4', '#ffd166', '#b58cff', '#7cdf8a', '#ff9ec4', '#6cb6ff', '#ffb86b'];
 const PHRASES = {
-  easy: ['במבה','בננה','ג׳ירפה','אבטיח','מסטיק','שוקו','פיצה','קרמבו','פלאפל','מטריה','אוטובוס','טלפון','מלפפון','תפוז','ארנב','פרפר','שוקולד','דובדבן','היפופוטם','קנגורו','ספגטי','מקרר','אופניים','תרנגול','פינגווין','מסוק','קיפוד','לימונדה'],
-  medium: ['בוקר טוב','תפוח אדמה','יום הולדת שמח','פיתה עם חומוס','חתול על הגג','מכונת כביסה','שוקו חם','רכבת לחיפה','מטוס נייר','כדור פורח','גלידת וניל','מלך הג׳ונגל','ארוחת ערב','סוכריה על מקל','צב ים','עוגת שוקולד','שלום לכולם','לילה טוב','קפה עם חלב','דג זהב'],
-  hard: ['הכלב של השכנים נובח כל הלילה','אני רוצה עוד חתיכה של עוגה','הפיל הכחול אכל בננה צהובה','מי שם את המפתחות במקרר','השעון המעורר צלצל מוקדם מדי','גנן גידל דגן בגן','הדג הזהב שוחה במים קרים','סבא קנה לי אופניים חדשים','התרנגול קם לפני השמש','הג׳ירפה לא מצאה את המשקפיים']
+  easy: ['במבה','בננה','ג׳ירפה','אבטיח','מסטיק','שוקו','פיצה','קרמבו','פלאפל','מטריה','אוטובוס','טלפון','מלפפון','תפוז','ארנב','פרפר','שוקולד','דובדבן','היפופוטם','קנגורו','ספגטי','מקרר','אופניים','תרנגול','פינגווין','מסוק','קיפוד','לימונדה','עגבנייה','מספריים','שעון','תנין','צפרדע','מחשב','סוכרייה','פטרייה','כדורגל','חמור','טוסט','מברשת'],
+  medium: ['בוקר טוב','תפוח אדמה','יום הולדת שמח','פיתה עם חומוס','חתול על הגג','מכונת כביסה','שוקו חם','רכבת לחיפה','מטוס נייר','כדור פורח','גלידת וניל','מלך הג׳ונגל','ארוחת ערב','סוכריה על מקל','צב ים','עוגת שוקולד','שלום לכולם','לילה טוב','קפה עם חלב','דג זהב','כובע קסמים','שן של כריש','מגפיים ירוקים','חוף הים','כריך עם גבינה','ענן גשם','פנס רחוב','שלג בירושלים','ספר מתכונים','תיבת דואר','קופסת צבעים','נעליים חדשות','פסטה ברוטב','כוכב נופל','ארון בגדים','מחבת חמה','משקפי שמש','ברווז צהוב','פיל ורוד','מגרש משחקים'],
+  hard: ['הכלב של השכנים נובח כל הלילה','אני רוצה עוד חתיכה של עוגה','הפיל הכחול אכל בננה צהובה','מי שם את המפתחות במקרר','השעון המעורר צלצל מוקדם מדי','גנן גידל דגן בגן','הדג הזהב שוחה במים קרים','סבא קנה לי אופניים חדשים','התרנגול קם לפני השמש','הג׳ירפה לא מצאה את המשקפיים','החתול השחור קפץ על השולחן','מחר בבוקר אנחנו נוסעים לים','הקוף גנב בננה מהסל','אני לא מוצא את הגרב השנייה','המורה ביקשה לפתוח את הספר','הפיצה הגיעה בדיוק בזמן','הרכבת יצאה מהתחנה באיחור','הגשם לא מפסיק לרדת היום','סבתא אופה עוגיות עם שוקולד','הפינגווין החליק על הקרח','מישהו השאיר את המקרר פתוח','הבלון האדום עף לשמיים','אני רוצה גלידה עם הרבה תוספות','הנהג עצר ברמזור האדום','הצב ניצח את הארנב במרוץ','השכן מתופף כל הבוקר','הטלפון צלצל באמצע הסרט','הדוב ישן כל החורף','מי אכל את כל הבמבה','מחר יש מבחן בחשבון','התרנגולת הטילה ביצה זהובה','הילדים בנו ארמון בחול','שרה שרה שיר שמח','הקיפוד הלך לאיבוד ביער','האוטובוס עבר לנו מול האף','הפרפר נחת על האף של הכלב']
 };
+const LEVELS = ['easy', 'medium', 'hard'];
+const LEVEL_NAME = { easy: 'קל', medium: 'בינוני', hard: 'קשה' };
+const LEVEL_POINTS = { easy: 10, medium: 20, hard: 30 };
 
 let actx = null;
 const bufs = { orig: null, origRev: null, imit: null, result: null };
-let rec = null, recPending = false, playing = null, speed = 1, lastScore = null;
+let rec = null, recPending = false, playing = null, speed = 1;
 let compareToken = 0, comparing = false;
 const isAndroidApp = !!(window.AndroidBridge && window.AndroidBridge.shareWav);
 const NA = window.NativeAudio && typeof window.NativeAudio.startRecording === 'function' ? window.NativeAudio : null;
@@ -435,6 +426,7 @@ let level = store.get('level', 'easy');
 let rounds = store.get('rounds', 1);
 let turnNo = 0, totalTurns = 0, speakerIdx = 0, guesserIdx = 1, handoffStage = 'speaker';
 let phrase = '', revealed = false, judged = false, deltas = {};
+let roundLevels = [], usedPhrases = new Set(), turnLevel = 'easy';
 
 /* ---------- clips (mono Float32 PCM) ---------- */
 function makeClip(data, sampleRate) { return { data, sampleRate, length: data.length, duration: data.length / sampleRate }; }
@@ -637,8 +629,8 @@ function liveLoop(r) {
 }
 function setBuffer(key, clip) {
   bufs[key] = clip;
-  if (key === 'orig') { bufs.origRev = reverse(clip); bufs.imit = bufs.result = null; lastScore = null; }
-  if (key === 'imit') { bufs.result = null; lastScore = null; }
+  if (key === 'orig') { bufs.origRev = reverse(clip); bufs.imit = bufs.result = null; }
+  if (key === 'imit') bufs.result = null;
   render();
 }
 
@@ -745,144 +737,7 @@ function redraw(cv) {
   drawWave(el, bufs[key], COLORS[key]);
 }
 
-/* ---------- similarity scoring (MFCC + DTW) ---------- */
-function fftInPlace(re, im) {
-  const n = re.length;
-  for (let i = 1, j = 0; i < n; i++) {
-    let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
-    if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; }
-  }
-  for (let len = 2; len <= n; len <<= 1) {
-    const ang = -2 * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
-    for (let i = 0; i < n; i += len) {
-      let cr = 1, ci = 0;
-      for (let j = 0; j < len / 2; j++) {
-        const a = i + j, b = a + len / 2;
-        const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
-        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
-        const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
-      }
-    }
-  }
-}
-const melCache = {};
-function melBank(N, sr, nb = 26, fmin = 100, fmax = 6000) {
-  const key = N + ':' + sr; if (melCache[key]) return melCache[key];
-  const mel = f => 2595 * Math.log10(1 + f / 700), inv = m => 700 * (Math.pow(10, m / 2595) - 1);
-  const top = Math.min(fmax, sr / 2), m0 = mel(fmin), m1 = mel(top), pts = [];
-  for (let i = 0; i < nb + 2; i++) pts.push(Math.floor((N + 1) * inv(m0 + (m1 - m0) * i / (nb + 1)) / sr));
-  const bank = [];
-  for (let b = 1; b <= nb; b++) {
-    const a = pts[b - 1], c = pts[b], d = pts[b + 1], w = [];
-    for (let k = a; k <= d; k++) w.push(k < c ? (k - a) / Math.max(1, c - a) : (d - k) / Math.max(1, d - c));
-    bank.push({ a, w });
-  }
-  return (melCache[key] = bank);
-}
-function features(buf) {
-  const x = buf.data, sr = buf.sampleRate;
-  const N = sr > 32000 ? 1024 : 512, hop = N >> 1, bank = melBank(N, sr), NC = 13;
-  const win = new Float32Array(N); for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
-  const re = new Float64Array(N), im = new Float64Array(N), pw = new Float64Array(N / 2 + 1), mels = new Float64Array(bank.length);
-  const M = [], T = []; let maxMel = 0, maxTot = 0;
-  for (let s = 0; s + N <= x.length; s += hop) {
-    for (let i = 0; i < N; i++) { re[i] = x[s + i] * win[i]; im[i] = 0; }
-    fftInPlace(re, im);
-    let tot = 0;
-    for (let k = 0; k <= N / 2; k++) { pw[k] = re[k] * re[k] + im[k] * im[k]; tot += pw[k]; }
-    const m = new Float64Array(bank.length);
-    for (let b = 0; b < bank.length; b++) {
-      let e = 0; const { a, w } = bank[b];
-      for (let k = 0; k < w.length; k++) e += pw[a + k] * w[k];
-      m[b] = e; if (e > maxMel) maxMel = e;
-    }
-    M.push(m); T.push(tot); if (tot > maxTot) maxTot = tot;
-  }
-  // Floor ~50dB below the loudest moment, so pauses compare equal whether they hold
-  // digital silence or room noise.
-  const melFloor = maxMel * 1e-5 + 1e-12, totFloor = maxTot * 1e-5 + 1e-12;
-  const C = [], E = [];
-  for (let f = 0; f < M.length; f++) {
-    for (let b = 0; b < bank.length; b++) mels[b] = Math.log(M[f][b] + melFloor);
-    const c = new Float32Array(NC - 1);
-    for (let n = 1; n < NC; n++) {
-      let v = 0; for (let b = 0; b < mels.length; b++) v += mels[b] * Math.cos(Math.PI * n * (b + 0.5) / mels.length);
-      c[n - 1] = v;
-    }
-    C.push(c); E.push(Math.log(T[f] + totFloor));
-  }
-  if (C.length) { // cepstral mean normalization
-    const mean = new Float32Array(NC - 1);
-    for (const c of C) for (let i = 0; i < c.length; i++) mean[i] += c[i] / C.length;
-    for (const c of C) for (let i = 0; i < c.length; i++) c[i] -= mean[i];
-  }
-  return { C, E };
-}
-function dtw(A, B) {
-  const n = A.length, m = B.length; if (!n || !m) return Infinity;
-  let prev = new Float64Array(m + 1).fill(Infinity), cur = new Float64Array(m + 1); prev[0] = 0;
-  for (let i = 1; i <= n; i++) {
-    cur[0] = Infinity; const a = A[i - 1];
-    for (let j = 1; j <= m; j++) {
-      const b = B[j - 1]; let d = 0;
-      for (let k = 0; k < a.length; k++) { const t = a[k] - b[k]; d += t * t; }
-      d = Math.sqrt(d);
-      cur[j] = d + Math.min(prev[j], cur[j - 1], prev[j - 1]);
-    }
-    [prev, cur] = [cur, prev];
-  }
-  return prev[m] / (n + m);
-}
-function resample(arr, n) {
-  const out = new Float64Array(n);
-  for (let i = 0; i < n; i++) {
-    const t = i * (arr.length - 1) / (n - 1), a = Math.floor(t), b = Math.min(arr.length - 1, a + 1);
-    out[i] = arr[a] + (arr[b] - arr[a]) * (t - a);
-  }
-  return out;
-}
-function pearson(a, b) {
-  const n = a.length; let ma = 0, mb = 0;
-  for (let i = 0; i < n; i++) { ma += a[i] / n; mb += b[i] / n; }
-  let num = 0, da = 0, db = 0;
-  for (let i = 0; i < n; i++) { const x = a[i] - ma, y = b[i] - mb; num += x * y; da += x * x; db += y * y; }
-  return da && db ? num / Math.sqrt(da * db) : 0;
-}
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-// Compare result to the original, using the original-reversed as a "wrong answer" baseline.
-function similarity(orig, origRev, result) {
-  const fo = features(orig), fr = features(result), fb = features(origRev);
-  if (fo.C.length < 2 || fr.C.length < 2) return 0;
-  const d = dtw(fo.C, fr.C), dBad = dtw(fo.C, fb.C);
-  const ratio = dBad > 0 ? d / dBad : 1;
-  const spec = clamp((1.1 - ratio) / 0.65, 0, 1);
-  const env = clamp(pearson(resample(fo.E, 64), resample(fr.E, 64)), 0, 1);
-  const dur = Math.min(orig.duration, result.duration) / Math.max(orig.duration, result.duration);
-  const s = 0.55 * spec + 0.3 * env + 0.15 * dur;
-  return Math.round(100 * Math.pow(clamp(s, 0, 1), 0.85));
-}
-/* ---------- score UI ---------- */
-function verdict(s) {
-  if (s >= 85) return ['מדהים! 🤯', 'כמעט אי אפשר להבדיל בין התוצאה למקור.'];
-  if (s >= 70) return ['קרוב מאוד!', 'עוד קצת וזה מושלם.'];
-  if (s >= 50) return ['לא רע בכלל', 'אפשר לזהות את המשפט. נסו להאט ולחקות שוב.'];
-  if (s >= 30) return ['יש על מה לעבוד', 'הקשיבו שוב להפוך ושימו לב לסדר ההברות.'];
-  return ['שפה של חייזרים 👽', 'זה נשמע כמו משהו אחר לגמרי…'];
-}
-function showScore() {
-  const fg = $('#ringFg'), C = 314.16, target = lastScore || 0;
-  fg.style.transition = 'none'; fg.style.strokeDashoffset = C;
-  requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.transition = ''; fg.style.strokeDashoffset = C * (1 - target / 100); }));
-  const el = $('#scoreNum'), t0 = performance.now();
-  (function step(t) {
-    const k = Math.min(1, (t - t0) / 1200), e = 1 - Math.pow(1 - k, 3);
-    el.textContent = Math.round(target * e);
-    if (k < 1) requestAnimationFrame(step);
-  })(t0);
-  const [h, p] = verdict(target);
-  $('#verdictT').textContent = h; $('#verdictP').textContent = p;
-  if (target >= 70) setTimeout(confetti, 900);
-}
 
 /* ---------- confetti ---------- */
 function confetti() {
@@ -967,27 +822,39 @@ function back() {
 window.__appBack = back;
 
 /* ---------- flow ---------- */
-function newPhrase() {
-  const list = PHRASES[level] || PHRASES.easy;
-  let p; do { p = list[(Math.random() * list.length) | 0]; } while (list.length > 1 && p === phrase);
-  phrase = p;
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; }
+// One random level per round, spread evenly: every 3 rounds hold one easy, one medium and one hard.
+function balancedLevels(r) {
+  const out = [];
+  while (out.length < r) out.push(...shuffle(LEVELS.slice()));
+  return shuffle(out.slice(0, r));
 }
+function newPhrase() {
+  const lv = mode === 'party' ? turnLevel : level;
+  let list = PHRASES[lv].filter(p => !usedPhrases.has(p) && p !== phrase);
+  if (!list.length) { PHRASES[lv].forEach(p => usedPhrases.delete(p)); list = PHRASES[lv].filter(p => p !== phrase); }
+  phrase = list[(Math.random() * list.length) | 0];
+  usedPhrases.add(phrase);
+}
+const roundOf = t => Math.floor(t / Math.max(1, players.length));
 function resetRound() {
   compareToken++; comparing = false; stopPlay(true);
   bufs.orig = bufs.origRev = bufs.imit = bufs.result = null;
-  lastScore = null; revealed = false; judged = false;
+  revealed = false; judged = false;
 }
-function startSolo() { mode = 'solo'; resetRound(); newPhrase(); go('secret'); }
+function startSolo() { mode = 'solo'; usedPhrases = new Set(); resetRound(); newPhrase(); go('secret'); }
 function startParty() {
   if (players.length < 2) { toast('צריך לפחות 2 שחקנים'); return; }
   mode = 'party';
   players.forEach(p => p.score = 0);
   totalTurns = players.length * rounds; turnNo = 0; deltas = {};
+  roundLevels = balancedLevels(rounds); usedPhrases = new Set();
   beginTurn();
 }
 function beginTurn() {
   const n = players.length;
   speakerIdx = turnNo % n; guesserIdx = (turnNo + 1) % n;
+  turnLevel = roundLevels[roundOf(turnNo)] || 'easy';
   resetRound(); newPhrase();
   handoffStage = 'speaker';
   go('handoff');
@@ -995,19 +862,19 @@ function beginTurn() {
 function flip() {
   if (!bufs.imit) return;
   bufs.result = reverse(bufs.imit);
-  try { lastScore = similarity(bufs.orig, bufs.origRev, bufs.result); } catch (e) { console.error(e); lastScore = 0; }
   revealed = false; judged = false;
   go('result');
-  showScore();
   setTimeout(() => { if (current === 'result') play('result', 'wres'); }, 550);
 }
 function judge(correct) {
   if (judged) return;
   judged = true;
   deltas = {};
-  const g = lastScore + (correct ? 50 : 0);
-  players[guesserIdx].score += g; deltas[guesserIdx] = g;
-  if (correct) { players[speakerIdx].score += 25; deltas[speakerIdx] = 25; }
+  if (correct) {
+    const pts = LEVEL_POINTS[turnLevel];
+    players[guesserIdx].score += pts; deltas[guesserIdx] = pts;
+    confetti();
+  }
   go('board');
 }
 function nextTurn() {
@@ -1018,7 +885,7 @@ function showFinal() {
   go('final');
   const max = Math.max(...players.map(p => p.score));
   const winners = players.filter(p => p.score === max);
-  $('#winLabel').textContent = winners.length > 1 ? 'תיקו בראש הטבלה!' : 'בראש הטבלה';
+  $('#winLabel').textContent = max === 0 ? 'אף אחד לא ניחש… תיקו!' : winners.length > 1 ? 'תיקו בראש הטבלה!' : 'בראש הטבלה';
   $('#winner').textContent = winners.map(p => p.name).join(' ו');
   setTimeout(confetti, 300);
 }
@@ -1047,7 +914,7 @@ function boardRows(ol, withDelta) {
 }
 function render() {
   const party = mode === 'party';
-  const turnText = party ? `תור ${turnNo + 1}/${totalTurns}` : '';
+  const turnText = party ? `סבב ${Math.min(rounds, roundOf(turnNo) + 1)}/${rounds}` : '';
   $$('[data-turn]').forEach(e => e.textContent = turnText);
 
   // setup
@@ -1061,12 +928,12 @@ function render() {
     li.append(av, nm, x); ul.appendChild(li);
   });
   $('#pempty').classList.toggle('hidden', players.length > 0);
-  $$('#levels [data-lv], #soloLevels [data-lv]').forEach(b => b.classList.toggle('on', b.dataset.lv === level));
+  $$('#soloLevels [data-lv]').forEach(b => b.classList.toggle('on', b.dataset.lv === level));
   $('#roundsOut').textContent = rounds;
-  $('#rMinus').disabled = rounds <= 1; $('#rPlus').disabled = rounds >= 5;
+  $('#rMinus').disabled = rounds <= 1; $('#rPlus').disabled = rounds >= 10;
   $('#roundsHint').textContent = players.length >= 2
-    ? `${players.length * rounds} תורות: כל שחקן מקליט ${rounds === 1 ? 'פעם אחת' : rounds + ' פעמים'} ומחקה ${rounds === 1 ? 'פעם אחת' : rounds + ' פעמים'}.`
-    : 'הוסיפו לפחות 2 שחקנים כדי להתחיל.';
+    ? `בכל סבב כל שחקן מחקה פעם אחת (${players.length * rounds} תורות בסך הכול). רמת הקושי מוגרלת לכל סבב, זהה לכולם.`
+    : 'הוסיפו לפחות 2 שחקנים (או קבוצות) כדי להתחיל.';
   $('#startGame').disabled = players.length < 2;
 
   // handoff
@@ -1075,6 +942,8 @@ function render() {
     $('#hoName').textContent = players[who].name;
     $('#hoAvatar').textContent = initial(players[who].name);
     $('#hoAvatar').style.setProperty('--c', AVATAR_COLORS[who % AVATAR_COLORS.length]);
+    $('#hoRound').dataset.l = turnLevel;
+    $('#hoRound').textContent = `סבב ${roundOf(turnNo) + 1} מתוך ${rounds} · רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳`;
     $('#hoText').textContent = handoffStage === 'speaker'
       ? 'תורך להקליט משפט סודי. כל השאר: לא להציץ במסך!'
       : `יש הקלטה סודית מ${players[speakerIdx].name}. תורך להקשיב לה הפוך, לחקות אותה ולנחש מה נאמר.`;
@@ -1084,6 +953,8 @@ function render() {
   $('#phrase').textContent = phrase;
   $('#secretTitle').textContent = party ? 'המשפט הסודי' : 'המשפט לאתגר';
   $('#secretHint').classList.toggle('hidden', !party);
+  $('#secretLvl').dataset.l = party ? turnLevel : level;
+  $('#secretLvl').textContent = party ? `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳ לניחוש` : '';
   $('#soloLevels').classList.toggle('hidden', party);
 
   // record
@@ -1093,7 +964,7 @@ function render() {
   $('#recPhrase').append(lab, b);
   $('#uploadLink').classList.toggle('hidden', party || !!rec);
   $('#recNext').disabled = !bufs.orig || !!rec;
-  $('#recNext').firstChild.textContent = party ? 'העברה למחקה ' : 'המשך ';
+  $('#recNext').firstChild.textContent = party ? 'שגרו למחקה ' : 'קדימה ';
 
   // imitate
   $$('#speedSeg [data-speed]').forEach(b => b.classList.toggle('on', +b.dataset.speed === speed));
@@ -1108,6 +979,7 @@ function render() {
   $('#extraRow').classList.toggle('hidden', party && !revealed);
   $('#soloFoot').classList.toggle('hidden', party);
   $('#gotIt').disabled = $('#missed').disabled = judged;
+  $('#gotItTxt').textContent = `בול! \u2066+${LEVEL_POINTS[turnLevel]}\u2069`;
   $('#compare').disabled = !bufs.result || !!rec;
   $('#compare').classList.toggle('playing', comparing);
   $('#shareRes').disabled = !bufs.result;
@@ -1115,7 +987,7 @@ function render() {
   // board / final
   if (current === 'board') boardRows($('#boardList'), true);
   if (current === 'final') boardRows($('#finalList'), false);
-  $('#nextTurn').firstChild.textContent = turnNo + 1 >= totalTurns ? 'לתוצאות הסופיות ' : 'התור הבא ';
+  $('#nextTurn').firstChild.textContent = turnNo + 1 >= totalTurns ? 'מי ניצח?! ' : (turnNo + 1) % players.length === 0 ? 'לסבב הבא! ' : 'קדימה, ממשיכים ';
 
   // shared audio controls
   $$('[data-play]').forEach(b => {
@@ -1132,8 +1004,8 @@ function render() {
     const lbl = $('#lbl-' + slot);
     lbl.classList.toggle('on', !!on);
     if (!on) lbl.textContent = slot === 'orig'
-      ? (bufs.orig ? 'הקלטה מחדש' : 'לחצו כדי להקליט')
-      : (bufs.imit ? 'חיקוי חוזר' : 'לחצו והקליטו את החיקוי');
+      ? (bufs.orig ? 'עוד טייק' : 'לחצו ודברו')
+      : (bufs.imit ? 'עוד טייק' : 'לחצו וחקו את הג׳יבריש');
   });
   for (const cv of ['wr', 'wi', 'wres']) {
     const has = !!bufs[defaultKey(cv)] || !!(playing && playing.cv === cv);
@@ -1194,7 +1066,7 @@ $('#shareRes').onclick = shareResult;
 $('#reveal').onclick = () => { revealed = true; render(); };
 $('#gotIt').onclick = () => judge(true);
 $('#missed').onclick = () => judge(false);
-$('#again').onclick = () => { bufs.imit = bufs.result = null; lastScore = null; go('imitate', true); };
+$('#again').onclick = () => { bufs.imit = bufs.result = null; go('imitate', true); };
 $('#nextPhrase').onclick = () => { resetRound(); newPhrase(); go('secret'); };
 $('#nextTurn').onclick = nextTurn;
 $('#endGame').onclick = showFinal;

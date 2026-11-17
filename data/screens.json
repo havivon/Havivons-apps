@@ -381,23 +381,23 @@
     "screens": [
       {
         "src": "apps/achoranit/screens/01.webp",
-        "caption": "מסך הפתיחה: משחק קבוצתי או אימון לבד"
+        "caption": "מסך הפתיחה: משחק חברים או אימון סולו"
       },
       {
         "src": "apps/achoranit/screens/02.webp",
-        "caption": "רישום שחקנים, רמת קושי וסבבים"
+        "caption": "רישום שחקנים ובחירת מספר הסבבים"
       },
       {
         "src": "apps/achoranit/screens/03.webp",
-        "caption": "העברת הטלפון לשחקן שבתור"
+        "caption": "העברת הטלפון, עם הסבב ורמת הקושי"
       },
       {
         "src": "apps/achoranit/screens/04.webp",
-        "caption": "חיקוי ההקלטה ההפוכה, עם האטה"
+        "caption": "חיקוי הג׳יבריש ההפוך, עם האטה"
       },
       {
         "src": "apps/achoranit/screens/05.webp",
-        "caption": "ציון דמיון, חשיפת המשפט וניחוש"
+        "caption": "חשיפת הסוד: בול או פספוס"
       }
     ]
   }
