@@ -381,19 +381,23 @@
     "screens": [
       {
         "src": "apps/achoranit/screens/01.webp",
-        "caption": "המסך הראשי עם משפט לאתגר"
+        "caption": "מסך הפתיחה: משחק קבוצתי או אימון לבד"
       },
       {
         "src": "apps/achoranit/screens/02.webp",
-        "caption": "הקלטת המשפט המקורי"
+        "caption": "רישום שחקנים, רמת קושי וסבבים"
       },
       {
         "src": "apps/achoranit/screens/03.webp",
-        "caption": "השמעה הפוכה וחיקוי"
+        "caption": "העברת הטלפון לשחקן שבתור"
       },
       {
         "src": "apps/achoranit/screens/04.webp",
-        "caption": "ציון דמיון וטבלת שחקנים"
+        "caption": "חיקוי ההקלטה ההפוכה, עם האטה"
+      },
+      {
+        "src": "apps/achoranit/screens/05.webp",
+        "caption": "ציון דמיון, חשיפת המשפט וניחוש"
       }
     ]
   }
