@@ -381,19 +381,19 @@
     "screens": [
       {
         "src": "apps/achoranit/screens/01.webp",
-        "caption": "מסך הפתיחה: משחק חברים או אימון סולו"
-      },
-      {
-        "src": "apps/achoranit/screens/02.webp",
         "caption": "רישום שחקנים ובחירת מספר הסבבים"
       },
       {
+        "src": "apps/achoranit/screens/02.webp",
+        "caption": "המשפט הסודי וספירה לאחור"
+      },
+      {
         "src": "apps/achoranit/screens/03.webp",
-        "caption": "העברת הטלפון, עם הסבב ורמת הקושי"
+        "caption": "הקלטה אוטומטית עם כפתור סיימתי"
       },
       {
         "src": "apps/achoranit/screens/04.webp",
-        "caption": "חיקוי הג׳יבריש ההפוך, עם האטה"
+        "caption": "שומעים את החיקוי ההפוך ומנחשים"
       },
       {
         "src": "apps/achoranit/screens/05.webp",

@@ -100,7 +100,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 
 /* ---------- setup ---------- */
 .players{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.players li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:18px;background:var(--surface);border:1px solid var(--line);font-size:19px;animation:pop .25s ease both}
+.players li{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 8px;padding-inline-start:18px;border-radius:18px;background:var(--surface);border:1px solid var(--line);font-size:19px;animation:pop .25s ease both}
 @keyframes pop{from{opacity:0;transform:scale(.96)}}
 .av{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#1a1424;background:var(--c,var(--fwd))}
 .players .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -137,6 +137,15 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 /* ---------- result ---------- */
 .box{width:100%;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:22px;background:var(--surface);border:1px solid var(--line);text-align:center}
 .hidden{display:none !important}
+.count{--p:1;--c:var(--gold);width:156px;height:156px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--c) calc(var(--p) * 360deg), rgba(255,255,255,.08) 0)}
+.count span{width:130px;height:130px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-family:var(--display);font-size:66px;line-height:1;color:var(--c)}
+.count.rec{--c:#ff3d71;animation:pulse 1.1s infinite}
+.count.tick span{animation:tick .9s ease-out}
+@keyframes tick{from{transform:scale(1.3);opacity:.3}}
+.count-label{font-size:20px;font-weight:600;margin:0;min-height:1.4em}
+.count-label.rec{color:#ff8fab}
+.phrase-card.pop{animation:bounce .5s cubic-bezier(.3,1.6,.5,1) both}
 .lvl{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:16px;font-weight:700;border:1px solid}
 .lvl[data-l=easy]{color:#bff5dc;background:rgba(61,220,151,.14);border-color:rgba(61,220,151,.45)}
 .lvl[data-l=medium]{color:#ffeab3;background:rgba(255,209,102,.13);border-color:rgba(255,209,102,.45)}
@@ -246,12 +255,28 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2></h2><span class="pill" data-turn></span></header>
     <div class="body center">
       <div class="chips" id="hoChips"><span class="lvl" id="hoRound" data-l=""></span></div>
-      <div class="avatar" id="hoAvatar"></div>
       <p class="eyebrow">הטלפון עובר אל</p>
       <h1 class="big-name" id="hoName"></h1>
       <p class="lead" id="hoText"></p>
     </div>
     <div class="foot"><button class="btn xl primary" id="hoGo">הטלפון אצלי!<svg><use href="#i-next"/></svg></button></div>
+  </section>
+
+  <!-- SPEAK (party): phrase, 5s countdown, automatic 10s recording -->
+  <section class="screen hidden" id="speak">
+    <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2>המשפט הסודי</h2><span class="pill" data-turn></span></header>
+    <div class="body center">
+      <span class="lvl" id="speakLvl" data-l=""></span>
+      <p class="eyebrow">אמרו בקול:</p>
+      <div class="phrase-card pop"><p id="speakPhrase"></p></div>
+      <div class="count" id="speakCount"><span id="speakNum"></span></div>
+      <p class="count-label" id="speakLabel"></p>
+      <div class="wave hidden" id="wv-ws"><canvas id="ws"></canvas></div>
+    </div>
+    <div class="foot">
+      <button class="btn xl primary" id="speakDone"><svg><use href="#i-check"/></svg>סיימתי</button>
+      <button class="btn xl hidden" id="speakRetry"><svg><use href="#i-redo"/></svg>שוב מההתחלה</button>
+    </div>
   </section>
 
   <!-- SECRET PHRASE -->
@@ -305,30 +330,46 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 
   <!-- RESULT -->
   <section class="screen hidden" id="result">
-    <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>הרגע של האמת</h2><span class="pill" data-turn></span></header>
+    <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2 id="resTitle">הרגע של האמת</h2><span class="pill" data-turn></span></header>
     <div class="body center">
       <div class="wave has" id="wv-wres"><canvas id="wres"></canvas></div>
       <button class="btn xl gold" data-play="result" data-cv="wres"><svg><use href="#i-play"/></svg>מה יצא?!</button>
       <div class="box hidden" id="guessBox">
         <p class="lead" id="guessLead"></p>
-        <button class="btn xl" id="reveal"><svg><use href="#i-eye"/></svg>חשפו את הסוד</button>
-        <div class="hidden" id="revealed" style="display:flex;flex-direction:column;gap:12px">
-          <div class="phrase-card small"><p id="resPhrase"></p></div>
-          <div class="row2">
-            <button class="btn xl ok" id="gotIt"><svg><use href="#i-check"/></svg><span id="gotItTxt">בול!</span></button>
-            <button class="btn xl no" id="missed"><svg><use href="#i-x"/></svg>פספוס</button>
-          </div>
-        </div>
       </div>
       <div class="row2" id="extraRow">
-        <button class="btn" id="compare"><svg><use href="#i-swap"/></svg>מקור מול חיקוי</button>
-        <button class="btn" id="shareRes"><svg><use href="#i-share"/></svg>שתפו צחוק</button>
+        <button class="btn" data-act="compare"><svg><use href="#i-swap"/></svg>מקור מול חיקוי</button>
+        <button class="btn" data-act="share"><svg><use href="#i-share"/></svg>שתפו צחוק</button>
       </div>
+    </div>
+    <div class="foot hidden" id="partyFoot">
+      <button class="btn xl primary" id="toReveal"><svg><use href="#i-eye"/></svg>חשפו את הסוד</button>
     </div>
     <div class="foot" id="soloFoot">
       <div class="row2">
         <button class="btn xl" id="again"><svg><use href="#i-redo"/></svg>עוד ניסיון</button>
         <button class="btn xl primary" id="nextPhrase"><svg><use href="#i-dice"/></svg>משפט חדש</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVEAL (party) -->
+  <section class="screen hidden" id="reveal">
+    <header class="bar"><button class="icon-btn" data-back aria-label="יציאה מהמשחק"><svg><use href="#i-x"/></svg></button><h2>חשיפת הסוד</h2><span class="pill" data-turn></span></header>
+    <div class="body center">
+      <span class="lvl" id="revLvl" data-l=""></span>
+      <p class="eyebrow">המשפט הסודי היה:</p>
+      <div class="phrase-card pop"><p id="resPhrase"></p></div>
+      <p class="lead" id="revLead"></p>
+      <div class="row2">
+        <button class="btn" data-act="compare"><svg><use href="#i-swap"/></svg>מקור מול חיקוי</button>
+        <button class="btn" data-act="share"><svg><use href="#i-share"/></svg>שתפו צחוק</button>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="row2">
+        <button class="btn xl ok" id="gotIt"><svg><use href="#i-check"/></svg><span id="gotItTxt">בול!</span></button>
+        <button class="btn xl no" id="missed"><svg><use href="#i-x"/></svg>פספוס</button>
       </div>
     </div>
   </section>
@@ -396,7 +437,6 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
 const MAX_REC = 15;
 const COLORS = { orig: '#ff6b4a', origRev: '#33e1d4', imit: '#b58cff', result: '#ffd166' };
-const AVATAR_COLORS = ['#ff8a65', '#33e1d4', '#ffd166', '#b58cff', '#7cdf8a', '#ff9ec4', '#6cb6ff', '#ffb86b'];
 const PHRASES = {
   easy: ['במבה','בננה','ג׳ירפה','אבטיח','מסטיק','שוקו','פיצה','קרמבו','פלאפל','מטריה','אוטובוס','טלפון','מלפפון','תפוז','ארנב','פרפר','שוקולד','דובדבן','היפופוטם','קנגורו','ספגטי','מקרר','אופניים','תרנגול','פינגווין','מסוק','קיפוד','לימונדה','עגבנייה','מספריים','שעון','תנין','צפרדע','מחשב','סוכרייה','פטרייה','כדורגל','חמור','טוסט','מברשת'],
   medium: ['בוקר טוב','תפוח אדמה','יום הולדת שמח','פיתה עם חומוס','חתול על הגג','מכונת כביסה','שוקו חם','רכבת לחיפה','מטוס נייר','כדור פורח','גלידת וניל','מלך הג׳ונגל','ארוחת ערב','סוכריה על מקל','צב ים','עוגת שוקולד','שלום לכולם','לילה טוב','קפה עם חלב','דג זהב','כובע קסמים','שן של כריש','מגפיים ירוקים','חוף הים','כריך עם גבינה','ענן גשם','פנס רחוב','שלג בירושלים','ספר מתכונים','תיבת דואר','קופסת צבעים','נעליים חדשות','פסטה ברוטב','כוכב נופל','ארון בגדים','מחבת חמה','משקפי שמש','ברווז צהוב','פיל ורוד','מגרש משחקים'],
@@ -425,7 +465,7 @@ let players = store.get('players', []).filter(p => p && p.name).map(p => ({ name
 let level = store.get('level', 'easy');
 let rounds = store.get('rounds', 1);
 let turnNo = 0, totalTurns = 0, speakerIdx = 0, guesserIdx = 1, handoffStage = 'speaker';
-let phrase = '', revealed = false, judged = false, deltas = {};
+let phrase = '', judged = false, deltas = {};
 let roundLevels = [], usedPhrases = new Set(), turnLevel = 'easy';
 
 /* ---------- clips (mono Float32 PCM) ---------- */
@@ -593,16 +633,16 @@ window.__nativeAudioEvent = (type, value) => {
 const engine = NA ? NativeEngine : WebEngine;
 /* ---------- recording ---------- */
 const REC_CANVAS = { orig: 'wr', imit: 'wi' };
-async function startRec(slot) {
+async function startRec(slot, maxSec = MAX_REC, onDone) {
   if (rec || recPending) return;
   stopPlay();
   recPending = true; render();
   try { await engine.startRecording(); }
   catch (e) { recPending = false; render(); toast(e.message || 'ההקלטה נכשלה'); return; }
   recPending = false;
-  const cv = REC_CANVAS[slot];
-  rec = { slot, t0: performance.now(), levels: [], cv };
-  rec.timer = setTimeout(stopRec, MAX_REC * 1000);
+  const cv = slot === 'orig' && current === 'speak' ? 'ws' : REC_CANVAS[slot];
+  rec = { slot, t0: performance.now(), levels: [], cv, max: maxSec, onDone };
+  rec.timer = setTimeout(stopRec, maxSec * 1000);
   $('#wv-' + cv).classList.add('live');
   render();
   liveLoop(rec);
@@ -615,16 +655,19 @@ async function stopRec() {
   try { raw = await engine.stopRecording(); } catch (e) { err = e; }
   rec = null;
   $('#wv-' + r.cv).classList.remove('live');
-  if (err || !raw || !raw.channels[0].length) { if (err) console.error(err); toast('לא הצלחנו לעבד את ההקלטה'); render(); return; }
-  if (performance.now() - r.t0 < 400 || raw.channels[0].length < raw.sampleRate * 0.3) { toast('ההקלטה קצרה מדי, נסו שוב'); render(); return; }
+  const fail = msg => { toast(msg); render(); if (r.onDone) r.onDone(false); };
+  if (err || !raw || !raw.channels[0].length) { if (err) console.error(err); fail('לא הצלחנו לעבד את ההקלטה'); return; }
+  if (performance.now() - r.t0 < 400 || raw.channels[0].length < raw.sampleRate * 0.3) { fail('ההקלטה קצרה מדי, נסו שוב'); return; }
   setBuffer(r.slot, prepare(raw));
+  if (r.onDone) r.onDone(true);
 }
 function liveLoop(r) {
   if (rec !== r || r.stopping) return;
   r.levels.push(engine.level());
   drawLive($('#' + r.cv), r.levels);
-  const lbl = $('#lbl-' + r.slot);
-  lbl.textContent = `${fmt((performance.now() - r.t0) / 1000)} · לחצו לעצירה`;
+  const el = (performance.now() - r.t0) / 1000;
+  if (r.cv === 'ws') speakTick(el, r.max);
+  else $('#lbl-' + r.slot).textContent = `${fmt(el)} · לחצו לעצירה`;
   requestAnimationFrame(() => liveLoop(r));
 }
 function setBuffer(key, clip) {
@@ -794,6 +837,7 @@ let current = 'home', navT = null;
 function go(id, back) {
   if (id === current) { render(); return; }
   compareToken++; comparing = false; stopPlay(true);
+  if (current === 'speak') cancelSpeak();
   if (rec) stopRec();
   const from = $('#' + current), to = $('#' + id);
   clearTimeout(navT);
@@ -821,6 +865,66 @@ function back() {
 }
 window.__appBack = back;
 
+/* ---------- speak (party recording) ---------- */
+let speakState = 'idle', speakCount = 5, speakTimer = null, speakToken = 0;
+function cancelSpeak() { speakToken++; clearInterval(speakTimer); speakState = 'idle'; }
+function enterSpeak() { go('speak'); beginCountdown(); }
+async function beginCountdown() {
+  const tok = ++speakToken; clearInterval(speakTimer);
+  bufs.orig = bufs.origRev = bufs.imit = bufs.result = null;
+  if (NA && !NA.hasMicPermission()) {        // ask before the countdown, not in the middle of it
+    speakState = 'perm'; renderSpeak();
+    const ok = await new Promise(res => { nativeCbs.permission = res; NA.requestMicPermission(); });
+    if (tok !== speakToken) return;
+    if (!ok) { speakState = 'fail'; renderSpeak(); toast('אין גישה למיקרופון. אפשר לאשר אותה בהגדרות האפליקציה.'); return; }
+  }
+  speakState = 'count'; speakCount = 5; renderSpeak();
+  speakTimer = setInterval(() => {
+    if (tok !== speakToken) { clearInterval(speakTimer); return; }
+    if (--speakCount > 0) { renderSpeak(); return; }
+    clearInterval(speakTimer);
+    startSpeakRec(tok);
+  }, 1000);
+}
+async function startSpeakRec(tok) {
+  speakState = 'starting'; renderSpeak();
+  await startRec('orig', 10, ok => {
+    if (tok !== speakToken || current !== 'speak') return;
+    if (ok) { speakState = 'idle'; handoffStage = 'guesser'; go('handoff'); }
+    else { speakState = 'fail'; renderSpeak(); }
+  });
+  if (tok !== speakToken) { if (rec) stopRec(); return; }
+  if (!rec) { speakState = 'fail'; renderSpeak(); return; }
+  speakState = 'rec'; renderSpeak();
+  $('#wv-ws').classList.remove('hidden');
+}
+function speakTick(elapsed, max) {
+  const left = Math.max(0, max - elapsed), n = Math.ceil(left);
+  const num = $('#speakNum');
+  if (num.textContent !== String(n)) num.textContent = n;
+  $('#speakCount').style.setProperty('--p', (left / max).toFixed(3));
+}
+function renderSpeak() {
+  const st = speakState, box = $('#speakCount'), num = $('#speakNum'), lab = $('#speakLabel');
+  $('#speakPhrase').textContent = phrase;
+  $('#speakLvl').dataset.l = turnLevel;
+  $('#speakLvl').textContent = `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳ לניחוש`;
+  box.classList.toggle('rec', st === 'rec');
+  lab.classList.toggle('rec', st === 'rec');
+  if (st === 'count') {
+    num.textContent = speakCount; box.style.setProperty('--p', speakCount / 5);
+    box.classList.remove('tick'); void box.offsetWidth; box.classList.add('tick');
+    lab.textContent = 'ההקלטה מתחילה בעוד…';
+  } else if (st === 'rec') { lab.textContent = 'מקליטים! אמרו את המשפט'; }
+  else if (st === 'starting') { num.textContent = '🎤'; lab.textContent = 'מתחילים…'; }
+  else if (st === 'perm') { num.textContent = '🎤'; box.style.setProperty('--p', 1); lab.textContent = 'אשרו גישה למיקרופון'; }
+  else if (st === 'fail') { num.textContent = '!'; box.style.setProperty('--p', 0); lab.textContent = 'ההקלטה לא הצליחה'; }
+  if (st !== 'rec') $('#wv-ws').classList.add('hidden');
+  $('#speakDone').classList.toggle('hidden', st === 'fail');
+  $('#speakRetry').classList.toggle('hidden', st !== 'fail');
+  $('#speakDone').disabled = st !== 'rec';
+}
+
 /* ---------- flow ---------- */
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; }
 // One random level per round, spread evenly: every 3 rounds hold one easy, one medium and one hard.
@@ -840,7 +944,7 @@ const roundOf = t => Math.floor(t / Math.max(1, players.length));
 function resetRound() {
   compareToken++; comparing = false; stopPlay(true);
   bufs.orig = bufs.origRev = bufs.imit = bufs.result = null;
-  revealed = false; judged = false;
+  judged = false;
 }
 function startSolo() { mode = 'solo'; usedPhrases = new Set(); resetRound(); newPhrase(); go('secret'); }
 function startParty() {
@@ -862,7 +966,7 @@ function beginTurn() {
 function flip() {
   if (!bufs.imit) return;
   bufs.result = reverse(bufs.imit);
-  revealed = false; judged = false;
+  judged = false;
   go('result');
   setTimeout(() => { if (current === 'result') play('result', 'wres'); }, 550);
 }
@@ -892,7 +996,6 @@ function showFinal() {
 
 /* ---------- rendering ---------- */
 function fmt(t) { const s = Math.floor(t); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
-function initial(name) { return [...name.trim()][0] || '?'; }
 function savePlayers() { store.set('players', players.map(p => ({ name: p.name }))); }
 function boardRows(ol, withDelta) {
   ol.textContent = '';
@@ -903,9 +1006,8 @@ function boardRows(ol, withDelta) {
     if (p.score === top && top > 0) li.className = 'lead1';
     li.style.animationDelay = (k * 60) + 'ms';
     const rank = document.createElement('span'); rank.className = 'rank'; rank.textContent = k + 1;
-    const av = document.createElement('span'); av.className = 'av'; av.style.setProperty('--c', AVATAR_COLORS[i % AVATAR_COLORS.length]); av.textContent = initial(p.name);
     const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = p.name;
-    li.append(rank, av, nm);
+    li.append(rank, nm);
     if (withDelta && deltas[i]) { const d = document.createElement('span'); d.className = 'delta'; d.textContent = '+' + deltas[i]; li.append(d); }
     const pts = document.createElement('span'); pts.className = 'pts'; pts.textContent = p.score;
     li.append(pts);
@@ -921,11 +1023,10 @@ function render() {
   const ul = $('#plist'); ul.textContent = '';
   players.forEach((p, i) => {
     const li = document.createElement('li');
-    const av = document.createElement('span'); av.className = 'av'; av.style.setProperty('--c', AVATAR_COLORS[i % AVATAR_COLORS.length]); av.textContent = initial(p.name);
     const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = p.name;
     const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', 'הסרת ' + p.name);
     x.onclick = () => { players.splice(i, 1); savePlayers(); render(); };
-    li.append(av, nm, x); ul.appendChild(li);
+    li.append(nm, x); ul.appendChild(li);
   });
   $('#pempty').classList.toggle('hidden', players.length > 0);
   $$('#soloLevels [data-lv]').forEach(b => b.classList.toggle('on', b.dataset.lv === level));
@@ -940,12 +1041,10 @@ function render() {
   const who = handoffStage === 'speaker' ? speakerIdx : guesserIdx;
   if (party && players[who]) {
     $('#hoName').textContent = players[who].name;
-    $('#hoAvatar').textContent = initial(players[who].name);
-    $('#hoAvatar').style.setProperty('--c', AVATAR_COLORS[who % AVATAR_COLORS.length]);
     $('#hoRound').dataset.l = turnLevel;
     $('#hoRound').textContent = `סבב ${roundOf(turnNo) + 1} מתוך ${rounds} · רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳`;
     $('#hoText').textContent = handoffStage === 'speaker'
-      ? 'תורך להקליט משפט סודי. כל השאר: לא להציץ במסך!'
+      ? 'תורך להקליט משפט סודי. אחרי הלחיצה יופיע המשפט, ותוך 5 שניות ההקלטה מתחילה. כל השאר: לא להציץ!'
       : `יש הקלטה סודית מ${players[speakerIdx].name}. תורך להקשיב לה הפוך, לחקות אותה ולנחש מה נאמר.`;
   }
 
@@ -964,30 +1063,37 @@ function render() {
   $('#recPhrase').append(lab, b);
   $('#uploadLink').classList.toggle('hidden', party || !!rec);
   $('#recNext').disabled = !bufs.orig || !!rec;
-  $('#recNext').firstChild.textContent = party ? 'שגרו למחקה ' : 'קדימה ';
+  $('#recNext').firstChild.textContent = 'קדימה ';
 
   // imitate
   $$('#speedSeg [data-speed]').forEach(b => b.classList.toggle('on', +b.dataset.speed === speed));
   $('#flip').disabled = !bufs.imit || !!rec;
 
-  // result
+  // result (party: listen and guess) / reveal (party: phrase + judge)
   $('#guessBox').classList.toggle('hidden', !party);
-  if (party && players[guesserIdx]) $('#guessLead').textContent = `${players[guesserIdx].name}, מה נאמר? נחשו בקול!`;
-  $('#reveal').classList.toggle('hidden', revealed);
-  $('#revealed').classList.toggle('hidden', !revealed);
-  $('#resPhrase').textContent = phrase;
-  $('#extraRow').classList.toggle('hidden', party && !revealed);
+  if (party && players[guesserIdx]) {
+    $('#guessLead').textContent = `${players[guesserIdx].name}, מה נאמר? נחשו בקול!`;
+    $('#revLead').textContent = `${players[guesserIdx].name}, ניחשת נכון?`;
+  }
+  $('#extraRow').classList.toggle('hidden', party);
   $('#soloFoot').classList.toggle('hidden', party);
+  $('#partyFoot').classList.toggle('hidden', !party);
+  $('#resPhrase').textContent = phrase;
+  $('#revLvl').dataset.l = turnLevel;
+  $('#revLvl').textContent = `רמה ${LEVEL_NAME[turnLevel]} · ${LEVEL_POINTS[turnLevel]} נק׳`;
   $('#gotIt').disabled = $('#missed').disabled = judged;
   $('#gotItTxt').textContent = `בול! \u2066+${LEVEL_POINTS[turnLevel]}\u2069`;
-  $('#compare').disabled = !bufs.result || !!rec;
-  $('#compare').classList.toggle('playing', comparing);
-  $('#shareRes').disabled = !bufs.result;
+  $$('[data-act=compare]').forEach(b => { b.disabled = !bufs.result || !!rec; b.classList.toggle('playing', comparing); });
+  $$('[data-act=share]').forEach(b => { b.disabled = !bufs.result; });
+  if (current === 'speak') renderSpeak();
 
   // board / final
   if (current === 'board') boardRows($('#boardList'), true);
   if (current === 'final') boardRows($('#finalList'), false);
   $('#nextTurn').firstChild.textContent = turnNo + 1 >= totalTurns ? 'מי ניצח?! ' : (turnNo + 1) % players.length === 0 ? 'לסבב הבא! ' : 'קדימה, ממשיכים ';
+
+  // in a party game the top-left button on these screens leaves the game
+  for (const id of ['imitate', 'result']) $(`#${id} [data-back] use`).setAttribute('href', party ? '#i-x' : '#i-back');
 
   // shared audio controls
   $$('[data-play]').forEach(b => {
@@ -1035,6 +1141,8 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-close]')) { closeModals(); return; }
   const lv = e.target.closest('[data-lv]');
   if (lv) { level = lv.dataset.lv; store.set('level', level); if (current === 'secret') newPhrase(); render(); return; }
+  const act = e.target.closest('[data-act]');
+  if (act) { if (act.dataset.act === 'compare') compare(); else shareResult(); return; }
   const sp = e.target.closest('[data-speed]');
   if (sp) { speed = +sp.dataset.speed; stopPlay(); render(); return; }
   if (e.target.classList.contains('modal')) closeModals();
@@ -1053,7 +1161,10 @@ $('#padd').onsubmit = e => {
 $('#rMinus').onclick = () => { rounds = Math.max(1, rounds - 1); store.set('rounds', rounds); render(); };
 $('#rPlus').onclick = () => { rounds = Math.min(5, rounds + 1); store.set('rounds', rounds); render(); };
 $('#startGame').onclick = startParty;
-$('#hoGo').onclick = () => go(handoffStage === 'speaker' ? 'secret' : 'imitate');
+$('#hoGo').onclick = () => { if (handoffStage === 'speaker') enterSpeak(); else go('imitate'); };
+$('#speakDone').onclick = () => { if (speakState === 'rec' && rec) stopRec(); };
+$('#speakRetry').onclick = beginCountdown;
+$('#toReveal').onclick = () => go('reveal');
 $('#dice').onclick = () => { newPhrase(); render(); };
 $('#toRecord').onclick = () => go('record');
 $('#recNext').onclick = () => {
@@ -1061,9 +1172,6 @@ $('#recNext').onclick = () => {
   if (mode === 'party') { handoffStage = 'guesser'; go('handoff'); } else go('imitate');
 };
 $('#flip').onclick = flip;
-$('#compare').onclick = compare;
-$('#shareRes').onclick = shareResult;
-$('#reveal').onclick = () => { revealed = true; render(); };
 $('#gotIt').onclick = () => judge(true);
 $('#missed').onclick = () => judge(false);
 $('#again').onclick = () => { bufs.imit = bufs.result = null; go('imitate', true); };
@@ -1087,6 +1195,7 @@ document.addEventListener('keydown', e => {
     const slot = current === 'record' ? 'orig' : 'imit';
     if (rec) stopRec(); else startRec(slot);
   }
+  if (e.code === 'Space' && current === 'speak' && speakState === 'rec') { e.preventDefault(); stopRec(); }
 });
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(render, 120); });
 document.addEventListener('visibilitychange', () => { if (document.hidden) { if (rec) stopRec(); stopPlay(); } });
