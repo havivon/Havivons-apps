@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-16",
+  "generated": "2026-11-17",
   "apps": [
     {
       "id": "pigeon",
@@ -109,17 +109,17 @@
       "id": "pdf",
       "category": "web",
       "order": 10,
-      "version": "2.0.0",
-      "updated": "2026-11-16",
+      "version": "2.0.1",
+      "updated": "2026-11-17",
       "download": {
         "url": "downloads/pdf.html",
-        "size": 3400129,
+        "size": 3400161,
         "type": "html"
       },
       "open": "web/pdf/",
       "apk": {
         "url": "downloads/pdf.apk",
-        "size": 3091692,
+        "size": 3091700,
         "type": "apk"
       }
     },

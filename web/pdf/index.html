@@ -199,14 +199,14 @@ button:disabled { cursor: not-allowed; }
   display: block;
 }
 .dropzone:hover, body.file-drag .dropzone { border-color: var(--accent); background: var(--accent-soft); }
-.dz-full { padding: 40px 20px 34px; }
+.dz-full { display: block; padding: 40px 20px 34px; }
 .dz-compact { display: none; align-items: center; justify-content: center; gap: 8px; padding: 13px 16px; font-weight: 600; font-size: 0.92rem; color: var(--accent); }
 body.has-pages .dz-full { display: none; }
 body.has-pages .dz-compact { display: flex; }
 body:not(.has-pages) .dropzone { margin-top: 4vh; }
 
 /* The fan of sheets — the one illustrated moment */
-.fan { position: relative; width: 190px; height: 128px; margin: 0 auto 26px; direction: ltr; }
+.fan { display: block; position: relative; width: 190px; height: 128px; margin: 0 auto 26px; direction: ltr; }
 .fan span {
   position: absolute; top: 8px; left: 50%;
   width: 84px; height: 112px; margin-left: -42px;
@@ -688,7 +688,7 @@ body.has-pages .privacy-note { display: none; }
 
 <script>
 'use strict';
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.0.1';
 
 // Configure PDF.js worker
 if (window.pdfjsLib) {
