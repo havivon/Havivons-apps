@@ -238,7 +238,7 @@
     ]
   },
   "pdf": {
-    "icon": "apps/pdf/icon.png",
+    "icon": "apps/pdf/icon-v2.png",
     "screens": [
       {
         "src": "apps/pdf/screens/01.webp",
