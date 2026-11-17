@@ -138,6 +138,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 .box{width:100%;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:22px;background:var(--surface);border:1px solid var(--line);text-align:center}
 .hidden{display:none !important}
 .compact-body{gap:12px;padding-bottom:20px}
+#cLevels{flex:none}
 .phrase-card.tap{display:block;color:inherit;font:inherit;text-align:center;cursor:pointer;flex:none}
 .phrase-card.tap small{display:block;margin-top:8px;color:var(--muted);font-size:14px}
 .cbtn{flex:1 1 0;min-height:78px;max-height:140px;width:100%;display:flex;align-items:center;gap:16px;padding:0 20px;border-radius:26px;
@@ -411,6 +412,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>מצב קומפקטי</h2><span class="pill"></span></header>
     <div class="body compact-body">
       <button class="phrase-card tap" id="cPhrase" aria-label="משפט חדש"><p id="cPhraseTxt"></p><small>הקישו למשפט חדש</small></button>
+      <div class="seg full" id="cLevels"><button data-lv="easy">קלה</button><button data-lv="medium">בינונית</button><button data-lv="hard">קשה</button></div>
       <button class="cbtn c-rec" id="cRec"><span class="n">1</span><svg><use href="#i-mic"/></svg><span class="t">הקלטה</span></button>
       <button class="cbtn c-rev" id="cRev"><span class="n">2</span><svg><use href="#i-rev"/></svg><span class="t">הפוך</span></button>
       <button class="cbtn c-imit" id="cImit"><span class="n">3</span><svg><use href="#i-mic"/></svg><span class="t">הקלטת ההפוך</span></button>
@@ -1083,7 +1085,7 @@ function render() {
     li.append(nm, x); ul.appendChild(li);
   });
   $('#pempty').classList.toggle('hidden', players.length > 0);
-  $$('#soloLevels [data-lv]').forEach(b => b.classList.toggle('on', b.dataset.lv === level));
+  $$('#soloLevels [data-lv], #cLevels [data-lv]').forEach(b => b.classList.toggle('on', b.dataset.lv === level));
   $('#roundsOut').textContent = rounds;
   $('#rMinus').disabled = rounds <= 1; $('#rPlus').disabled = rounds >= 10;
   $('#roundsHint').textContent = players.length >= 2
@@ -1211,7 +1213,7 @@ document.addEventListener('click', e => {
   if (e.target.closest('[data-back]')) { back(); return; }
   if (e.target.closest('[data-close]')) { closeModals(); return; }
   const lv = e.target.closest('[data-lv]');
-  if (lv) { level = lv.dataset.lv; store.set('level', level); if (current === 'secret') newPhrase(); render(); return; }
+  if (lv) { level = lv.dataset.lv; store.set('level', level); if (current === 'secret') newPhrase(); if (current === 'compact' && !rec) { resetRound(); newPhrase(); } render(); return; }
   const act = e.target.closest('[data-act]');
   if (act) { if (act.dataset.act === 'compare') compare(); else shareResult(); return; }
   const sp = e.target.closest('[data-speed]');
