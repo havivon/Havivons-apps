@@ -137,6 +137,22 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 /* ---------- result ---------- */
 .box{width:100%;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:22px;background:var(--surface);border:1px solid var(--line);text-align:center}
 .hidden{display:none !important}
+.compact-body{gap:12px;padding-bottom:20px}
+.phrase-card.tap{display:block;color:inherit;font:inherit;text-align:center;cursor:pointer;flex:none}
+.phrase-card.tap small{display:block;margin-top:8px;color:var(--muted);font-size:14px}
+.cbtn{flex:1 1 0;min-height:78px;max-height:140px;width:100%;display:flex;align-items:center;gap:16px;padding:0 20px;border-radius:26px;
+  border:1px solid var(--line);font-size:23px;font-weight:700;text-align:start;transition:transform .12s, opacity .2s}
+.cbtn:active{transform:scale(.97)}
+.cbtn:disabled{opacity:.32;pointer-events:none}
+.cbtn svg{width:34px;height:34px;flex:none}
+.cbtn .n{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;background:rgba(0,0,0,.22)}
+.cbtn .t{flex:1;font-variant-numeric:tabular-nums}
+.cbtn.c-rec{background:linear-gradient(135deg,#ff7a50,#ff3d71);border:none;color:#fff}
+.cbtn.c-rev{background:rgba(51,225,212,.14);border-color:rgba(51,225,212,.5);color:#c8fbf6}
+.cbtn.c-imit{background:rgba(181,140,255,.16);border-color:rgba(181,140,255,.5);color:#e9dcff}
+.cbtn.c-res{background:linear-gradient(135deg,#ffd166,#ffa94d);border:none;color:#2a1a00}
+.cbtn.on{animation:pulse 1.1s infinite}
+.cbtn.c-rev.on,.cbtn.c-res.on{animation:none;box-shadow:0 0 0 3px currentColor inset}
 .count{--p:1;--c:var(--gold);width:156px;height:156px;flex:none;border-radius:50%;display:grid;place-items:center;
   background:conic-gradient(var(--c) calc(var(--p) * 360deg), rgba(255,255,255,.08) 0)}
 .count span{width:130px;height:130px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-family:var(--display);font-size:66px;line-height:1;color:var(--c)}
@@ -155,8 +171,8 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
 .meta:empty{display:none}
 .m-round{font-size:17px;font-weight:600;color:var(--muted)}
 .m-pts{font-size:17px;font-weight:700;color:var(--gold)}
-.rec-row{display:flex;align-items:center;justify-content:center;gap:20px}
-.side{display:flex;flex-direction:column;align-items:center;gap:8px;width:86px;font-size:15px;color:var(--muted);text-align:center}
+.rec-row{display:flex;align-items:center;justify-content:center;gap:14px}
+.side{display:flex;flex-direction:column;align-items:center;gap:8px;width:100px;font-size:15px;color:var(--muted);text-align:center;white-space:nowrap}
 .roundbtn{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface2);transition:transform .12s}
 .roundbtn:active{transform:scale(.94)}
 .roundbtn svg{width:30px;height:30px}
@@ -219,6 +235,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 16V4M7 9l5-5 5 5M5 20h14"/></symbol>
     <symbol id="i-redo" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></symbol>
     <symbol id="i-trophy" viewBox="0 0 24 24"><path fill="currentColor" d="M7 3h10v2h3v3a4 4 0 0 1-4 4h-.3A5 5 0 0 1 13 14.9V18h3v3H8v-3h3v-3.1A5 5 0 0 1 8.3 12H8a4 4 0 0 1-4-4V5h3zm-1 4v1a2 2 0 0 0 1.2 1.8A5 5 0 0 1 7 8V7zm11 0v1a5 5 0 0 1-.2 1.8A2 2 0 0 0 18 8V7z"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 2 4 13.5h6.5L9.5 22 20 9.5h-6.5z"/></symbol>
     <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10"/></symbol>
   </defs>
 </svg>
@@ -238,6 +255,7 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
     <div class="foot">
       <button class="btn xl primary" id="goParty"><svg><use href="#i-users"/></svg>משחק חברים</button>
       <button class="btn xl" id="goSolo"><svg><use href="#i-mic"/></svg>אימון סולו</button>
+      <button class="btn xl" id="goCompact"><svg><use href="#i-bolt"/></svg>מצב קומפקטי</button>
       <button class="link" id="howBtn">רגע, איך משחקים?</button>
     </div>
   </section>
@@ -385,6 +403,18 @@ button{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:man
         <button class="btn xl ok" id="gotIt"><svg><use href="#i-check"/></svg><span id="gotItTxt">בול!</span></button>
         <button class="btn xl no" id="missed"><svg><use href="#i-x"/></svg>פספוס</button>
       </div>
+    </div>
+  </section>
+
+  <!-- COMPACT: everything on one screen -->
+  <section class="screen hidden" id="compact">
+    <header class="bar"><button class="icon-btn" data-back aria-label="חזרה"><svg><use href="#i-back"/></svg></button><h2>מצב קומפקטי</h2><span class="pill"></span></header>
+    <div class="body compact-body">
+      <button class="phrase-card tap" id="cPhrase" aria-label="משפט חדש"><p id="cPhraseTxt"></p><small>הקישו למשפט חדש</small></button>
+      <button class="cbtn c-rec" id="cRec"><span class="n">1</span><svg><use href="#i-mic"/></svg><span class="t">הקלטה</span></button>
+      <button class="cbtn c-rev" id="cRev"><span class="n">2</span><svg><use href="#i-rev"/></svg><span class="t">הפוך</span></button>
+      <button class="cbtn c-imit" id="cImit"><span class="n">3</span><svg><use href="#i-mic"/></svg><span class="t">הקלטת ההפוך</span></button>
+      <button class="cbtn c-res" id="cRes"><span class="n">4</span><svg><use href="#i-play"/></svg><span class="t">בוא נשמע מה יצא</span></button>
     </div>
   </section>
 
@@ -654,10 +684,10 @@ async function startRec(slot, maxSec = MAX_REC, onDone) {
   try { await engine.startRecording(); }
   catch (e) { recPending = false; render(); toast(e.message || 'ההקלטה נכשלה'); return; }
   recPending = false;
-  const cv = slot === 'orig' && current === 'speak' ? 'ws' : REC_CANVAS[slot];
+  const cv = current === 'compact' ? null : slot === 'orig' && current === 'speak' ? 'ws' : REC_CANVAS[slot];
   rec = { slot, t0: performance.now(), levels: [], cv, max: maxSec, onDone };
   rec.timer = setTimeout(stopRec, maxSec * 1000);
-  $('#wv-' + cv).classList.add('live');
+  if (cv) $('#wv-' + cv).classList.add('live');
   render();
   liveLoop(rec);
 }
@@ -668,7 +698,7 @@ async function stopRec() {
   let raw = null, err = null;
   try { raw = await engine.stopRecording(); } catch (e) { err = e; }
   rec = null;
-  $('#wv-' + r.cv).classList.remove('live');
+  if (r.cv) $('#wv-' + r.cv).classList.remove('live');
   const fail = msg => { toast(msg); render(); if (r.onDone) r.onDone(false); };
   if (err || !raw || !raw.channels[0].length) { if (err) console.error(err); fail('לא הצלחנו לעבד את ההקלטה'); return; }
   if (performance.now() - r.t0 < 400 || raw.channels[0].length < raw.sampleRate * 0.3) { fail('ההקלטה קצרה מדי, נסו שוב'); return; }
@@ -678,9 +708,10 @@ async function stopRec() {
 function liveLoop(r) {
   if (rec !== r || r.stopping) return;
   r.levels.push(engine.level());
-  drawLive($('#' + r.cv), r.levels);
+  if (r.cv) drawLive($('#' + r.cv), r.levels);
   const el = (performance.now() - r.t0) / 1000;
   if (r.cv === 'ws') speakTick(el, r.max);
+  else if (!r.cv) $(r.slot === 'orig' ? '#cRec .t' : '#cImit .t').textContent = `עצירה · ${fmt(el)}`;
   else $('#lbl-' + r.slot).textContent = `${fmt(el)} · לחצו לעצירה`;
   requestAnimationFrame(() => liveLoop(r));
 }
@@ -723,7 +754,7 @@ function stopPlay(silent) {
 function tick(p) {
   if (playing !== p) return;
   const prog = Math.max(0, Math.min(1, (performance.now() - p.t0) / p.dur));
-  drawWave($('#' + p.cv), bufs[p.key], COLORS[p.key], prog);
+  const cvEl = $('#' + p.cv); if (cvEl) drawWave(cvEl, bufs[p.key], COLORS[p.key], prog);
   requestAnimationFrame(() => tick(p));
 }
 function compare() {
@@ -873,7 +904,7 @@ function back() {
   if (modalOpen()) { closeModals(); return true; }
   if (rec) { stopRec(); return true; }
   if (current === 'home') return false;
-  if (current === 'setup' || current === 'final') { go('home', true); return true; }
+  if (current === 'setup' || current === 'final' || current === 'compact') { go('home', true); return true; }
   if (mode === 'party') { openModal('exitModal'); return true; }
   go({ secret: 'home', record: 'secret', imitate: 'record', result: 'imitate' }[current] || 'home', true);
   return true;
@@ -1116,6 +1147,25 @@ function render() {
   // in a party game the top-left button on these screens leaves the game
   for (const id of ['imitate', 'result']) $(`#${id} [data-back] use`).setAttribute('href', party ? '#i-x' : '#i-back');
 
+  // compact
+  if (current === 'compact') {
+    $('#cPhraseTxt').textContent = phrase;
+    const st = (id, { on, disabled, icon, text }) => {
+      const b = $(id); b.disabled = disabled; b.classList.toggle('on', !!on);
+      b.querySelector('use').setAttribute('href', icon);
+      if (text != null) b.querySelector('.t').textContent = text;
+    };
+    const recOn = slot => !!(rec && rec.slot === slot), playOn = key => !!(playing && playing.key === key);
+    st('#cRec', { on: recOn('orig'), disabled: recPending || (!!rec && !recOn('orig')), icon: recOn('orig') ? '#i-stop' : '#i-mic',
+      text: recOn('orig') ? null : (bufs.orig ? 'הקלטה מחדש' : 'הקלטה') });
+    st('#cRev', { on: playOn('origRev'), disabled: !bufs.origRev || !!rec, icon: playOn('origRev') ? '#i-stop' : '#i-rev',
+      text: playOn('origRev') ? 'עצירה' : 'הפוך' });
+    st('#cImit', { on: recOn('imit'), disabled: !bufs.orig || recPending || (!!rec && !recOn('imit')), icon: recOn('imit') ? '#i-stop' : '#i-mic',
+      text: recOn('imit') ? null : (bufs.imit ? 'הקלטת ההפוך מחדש' : 'הקלטת ההפוך') });
+    st('#cRes', { on: playOn('result'), disabled: !bufs.imit || !!rec, icon: playOn('result') ? '#i-stop' : '#i-play',
+      text: playOn('result') ? 'עצירה' : 'בוא נשמע מה יצא' });
+  }
+
   // shared audio controls
   $$('[data-play]').forEach(b => {
     const on = playing && playing.key === b.dataset.play && playing.cv === b.dataset.cv && !comparing;
@@ -1170,6 +1220,13 @@ document.addEventListener('click', e => {
 });
 $('#goParty').onclick = () => go('setup');
 $('#goSolo').onclick = startSolo;
+$('#goCompact').onclick = () => { mode = 'compact'; usedPhrases = new Set(); resetRound(); newPhrase(); go('compact'); };
+$('#cPhrase').onclick = () => { if (rec) return; resetRound(); newPhrase(); render(); };
+$('#cRec').onclick = () => { if (rec && rec.slot === 'orig') stopRec(); else startRec('orig'); };
+$('#cImit').onclick = () => { if (rec && rec.slot === 'imit') stopRec(); else startRec('imit'); };
+const cToggle = key => { if (playing && playing.key === key) stopPlay(); else play(key, 'cmp'); };
+$('#cRev').onclick = () => cToggle('origRev');
+$('#cRes').onclick = () => { if (!bufs.result && bufs.imit) bufs.result = reverse(bufs.imit); cToggle('result'); };
 $('#howBtn').onclick = () => openModal('howModal');
 $('#padd').onsubmit = e => {
   e.preventDefault();

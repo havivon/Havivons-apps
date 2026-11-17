@@ -381,23 +381,23 @@
     "screens": [
       {
         "src": "apps/achoranit/screens/01.webp",
-        "caption": "רישום שחקנים ובחירת מספר הסבבים"
-      },
-      {
-        "src": "apps/achoranit/screens/02.webp",
         "caption": "העברת הטלפון: סבב, רמה וניקוד"
       },
       {
-        "src": "apps/achoranit/screens/03.webp",
+        "src": "apps/achoranit/screens/02.webp",
         "caption": "המשפט הסודי והקלטה אוטומטית"
       },
       {
-        "src": "apps/achoranit/screens/04.webp",
+        "src": "apps/achoranit/screens/03.webp",
         "caption": "חיקוי, עם השמעה חוזרת ליד המיקרופון"
       },
       {
-        "src": "apps/achoranit/screens/05.webp",
+        "src": "apps/achoranit/screens/04.webp",
         "caption": "חשיפת הסוד: בול או פספוס"
+      },
+      {
+        "src": "apps/achoranit/screens/05.webp",
+        "caption": "מצב קומפקטי: הכול במסך אחד"
       }
     ]
   }
