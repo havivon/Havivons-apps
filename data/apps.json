@@ -65,10 +65,10 @@
       "category": "android",
       "order": 6,
       "version": "1.0.0",
-      "updated": "2026-10-11",
+      "updated": "2026-11-18",
       "download": {
-        "url": "https://github.com/havivon/BabyMonitor/releases/download/android-build-18/BabyMonitor-1.0.0-build18.apk",
-        "size": 7638919,
+        "url": "https://github.com/havivon/BabyMonitor/releases/download/android-build-19/BabyMonitor-1.0.0-build19.apk",
+        "size": 7572987,
         "type": "apk"
       }
     },
@@ -77,10 +77,10 @@
       "category": "web",
       "order": 7,
       "open": "https://havivon.github.io/child-behavior/",
-      "updated": "2026-10-18",
+      "updated": "2026-11-18",
       "download": {
         "url": "https://github.com/havivon/child-behavior/raw/ccr-82643f82-qh3f6c/dist/ragua-vehazak.apk",
-        "size": 452431,
+        "size": 460623,
         "type": "apk"
       }
     },

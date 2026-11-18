@@ -146,7 +146,7 @@
     ]
   },
   "ragua": {
-    "icon": "apps/ragua/icon.png",
+    "icon": "apps/ragua/icon-v2.png",
     "screens": [
       {
         "src": "apps/ragua/screens/01.webp",
@@ -167,7 +167,7 @@
     ]
   },
   "babymonitor": {
-    "icon": "apps/babymonitor/icon.png",
+    "icon": "apps/babymonitor/icon-v2.png",
     "screens": [
       {
         "src": "apps/babymonitor/screens/01.webp",
