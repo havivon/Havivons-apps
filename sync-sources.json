@@ -212,6 +212,16 @@
           "dir": "web"
         }
       }
+    },
+    "obd2": {
+      "category": "android",
+      "order": 19,
+      "_comment": "The source repo is private, so the build is hosted here and tracked from this repo.",
+      "remote": {
+        "kind": "file",
+        "repo": "havivon/Havivons-apps",
+        "file": "downloads/obd2.apk"
+      }
     }
   }
 }

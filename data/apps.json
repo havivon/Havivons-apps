@@ -221,6 +221,18 @@
         "type": "apk"
       },
       "open": "web/achoranit/"
+    },
+    {
+      "id": "obd2",
+      "category": "android",
+      "order": 19,
+      "version": "1.0.0",
+      "updated": "2026-11-18",
+      "download": {
+        "url": "https://github.com/havivon/Havivons-apps/raw/main/downloads/obd2.apk",
+        "size": 177297,
+        "type": "apk"
+      }
     }
   ]
 }
