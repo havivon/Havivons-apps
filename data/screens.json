@@ -403,6 +403,23 @@
   },
   "obd2": {
     "icon": "apps/obd2/icon.png",
-    "screens": []
+    "screens": [
+      {
+        "src": "apps/obd2/screens/01.webp",
+        "caption": "מדדים חיים במחוונים, כל אחד עם הטווח התקין שלו מסומן"
+      },
+      {
+        "src": "apps/obd2/screens/02.webp",
+        "caption": "קודי התקלה, ולצידם כמה זמן הנורה כבר דולקת ומתי נמחק הזיכרון"
+      },
+      {
+        "src": "apps/obd2/screens/03.webp",
+        "caption": "בדיקות המוכנות שקובעות אם הרכב יעבור טסט, ומה חוסם אותו"
+      },
+      {
+        "src": "apps/obd2/screens/04.webp",
+        "caption": "שאר הכלים: דוח מלא, נקודת התחלה, מסגרת קפואה וחיישני חמצן"
+      }
+    ]
   }
 }
