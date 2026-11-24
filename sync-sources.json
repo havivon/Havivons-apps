@@ -10,8 +10,7 @@
         "app/build/outputs/apk/release/*.apk",
         "app/build/outputs/apk/debug/*.apk"
       ],
-      "version_file": "app/build.gradle.kts",
-      "repo": "havivon/Pigeon"
+      "version_file": "app/build.gradle.kts"
     },
     "smartfiles": {
       "category": "android",
@@ -21,8 +20,7 @@
         "dist/*.apk",
         "app/build/outputs/apk/release/*.apk"
       ],
-      "version_file": "app/build.gradle.kts",
-      "repo": "havivon/SmartFileManager"
+      "version_file": "app/build.gradle.kts"
     },
     "hebreminder": {
       "category": "android",
@@ -126,8 +124,7 @@
         "app/build/outputs/apk/release/*.apk",
         "app/build/outputs/apk/debug/*.apk"
       ],
-      "version_file": "app/build.gradle.kts",
-      "repo": "havivon/mahjong"
+      "version_file": "app/build.gradle.kts"
     },
     "hidon": {
       "category": "game",
@@ -183,7 +180,6 @@
     "zmanei-tfila": {
       "category": "web",
       "order": 13,
-      "repo": "havivon/zmaneitfila",
       "open": "https://havivon.github.io/zmaneitfila/",
       "remote": {
         "kind": "release",
@@ -202,7 +198,6 @@
     "achoranit": {
       "category": "game",
       "order": 18,
-      "repo": "havivon/reverse-audio-game",
       "remote": {
         "kind": "file",
         "repo": "havivon/reverse-audio-game",
