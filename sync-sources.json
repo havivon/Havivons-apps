@@ -226,7 +226,6 @@
     "seeyoulater": {
       "category": "android",
       "order": 20,
-      "repo": "havivon/LaterCenter",
       "remote": {
         "kind": "release",
         "repo": "havivon/LaterCenter",

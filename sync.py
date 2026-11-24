@@ -283,6 +283,8 @@ def main(argv):
             entry.pop("store", None)
         if src.get("repo"):
             entry["repo"] = f"https://github.com/{src['repo']}"
+        else:  # no top-level "repo": no "source code" button on the site
+            entry.pop("repo", None)
         if only and app_id not in only:
             continue
         try:
