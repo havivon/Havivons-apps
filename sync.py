@@ -152,6 +152,18 @@ def sync_local(app_id, src, entry):
         entry["open"] = os.path.dirname(host["to"]).replace("\\", "/") + "/"
 
 
+def mirror_asset(app_id, asset):
+    """Copy a release asset into downloads/<id>.apk (needs GITHUB_TOKEN for a private repo)."""
+    headers = {"Accept": "application/octet-stream", "User-Agent": "havivons-apps-sync"}
+    if os.environ.get("GITHUB_TOKEN"):
+        headers["Authorization"] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+    rel = f"downloads/{app_id}.apk"
+    req = urllib.request.Request(asset["url"], headers=headers)
+    with urllib.request.urlopen(req, timeout=300) as r, open(os.path.join(ROOT, rel), "wb") as f:
+        shutil.copyfileobj(r, f)
+    return rel
+
+
 def sync_remote(app_id, src, entry):
     r = src["remote"]
     api = f"https://api.github.com/repos/{r['repo']}"
@@ -164,6 +176,8 @@ def sync_remote(app_id, src, entry):
         entry["version"] = m.group(1) if m else None
         entry["updated"] = rel["published_at"][:10]
         entry["download"] = {"url": asset["browser_download_url"], "size": asset["size"], "type": "apk"}
+        if r.get("mirror"):  # private repo: visitors can't reach its releases, so host a copy in downloads/
+            entry["download"]["url"] = mirror_asset(app_id, asset)
     elif r["kind"] == "file":
         repo = github(api)
         info = github(f"{api}/contents/{r['file']}?ref={repo['default_branch']}")

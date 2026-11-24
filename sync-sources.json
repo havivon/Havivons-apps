@@ -222,6 +222,17 @@
         "repo": "havivon/Havivons-apps",
         "file": "downloads/obd2.apk"
       }
+    },
+    "latercenter": {
+      "category": "android",
+      "order": 20,
+      "repo": "havivon/LaterCenter",
+      "remote": {
+        "kind": "release",
+        "repo": "havivon/LaterCenter",
+        "asset": ".apk",
+        "mirror": true
+      }
     }
   }
 }
