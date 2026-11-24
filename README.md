@@ -28,7 +28,7 @@ python sync.py --push pigeon    # כולל commit + push
 הסקריפט לוקח את הבנייה החדשה ביותר מהנתיבים ב-`sync-sources.json`, קורא את מספר הגרסה מתוך ה-APK
 (או מקובץ ה-gradle), ומעדכן את `data/apps.json`. אפליקציות שמתפרסמות ב-GitHub Releases
 (NewPlayer, BabyMonitor, Print My Bingo) מתעדכנות מה-Release האחרון.
-ריפו פרטי (LaterCenter): `"mirror": true` ב-`remote` מעתיק את ה-APK מה-Release ל-`downloads/<id>.apk`, כי מבקרים לא יכולים להוריד מריפו פרטי. לזה נדרש `GITHUB_TOKEN`.
+ריפו פרטי (SeeYouLater): `"mirror": true` ב-`remote` מעתיק את ה-APK מה-Release ל-`downloads/<id>.apk`, כי מבקרים לא יכולים להוריד מריפו פרטי. לזה נדרש `GITHUB_TOKEN`.
 אם ה-API של GitHub חוסם (60 בקשות לשעה), אפשר להגדיר `GITHUB_TOKEN`.
 
 אפליקציה חדשה: להוסיף ל-`sync-sources.json`, ל-`data/content.json` ול-`data/screens.json`, ולהריץ sync.

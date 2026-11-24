@@ -422,27 +422,27 @@
       }
     ]
   },
-  "latercenter": {
-    "icon": "apps/latercenter/icon.png",
+  "seeyoulater": {
+    "icon": "apps/seeyoulater/icon.png",
     "screens": [
       {
-        "src": "apps/latercenter/screens/01.webp",
+        "src": "apps/seeyoulater/screens/01.webp",
         "caption": "מסך הבית: להמשיך לצפות וקטגוריות"
       },
       {
-        "src": "apps/latercenter/screens/02.webp",
+        "src": "apps/seeyoulater/screens/02.webp",
         "caption": "קטגוריית מתכונים עם סרטונים אנכיים ואופקיים"
       },
       {
-        "src": "apps/latercenter/screens/03.webp",
+        "src": "apps/seeyoulater/screens/03.webp",
         "caption": "מסך הבית במצב כהה"
       },
       {
-        "src": "apps/latercenter/screens/04.webp",
+        "src": "apps/seeyoulater/screens/04.webp",
         "caption": "שמירה מהירה מתוך השיתוף: הצעת קטגוריה, תגיות ותזכורת"
       },
       {
-        "src": "apps/latercenter/screens/05.webp",
+        "src": "apps/seeyoulater/screens/05.webp",
         "caption": "תזכורות ותקציר שבועי"
       }
     ]
