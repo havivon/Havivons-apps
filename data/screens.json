@@ -241,23 +241,23 @@
     "icon": "apps/pdf/icon-v2.png",
     "screens": [
       {
-        "src": "apps/pdf/screens/01.webp",
+        "src": "apps/pdf/screens/01-v2.webp",
         "caption": "מסך הפתיחה: גוררים קבצים או בוחרים אותם"
       },
       {
-        "src": "apps/pdf/screens/02.webp",
+        "src": "apps/pdf/screens/02-v2.webp",
         "caption": "העמודים מוכנים לסידור בגרירה"
       },
       {
-        "src": "apps/pdf/screens/03.webp",
+        "src": "apps/pdf/screens/03-v2.webp",
         "caption": "מצב בחירה: פעולה על כמה עמודים יחד"
       },
       {
-        "src": "apps/pdf/screens/04.webp",
+        "src": "apps/pdf/screens/04-v2.webp",
         "caption": "תצוגה מקדימה של עמוד, במצב כהה"
       },
       {
-        "src": "apps/pdf/screens/05.webp",
+        "src": "apps/pdf/screens/05-v2.webp",
         "caption": "תצוגת מחשב: כל העמודים על מסך רחב"
       }
     ]
