@@ -49,6 +49,9 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--bg); color
 .btn-ghost { border: 1px solid var(--line); color: var(--text); background: transparent; }
 .btn-ghost:hover { background: var(--surface-2); }
 .btn svg { width: 18px; height: 18px; }
+/* keep the place of an icon until Lucide draws it, so nothing jumps */
+:where(i[data-lucide]) { display: inline-block; width: 24px; height: 24px; }
+.btn i[data-lucide] { width: 18px; height: 18px; }
 
 .chip { border: 1px solid var(--line); border-radius: 999px; padding: .4rem .95rem; font-size: .9rem; color: var(--muted); transition: all .2s; }
 .chip:hover { color: var(--text); }
@@ -60,6 +63,10 @@ body { font-family: 'Heebo', system-ui, sans-serif; background: var(--bg); color
 
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.in { opacity: 1; transform: none; }
+/* a returning visit shows the saved content at once, without the entrance animation */
+.instant .reveal { opacity: 1; transform: none; transition: none; }
+.instant .card.reveal { transition: transform .25s ease, box-shadow .25s ease, border-color .25s; }
+.instant .card.reveal:hover { transform: translateY(-4px); }
 
 .shots { scroll-snap-type: x mandatory; scrollbar-width: thin; }
 .shots > * { scroll-snap-align: start; }

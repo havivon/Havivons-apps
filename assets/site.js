@@ -28,19 +28,51 @@ const Theme = {
 Theme.init();
 
 // ---------- data ----------
-async function getJson(url) {
+const DATA_FILES = ['data/apps.json', 'data/content.json', 'data/screens.json'];
+const DATA_KEY = 'site-data-v1';
+
+// The text of a data file, or null when it could not be loaded (the saved copy stays).
+async function getText(url) {
   try {
     const r = await fetch(url, { cache: 'no-cache' });
-    return r.ok ? r.json() : {};
+    return r.ok ? await r.text() : null;
   } catch (e) {
-    return {};
+    return null;
   }
 }
 
-async function loadApps() {
-  const [catalog, content, screens] = await Promise.all([
-    getJson('data/apps.json'), getJson('data/content.json'), getJson('data/screens.json'),
-  ]);
+// Draws the page at once from the copy saved on the previous visit, then checks for news
+// and draws again only if something really changed.
+async function loadApps(draw) {
+  let shown = null;
+  try {
+    const saved = JSON.parse(localStorage.getItem(DATA_KEY));
+    if (Array.isArray(saved) && saved.length === DATA_FILES.length) {
+      const apps = buildApps(saved);
+      document.documentElement.classList.add('instant');
+      draw(apps, true);
+      shown = saved;
+    }
+  } catch (e) { shown = null; }
+
+  const fresh = await Promise.all(DATA_FILES.map(getText));
+  const texts = fresh.map((t, i) => t ?? (shown && shown[i]));
+  if (shown && texts.every((t, i) => t === shown[i])) return;
+  let apps;
+  try {
+    apps = buildApps(texts.map((t) => t ?? '{}'));
+  } catch (e) {
+    if (shown) return;
+    apps = [];
+  }
+  draw(apps);
+  if (texts.every((t) => t != null)) {
+    try { localStorage.setItem(DATA_KEY, JSON.stringify(texts)); } catch (e) {}
+  }
+}
+
+function buildApps(texts) {
+  const [catalog, content, screens] = texts.map((t) => JSON.parse(t));
   showSiteUpdated(catalog.generated);
   return (catalog.apps || []).map((a) => {
     const c = content[a.id] || {};
@@ -126,30 +158,41 @@ function revealOnScroll() {
 function icons() { if (window.lucide) lucide.createIcons(); }
 
 // ---------- home ----------
-async function renderHome() {
-  const apps = await loadApps();
+function renderHome() {
+  let apps = [];
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
   const search = document.getElementById('search');
-  let filter = 'all';
-
-  document.getElementById('count-all').textContent = apps.length;
-  document.getElementById('count-android').textContent = apps.filter((a) => a.store || a.apk || a.download?.type === 'apk').length;
-  document.getElementById('count-web').textContent = apps.filter((a) => a.open).length;
-
+  // kept in the history entry: going back from an app page returns to the same filter and search
+  const wentBack = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+  const kept = (wentBack && history.state) || {};
+  let filter = kept.filter || 'all';
+  if (kept.q) search.value = kept.q;
+  const remember = () => { try { history.replaceState({ filter, q: search.value }, ''); } catch (e) {} };
   const chips = document.getElementById('chips');
-  const present = Object.keys(CATEGORIES).filter((k) => apps.some((a) => a.category === k));
-  chips.innerHTML = [['all', 'הכול', 'layout-grid'], ...present.map((k) => [k, CATEGORIES[k].label, CATEGORIES[k].icon])]
-    .map(([k, label, ic]) => `<button type="button" class="chip inline-flex items-center gap-1.5" data-filter="${k}" aria-pressed="${k === 'all'}"><i data-lucide="${ic}" class="w-4 h-4"></i>${label}</button>`)
-    .join('');
+
+  function show(list) {
+    apps = list;
+    document.getElementById('count-all').textContent = apps.length;
+    document.getElementById('count-android').textContent = apps.filter((a) => a.store || a.apk || a.download?.type === 'apk').length;
+    document.getElementById('count-web').textContent = apps.filter((a) => a.open).length;
+    const present = Object.keys(CATEGORIES).filter((k) => apps.some((a) => a.category === k));
+    if (!present.includes(filter)) filter = 'all';
+    chips.innerHTML = [['all', 'הכול', 'layout-grid'], ...present.map((k) => [k, CATEGORIES[k].label, CATEGORIES[k].icon])]
+      .map(([k, label, ic]) => `<button type="button" class="chip inline-flex items-center gap-1.5" data-filter="${k}" aria-pressed="${k === filter}"><i data-lucide="${ic}" class="w-4 h-4"></i>${label}</button>`)
+      .join('');
+    draw();
+  }
+
   chips.addEventListener('click', (e) => {
     const b = e.target.closest('[data-filter]');
     if (!b) return;
     filter = b.dataset.filter;
     chips.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    remember();
     draw();
   });
-  search.addEventListener('input', draw);
+  search.addEventListener('input', () => { remember(); draw(); });
 
   function draw() {
     const q = search.value.trim().toLowerCase();
@@ -179,15 +222,40 @@ async function renderHome() {
     icons();
     revealOnScroll();
   }
-  draw();
+  loadApps(show);
 }
 
 // ---------- app page ----------
-async function renderApp() {
+let currentApp = null; // whose screenshots the enlarged view shows
+
+function renderApp() {
+  setupLightbox();
+  backToList();
+  loadApps(drawApp);
+}
+
+// "All apps" returns to the list that is already in the history (same place, filter and
+// search) instead of loading it again.
+function backToList() {
+  let fromList = false;
+  try {
+    const r = new URL(document.referrer);
+    const home = location.pathname.replace(/[^/]*$/, '');
+    fromList = r.origin === location.origin && r.pathname.replace(/index\.html$/, '') === home;
+  } catch (e) {}
+  if (!fromList || history.length < 2) return;
+  document.querySelectorAll('a[href^="./"]').forEach((a) => a.addEventListener('click', (e) => {
+    if (e.button || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    history.back();
+  }));
+}
+
+function drawApp(apps, fromSaved) {
   const id = new URLSearchParams(location.search).get('id');
-  const apps = await loadApps();
   const app = apps.find((a) => a.id === id);
   const root = document.getElementById('app');
+  if (!app && fromSaved) return; // perhaps a new app: wait for the fresh data
   if (!app) {
     root.innerHTML = `<div class="text-center py-24"><p class="font-display text-2xl">האפליקציה לא נמצאה</p><a class="btn btn-primary mt-6" href="./">לכל האפליקציות</a></div>`;
     icons();
@@ -263,11 +331,27 @@ async function renderApp() {
       </div>
     </section>`;
 
+  currentApp = app;
+  icons();
+  revealOnScroll();
+}
+
+function setupLightbox() {
   const dlg = document.getElementById('lightbox');
   const big = dlg.querySelector('img');
   let idx = 0;
-  const show = (i) => { idx = (i + app.screens.length) % app.screens.length; big.src = app.screens[idx].src; big.alt = app.screens[idx].caption || ''; };
-  root.querySelectorAll('.shot').forEach((img) => img.addEventListener('click', () => { show(Number(img.dataset.index)); dlg.showModal(); }));
+  const show = (i) => {
+    const shots = currentApp.screens;
+    idx = (i + shots.length) % shots.length;
+    big.src = shots[idx].src;
+    big.alt = shots[idx].caption || '';
+  };
+  document.getElementById('app').addEventListener('click', (e) => {
+    const img = e.target.closest('.shot');
+    if (!img) return;
+    show(Number(img.dataset.index));
+    dlg.showModal();
+  });
   dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close(); });
   dlg.querySelector('[data-prev]').addEventListener('click', () => show(idx + 1));
   dlg.querySelector('[data-next]').addEventListener('click', () => show(idx - 1));
@@ -275,9 +359,6 @@ async function renderApp() {
     if (e.key === 'ArrowLeft') show(idx + 1);
     if (e.key === 'ArrowRight') show(idx - 1);
   });
-
-  icons();
-  revealOnScroll();
 }
 
 function infoBox(icon, title, text) {
