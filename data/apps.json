@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "apps": [
     {
       "id": "pigeon",
@@ -233,11 +233,11 @@
       "id": "seeyoulater",
       "category": "android",
       "order": 20,
-      "version": "1.0.9",
-      "updated": "2026-11-24",
+      "version": "1.0.10",
+      "updated": "2026-11-25",
       "download": {
         "url": "downloads/seeyoulater.apk",
-        "size": 30074485,
+        "size": 30283193,
         "type": "apk"
       }
     }
