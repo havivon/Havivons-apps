@@ -227,6 +227,16 @@
         "asset": ".apk",
         "mirror": true
       }
+    },
+    "kama-zman": {
+      "category": "game",
+      "order": 21,
+      "_comment": "Multiplayer game with its own Node server on Render, so it is linked, not hosted here. The source repo is private: the date needs GITHUB_TOKEN.",
+      "open": "https://kama-zman-avar.onrender.com/",
+      "remote": {
+        "kind": "commit",
+        "repo": "havivon/newgame"
+      }
     }
   }
 }

@@ -240,6 +240,14 @@
         "size": 30350682,
         "type": "apk"
       }
+    },
+    {
+      "id": "kama-zman",
+      "category": "game",
+      "order": 21,
+      "open": "https://kama-zman-avar.onrender.com/",
+      "updated": "2026-11-25",
+      "download": null
     }
   ]
 }

@@ -446,5 +446,30 @@
         "caption": "תזכורות ותקציר שבועי"
       }
     ]
+  },
+  "kama-zman": {
+    "icon": "apps/kama-zman/icon.png",
+    "screens": [
+      {
+        "src": "apps/kama-zman/screens/01.webp",
+        "caption": "מסך הפתיחה: פותחים חדר או מצטרפים עם קוד"
+      },
+      {
+        "src": "apps/kama-zman/screens/02.webp",
+        "caption": "סיבוב במצב מנורת לבה, ולמטה מי כבר לחץ"
+      },
+      {
+        "src": "apps/kama-zman/screens/03.webp",
+        "caption": "שעון עקום: מתקתק מהר או לאט מדי"
+      },
+      {
+        "src": "apps/kama-zman/screens/04.webp",
+        "caption": "תוצאות הסיבוב: מי הקדים, מי איחר ומי פגע בול"
+      },
+      {
+        "src": "apps/kama-zman/screens/05.webp",
+        "caption": "סוף המשחק: פודיום ותעודות הצטיינות"
+      }
+    ]
   }
 }
