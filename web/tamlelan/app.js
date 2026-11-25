@@ -55,9 +55,9 @@ const SINGLE_PUNCT = {
 const HEBREW_NUMBERS = {
   "אחד": 1, "אחת": 1,
   "שניים": 2, "שתיים": 2, "שנים": 2, "שתים": 2, "שני": 2, "שתי": 2,
-  "שלושה": 3, "שלוש": 3,
-  "ארבעה": 4, "ארבע": 4,
-  "חמישה": 5, "חמש": 5,
+  "שלושה": 3, "שלוש": 3, "שלושת": 3,
+  "ארבעה": 4, "ארבע": 4, "ארבעת": 4,
+  "חמישה": 5, "חמש": 5, "חמשת": 5,
   "שישה": 6, "שש": 6,
   "שבעה": 7, "שבע": 7,
   "שמונה": 8,
@@ -99,26 +99,90 @@ function parseNumberFromTokens(tokens, start) {
   return { value: val, consumed: 1 };
 }
 
-// "מחק 3", "מחק שלוש מילים", "מחק 3 המילים האחרונות". "מחק מילה" counts only when nothing
-// else was said, because it is also an ordinary phrase ("הוא מחק מילה מהמסמך").
+// "מחק 3", "מחק שלוש מילים", "מחק את 3 המילים האחרונות", "מחק את המילה האחרונה".
+// "מחק מילה" counts only when nothing else was said, because it is also an ordinary
+// phrase ("הוא מחק מילה מהמסמך").
+const DELETE_VERBS = ["מחק", "מחקי", "תמחק", "תמחקי"];
+const LAST_WORDS = ["אחרונה", "האחרונה", "אחרונות", "האחרונות", "אחרונים", "האחרונים"];
 function parseDeleteCommand(tokens, i) {
   const word = (k) => bare(tokens[k]);
-  if (word(i) !== "מחק") return null;
-  if (word(i + 1) === "מילה") {
-    if (word(i + 2) === "אחת") return { count: 1, consumed: 3 };
-    if (tokens.length === 2 || (tokens.length === 3 && word(i + 2) === "אחרונה")) {
-      return { count: 1, consumed: tokens.length };
-    }
+  if (!DELETE_VERBS.includes(word(i))) return null;
+  let k = i + 1;
+  if (word(k) === "את") k++;
+  if (word(k) === "מילה" || word(k) === "המילה") {
+    if (word(k + 1) === "אחת") return { count: 1, consumed: k + 2 - i };
+    if (LAST_WORDS.includes(word(k + 1))) return { count: 1, consumed: k + 2 - i };
+    if (i === 0 && tokens.length === k + 1) return { count: 1, consumed: k + 1 - i };
     return null;
   }
-  const num = parseNumberFromTokens(tokens, i + 1);
+  const num = parseNumberFromTokens(tokens, k);
   if (!num || num.value < 1) return null;
-  let k = i + 1 + num.consumed;
-  if (["מילים", "המילים", "מילה"].includes(word(k))) {
-    k++;
-    if (["אחרונות", "האחרונות"].includes(word(k))) k++;
-  }
+  k += num.consumed;
+  if (["מילים", "המילים", "מילה"].includes(word(k))) k++;
+  if (LAST_WORDS.includes(word(k))) k++;
   return { count: num.value, consumed: k - i };
+}
+
+// How many of the last tokens may be the beginning of a command whose rest has not been
+// said yet ("מחק" ... "שלוש"). They wait for what comes next.
+const FIRST_HALF = [
+  ["סימן"], ["שורה"], ["פסקה"], ["רד"], ["פתח"], ["סגור"],
+  ...DELETE_VERBS.map((v) => [v]), ...DELETE_VERBS.map((v) => [v, "את"]),
+  ["תקן"], ["תקן", "את"], ["תקן", "מילה"], ["תקן", "את", "המילה"],
+  ["תקן", "מילה", null], ["תקן", "את", "המילה", null],
+  ["תקן", "מילה", null, "ל"], ["תקן", "את", "המילה", null, "ל"],
+];
+function unfinishedTail(tokens) {
+  let hold = 0;
+  for (const half of FIRST_HALF) {
+    const tail = tokens.slice(-half.length);
+    if (tail.length === half.length && half.length > hold &&
+        half.every((w, i) => w === null || bare(tail[i]) === w)) hold = half.length;
+  }
+  return hold;
+}
+
+// Does the text end with a command that was said in full? (It is carried out right away.)
+function endsWithCommand(tokens) {
+  for (let i = Math.max(0, tokens.length - 6); i < tokens.length; i++) {
+    const c = parseDeleteCommand(tokens, i) || parseFixCommand(tokens, i);
+    if (c && i + c.consumed === tokens.length) return true;
+  }
+  const last = bare(tokens[tokens.length - 1]);
+  const pair = bare(tokens[tokens.length - 2]) + " " + last;
+  return own(SINGLE_PUNCT, last) || ["ציטוט", "רווח", "מקף"].includes(last) ||
+    ["סימן שאלה", "סימן קריאה", "נקודה פסיק", "שורה חדשה", "רד שורה", "פסקה חדשה",
+      "פתח סוגריים", "סגור סוגריים"].includes(pair);
+}
+
+// The recognizer keeps rewriting what it heard. Given the tokens that already went into the
+// text and the tokens it reports now, returns how many of the new ones those are - also when
+// it has since changed, joined or split some of them ("10 00" -> "10:00").
+function alignTaken(taken, now) {
+  let p = 0;
+  while (p < taken.length && p < now.length && taken[p] === now[p]) p++;
+  if (p === taken.length) return p;
+  // Letters are compared, not whole tokens, so that "10 00" equals "10:00".
+  const letters = (list) => list.join("").replace(/[^\p{L}\p{N}]/gu, "");
+  const a = letters(taken.slice(p));
+  const rest = now.slice(p, taken.length + 8);
+  const b = letters(rest);
+  let row = Array.from({ length: b.length + 1 }, (_, n) => n);
+  for (let x = 0; x < a.length; x++) {
+    const next = [x + 1];
+    for (let y = 0; y < b.length; y++) {
+      next.push(Math.min(row[y] + (a[x] === b[y] ? 0 : 1), row[y + 1] + 1, next[y] + 1));
+    }
+    row = next;
+  }
+  let best = 0;
+  let end = 0;
+  let bestEnd = 0;
+  for (let n = 1; n <= rest.length; n++) {
+    end += letters([rest[n - 1]]).length;
+    if (row[end] < row[bestEnd]) { best = n; bestEnd = end; }
+  }
+  return p + best;
 }
 
 // What the text ends with, as far as joining the next word is concerned:
@@ -664,7 +728,10 @@ function safeFileName(raw) {
   }
   docTitle.addEventListener("input", saveDraft);
   // Only what is still waiting: another open window may have saved newer text since.
-  window.addEventListener("pagehide", () => { if (draftTimer) writeDraft(); });
+  window.addEventListener("pagehide", () => {
+    if (phase !== "idle") flushSession(); // words still on their way into the text
+    if (draftTimer) writeDraft();
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden && draftTimer) writeDraft();
   });
@@ -806,6 +873,52 @@ function safeFileName(raw) {
     openSession();
   }
 
+  let pauseTimer = null;
+  let flushSession = () => {};
+
+  // The beginning of a command waits here for its other half.
+  const HOLD_MS = 4000;
+  let held = [];
+  let heldTimer = null;
+  let deletedAt = 0; // when a delete command was last carried out
+
+  function showInterim(tokens) {
+    interimText = [...held, ...tokens].join(" ");
+    updateInterim();
+  }
+
+  function take(tokens) {
+    clearTimeout(heldTimer);
+    let all = [...held, ...tokens];
+    // "מחק שלוש" was carried out, and "מילים" came a moment later
+    if (!held.length && Date.now() - deletedAt < 3000 && /^ה?מילים$/.test(bare(all[0]))) {
+      all = all.slice(LAST_WORDS.includes(bare(all[1])) ? 2 : 1);
+    }
+    const hold = unfinishedTail(all);
+    held = hold ? all.slice(-hold) : [];
+    const ready = hold ? all.slice(0, -hold) : all;
+    interimText = held.join(" ");
+    if (held.length) heldTimer = setTimeout(releaseHeld, HOLD_MS);
+    deletedAt = 0;
+    if (ready.length) {
+      commit(ready.join(" "));
+      for (let i = Math.max(0, ready.length - 4); i < ready.length; i++) {
+        const c = parseDeleteCommand(ready, i);
+        if (c && i + c.consumed === ready.length) deletedAt = Date.now();
+      }
+    } else updateInterim();
+  }
+
+  // The other half did not come: they were ordinary words.
+  function releaseHeld() {
+    clearTimeout(heldTimer);
+    if (!held.length) return;
+    const words = held.join(" ");
+    interimText = interimText === words ? "" : interimText.slice(words.length).trim();
+    held = [];
+    commit(words);
+  }
+
   function openSession() {
     clearTimeout(restartTimer);
     restartTimer = null;
@@ -821,7 +934,8 @@ function safeFileName(raw) {
     let startedAt = 0;
     let gotResult = false;
     let error = "";
-    let committed = 0; // results that already went into the text
+    let taken = []; // tokens of this session that already went into the text
+    let now = [];   // all the tokens of this session, as reported last
     const mine = (fn) => (e) => { if (rec === recognition) fn(e); };
 
     rec.onstart = mine(() => {
@@ -847,29 +961,51 @@ function safeFileName(raw) {
         failures = 0;
         if (phase === "on") setStatus(LISTENING, "active");
       }
-      let finals = "";
-      let interim = "";
-      for (let i = committed; i < event.results.length; i++) {
+      // Chrome may keep a whole session "not final" and only raise the confidence of the part
+      // it will not change any more, so waiting for final results is not enough: commands and
+      // text go in as soon as the speaker pauses.
+      now = [];
+      let sure = 0;    // leading tokens that are final
+      let steady = true; // no part is still a low-confidence guess
+      for (let i = 0; i < event.results.length; i++) {
         const result = event.results[i];
-        const said = result[0].transcript;
+        const tokens = result[0].transcript.trim().split(/\s+/).filter(Boolean);
         // Android marks partial results as final, with zero confidence.
         const isFinal = result.isFinal && !(IS_ANDROID && result[0].confidence === 0);
-        if (isFinal && !interim) { finals += said + " "; committed = i + 1; }
-        else interim += said + " ";
+        if (isFinal && sure === now.length) sure += tokens.length;
+        if (!isFinal && result[0].confidence < 0.5) steady = false;
+        now.push(...tokens);
       }
-      interimText = interim.trim().replace(/\s+/g, " ");
-      if (finals.trim()) commit(finals);
-      else updateInterim();
+      const from = alignTaken(taken, now);
+      if (sure > from) {
+        take(now.slice(from, sure));
+        taken = now.slice(0, sure);
+      }
+      const rest = now.slice(Math.max(from, sure));
+      showInterim(rest);
+      clearTimeout(pauseTimer);
+      if (!rest.length) return;
+      const command = endsWithCommand([...held, ...rest]);
+      pauseTimer = setTimeout(takeRest, steady ? (command ? 250 : 900) : (command ? 1000 : 2000));
     });
+
+    // Takes into the text everything that was heard so far.
+    function takeRest() {
+      clearTimeout(pauseTimer);
+      const rest = now.slice(alignTaken(taken, now));
+      if (!rest.length) return;
+      taken = now.slice();
+      interimText = "";
+      take(rest);
+    }
+    flushSession = () => { takeRest(); releaseHeld(); };
 
     rec.onend = mine(() => {
       recognition = null;
       // Words that were on screen but never became final (lost connection, engine restart)
       // are kept rather than disappearing.
-      const leftover = interimText;
-      interimText = "";
-      if (leftover) commit(leftover);
-      else renderEditor();
+      takeRest();
+      if (phase === "stopping") releaseHeld();
       sessionEnded({ error, gotResult, lasted: startedAt ? Date.now() - startedAt : 0 });
     });
 
@@ -893,6 +1029,7 @@ function safeFileName(raw) {
     if (phase === "idle") return;
 
     if (Object.prototype.hasOwnProperty.call(FATAL, error)) {
+      releaseHeld();
       setPhase("idle");
       setStatus(FATAL[error][0], "error");
       showToast(FATAL[error][1], "error", 7000);
@@ -911,6 +1048,7 @@ function safeFileName(raw) {
     failures = gotResult || lasted > 8000 ? 1 : failures + 1;
     const offline = error === "network";
     if (failures >= MAX_FAILURES) {
+      releaseHeld();
       setPhase("idle");
       const text = offline ? "אין חיבור לשירות זיהוי הדיבור" : "זיהוי הדיבור נעצר";
       setStatus(text, "error");
@@ -944,10 +1082,7 @@ function safeFileName(raw) {
       const rec = recognition;
       recognition = null;
       if (rec) { try { rec.abort(); } catch { /* ignore */ } }
-      const leftover = interimText;
-      interimText = "";
-      if (leftover) commit(leftover);
-      else renderEditor();
+      flushSession();
       finishStopped();
     }, 3000);
   }
@@ -955,6 +1090,7 @@ function safeFileName(raw) {
   function finishStopped() {
     clearTimeout(stopTimer);
     stopTimer = null;
+    releaseHeld();
     setPhase("idle");
     setStatus("מוכן");
     if (startAgain) {
@@ -1008,8 +1144,8 @@ function safeFileName(raw) {
     docText = readEditorText();
     if (!docText) { showToast("הטקסט כבר ריק"); return; }
     askConfirm("ניקוי הטקסט", "כל הטקסט יימחק. אפשר לבטל אחר כך בכפתור הביטול או ב-Ctrl+Z, כל עוד החלון פתוח.", () => {
+      flushSession();
       docText = readEditorText();
-      interimText = "";
       setText("");
       showToast("הטקסט נוקה", "success");
     });
