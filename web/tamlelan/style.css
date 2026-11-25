@@ -8,7 +8,7 @@
   --border-strong: rgba(255, 255, 255, 0.15);
   --text: #f1f5f9;
   --text-muted: #94a3b8;
-  --text-faint: #64748b;
+  --text-faint: #7f8da3;
   --accent-1: #8b5cf6;
   --accent-2: #3b82f6;
   --accent: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
@@ -37,7 +37,7 @@ body.light {
   --border-strong: rgba(15, 23, 42, 0.15);
   --text: #0f172a;
   --text-muted: #475569;
-  --text-faint: #94a3b8;
+  --text-faint: #64748b;
   --paper: #ffffff;
   --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
@@ -47,10 +47,8 @@ body.light {
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  height: 100%;
-  overflow-x: hidden;
-}
+/* not on body too: that would make it a scroller of its own and break the sticky toolbar */
+html { overflow-x: hidden; }
 
 body {
   font-family: 'Heebo', 'Segoe UI', Tahoma, Arial, sans-serif;
@@ -112,6 +110,8 @@ body.light .orb { opacity: 0.25; }
 /* Header ------------------------------------------------------------- */
 .app-header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
@@ -360,6 +360,11 @@ body.light .btn-danger { color: var(--danger-dark); }
   border-color: rgba(239, 68, 68, 0.4);
 }
 
+.btn-primary.busy { opacity: 0.75; }
+
+button:focus-visible, .editor:focus-visible { outline: 2px solid var(--accent-1); outline-offset: 2px; }
+.editor:focus-visible { outline-offset: -2px; }
+
 .toolbar-spacer { flex: 1; min-width: 8px; }
 
 .status-pill {
@@ -423,6 +428,9 @@ body.light .btn-danger { color: var(--danger-dark); }
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
   animation: blink-dot 1.2s infinite;
 }
+.status-pill.error { color: #f87171; border-color: rgba(239, 68, 68, 0.4); }
+body.light .status-pill.error { color: var(--danger-dark); }
+.status-pill.error .status-dot { background: var(--danger); }
 .status-pill.success .status-dot {
   background: var(--success);
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
@@ -441,7 +449,8 @@ body.light .btn-danger { color: var(--danger-dark); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   padding: 12px 22px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
@@ -481,6 +490,8 @@ body.light .btn-danger { color: var(--danger-dark); }
 }
 .font-mini-btn:hover { background: var(--surface-hover); }
 .font-mini-btn:active { transform: scale(0.92); }
+.font-mini-btn:disabled { opacity: 0.35; cursor: default; background: transparent; transform: none; }
+.font-mini-btn svg { width: 15px; height: 15px; }
 .font-size-display {
   min-width: 26px;
   font-size: 11px;
@@ -523,7 +534,10 @@ input.doc-title::placeholder {
 
 .editor {
   padding: 36px 44px;
-  min-height: 420px;
+  /* a long text scrolls inside, so the newest words and the buttons stay in view */
+  min-height: min(420px, 60vh);
+  max-height: max(320px, calc(100vh - 190px));
+  overflow-y: auto;
   font-size: 19px;
   line-height: 1.85;
   color: var(--text);
@@ -535,12 +549,10 @@ input.doc-title::placeholder {
   letter-spacing: 0.005em;
   user-select: text;
   cursor: text;
-  outline: none;
   caret-color: var(--accent-1);
   direction: rtl;
   text-align: right;
 }
-.editor:focus { outline: none; }
 
 .editor.is-empty::before {
   content: attr(data-placeholder);
@@ -577,7 +589,7 @@ input.doc-title::placeholder {
   line-height: 1.6;
   padding: 0 12px;
 }
-#privacy-dialog .dialog-content { max-width: min(520px, 92vw); }
+#privacy-dialog .dialog-content { width: 520px; }
 .footer-credit {
   font-size: 13px;
   font-weight: 700;
@@ -625,8 +637,8 @@ input.doc-title::placeholder {
   position: fixed;
   inset: 0;
   margin: auto;
-  width: max-content;
-  height: max-content;
+  width: fit-content;
+  height: fit-content;
   max-width: calc(100vw - 32px);
   max-height: calc(100vh - 32px);
 }
@@ -647,8 +659,8 @@ input.doc-title::placeholder {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   padding: 28px;
-  min-width: 380px;
-  max-width: 92vw;
+  width: 460px;
+  max-width: 100%;
   box-shadow: var(--shadow-lg);
   color: var(--text);
   font-family: inherit;
@@ -657,7 +669,7 @@ input.doc-title::placeholder {
 }
 .dialog h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
 .dialog p { color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; }
-.dialog-actions { display: flex; gap: 10px; justify-content: flex-start; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; }
 
 /* Scrollbar ---------------------------------------------------------- */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -671,9 +683,34 @@ input.doc-title::placeholder {
 /* Responsive --------------------------------------------------------- */
 @media (max-width: 640px) {
   .app { padding: 18px 14px 30px; }
-  .editor { padding: 24px 22px; font-size: 17px; }
+  .editor { padding: 24px 22px; max-height: 60vh; }
+  .editor.is-empty::before { inset: 24px 22px auto auto; max-width: calc(100% - 44px); }
+  .editor-toolbar { padding: 10px 14px; }
+  .font-mini-btn { width: 36px; height: 34px; }
+  .cmd-card { padding: 10px 12px; gap: 8px; }
+  .cmd-word { white-space: normal; }
   .commands-grid { grid-template-columns: 1fr 1fr; }
   .btn { padding: 11px 16px; font-size: 13px; }
   .btn-primary { padding: 12px 20px; }
   .brand h1 { font-size: 18px; }
+}
+
+@media (max-width: 900px) {
+  .cmd-word { white-space: normal; flex-shrink: 1; }
+}
+
+/* On a wide screen the buttons stay on top while the page scrolls */
+@media (min-width: 641px) and (min-height: 560px) {
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    background: var(--bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

@@ -287,15 +287,15 @@
     "icon": "apps/tamlelan/icon.png",
     "screens": [
       {
-        "src": "apps/tamlelan/screens/01.webp",
+        "src": "apps/tamlelan/screens/01-v2.webp",
         "caption": "הכתבה בעברית עם פקודות קוליות"
       },
       {
-        "src": "apps/tamlelan/screens/02.webp",
+        "src": "apps/tamlelan/screens/02-v2.webp",
         "caption": "אותו מסך במצב בהיר"
       },
       {
-        "src": "apps/tamlelan/screens/03.webp",
+        "src": "apps/tamlelan/screens/03-v2.webp",
         "caption": "תצוגת מחשב"
       }
     ]

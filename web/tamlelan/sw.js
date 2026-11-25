@@ -1,7 +1,7 @@
 // Service worker for Tamlelan (works under any sub-path: everything is relative
 // to the SW's own scope). Network-first so updates arrive; cache is only an
 // offline fallback for the app shell. Dictation itself still needs internet.
-const CACHE = "tamlelan-v15";
+const CACHE = "tamlelan-v16";
 const SHELL = [
   "./",
   "index.html",
@@ -9,6 +9,7 @@ const SHELL = [
   "style.css",
   "manifest.json",
   "icon.svg",
+  "icon.ico",
   "icon-16.png",
   "icon-32.png",
   "icon-48.png",

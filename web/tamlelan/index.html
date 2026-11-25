@@ -7,20 +7,20 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>הכתבה בעברית · תמלול בזמן אמת</title>
-<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png?v=15">
-<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png?v=15">
-<link rel="icon" type="image/png" sizes="48x48" href="icon-48.png?v=15">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=15">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=15">
-<link rel="icon" type="image/svg+xml" href="icon.svg?v=15">
-<link rel="shortcut icon" href="icon.ico?v=15">
-<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=15">
-<link rel="manifest" href="manifest.json?v=15">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png?v=16">
+<link rel="icon" type="image/png" sizes="16x16" href="icon-16.png?v=16">
+<link rel="icon" type="image/png" sizes="48x48" href="icon-48.png?v=16">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=16">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=16">
+<link rel="icon" type="image/svg+xml" href="icon.svg?v=16">
+<link rel="shortcut icon" href="icon.ico?v=16">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png?v=16">
+<link rel="manifest" href="manifest.json?v=16">
 <meta name="theme-color" content="#8b5cf6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=15">
+<link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
 <div class="bg-orbs">
@@ -65,9 +65,13 @@
       <div class="cmd-card"><span class="cmd-word">"סימן שאלה"</span><span class="cmd-result">?</span></div>
       <div class="cmd-card"><span class="cmd-word">"סימן קריאה"</span><span class="cmd-result">!</span></div>
       <div class="cmd-card"><span class="cmd-word">"נקודותיים"</span><span class="cmd-result">:</span></div>
-      <div class="cmd-card"><span class="cmd-word">"ציטוט"</span><span class="cmd-result">'</span></div>
+      <div class="cmd-card"><span class="cmd-word">"ציטוט"</span><span class="cmd-result" dir="ltr">' '</span></div>
       <div class="cmd-card"><span class="cmd-word">"רווח"</span><span class="cmd-result">␣</span></div>
       <div class="cmd-card"><span class="cmd-word">"שורה חדשה"</span><span class="cmd-result">↵</span></div>
+      <div class="cmd-card"><span class="cmd-word">"פסקה חדשה"</span><span class="cmd-result">↵↵</span></div>
+      <div class="cmd-card"><span class="cmd-word">"נקודה פסיק"</span><span class="cmd-result">;</span></div>
+      <div class="cmd-card"><span class="cmd-word">"מקף"</span><span class="cmd-result">-</span></div>
+      <div class="cmd-card"><span class="cmd-word">"פתח / סגור סוגריים"</span><span class="cmd-result" dir="ltr">( )</span></div>
       <div class="cmd-card cmd-explain"><span class="cmd-word">"מחק N"</span><span class="cmd-result">מוחק N מילים אחרונות</span></div>
       <div class="cmd-card cmd-explain"><span class="cmd-word">"תקן מילה X לY"</span><span class="cmd-result">החלפה ב-5 האחרונות</span></div>
     </div>
@@ -95,7 +99,7 @@
       <span class="speaking-dot"></span>
       <span>מדבר</span>
     </div>
-    <div class="status-pill" id="status">
+    <div class="status-pill" id="status" role="status">
       <span class="status-dot"></span>
       <span id="status-text">מוכן</span>
     </div>
@@ -115,6 +119,14 @@
           <span class="font-size-display" id="font-size-display">19</span>
           <button id="font-inc" class="font-mini-btn" title="הגדל פונט" aria-label="הגדל פונט">A+</button>
         </div>
+        <div class="font-controls">
+          <button id="undo-btn" class="font-mini-btn" type="button" title="בטל (Ctrl+Z)" aria-label="בטל פעולה אחרונה" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 0 1 4-4h12"/></svg>
+          </button>
+          <button id="redo-btn" class="font-mini-btn" type="button" title="בצע שוב (Ctrl+Y)" aria-label="בצע שוב" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+          </button>
+        </div>
         <span class="doc-stats" id="doc-stats">0 מילים</span>
       </div>
     </div>
@@ -123,7 +135,7 @@
 
   <footer class="footer">
     <span>טכנולוגיית זיהוי דיבור של הדפדפן (Chrome/Edge) · עברית · ללא עלות</span>
-    <span class="footer-privacy">פרטיות: האודיו נשלח לעיבוד בשירות זיהוי הדיבור של הדפדפן (Google ב-Chrome, Microsoft ב-Edge) ונדרש חיבור לאינטרנט. הטקסט עצמו נשאר במכשיר שלך. הגופנים נטענים משירות Google Fonts.</span>
+    <span class="footer-privacy">פרטיות: האודיו נשלח לעיבוד בשירות זיהוי הדיבור של הדפדפן (Google ב-Chrome, Microsoft ב-Edge) ונדרש חיבור לאינטרנט. הטקסט עצמו נשאר במכשיר שלך, ונשמר בדפדפן עד שמנקים אותו. הגופנים נטענים משירות Google Fonts.</span>
     <span class="footer-credit">Created by Havivon</span>
   </footer>
 </div>
@@ -133,7 +145,7 @@
 <dialog id="privacy-dialog" class="dialog" aria-labelledby="privacy-title">
   <div class="dialog-content">
     <h3 id="privacy-title">לפני שמתחילים: על הפרטיות</h3>
-    <p>ההכתבה פועלת באמצעות שירות זיהוי הדיבור של הדפדפן. <strong>האודיו מהמיקרופון נשלח לעיבוד בשרתי הספק</strong> (Google ב-Chrome, Microsoft ב-Edge), ולכן נדרש חיבור לאינטרנט. הטקסט שמתקבל נשאר על המכשיר שלך ואינו נשלח לשום מקום על ידי האפליקציה. הגופנים נטענים משירות Google Fonts.</p>
+    <p>ההכתבה פועלת באמצעות שירות זיהוי הדיבור של הדפדפן. <strong>האודיו מהמיקרופון נשלח לעיבוד בשרתי הספק</strong> (Google ב-Chrome, Microsoft ב-Edge), ולכן נדרש חיבור לאינטרנט. הטקסט שמתקבל נשאר על המכשיר שלך (נשמר בדפדפן עד שמנקים אותו) ואינו נשלח לשום מקום על ידי האפליקציה. הגופנים נטענים משירות Google Fonts.</p>
     <div class="dialog-actions">
       <button id="privacy-ok" class="btn btn-primary" type="button">הבנתי, המשך להכתבה</button>
     </div>
@@ -152,6 +164,6 @@
 </dialog>
 
 <script src="vendor/jszip.min.js"></script>
-<script src="app.js?v=15"></script>
+<script src="app.js?v=16"></script>
 </body>
 </html>
