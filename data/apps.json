@@ -233,11 +233,11 @@
       "id": "seeyoulater",
       "category": "android",
       "order": 20,
-      "version": "1.0.11",
+      "version": "1.0.14",
       "updated": "2026-11-25",
       "download": {
         "url": "downloads/seeyoulater.apk",
-        "size": 30350682,
+        "size": 30350694,
         "type": "apk"
       }
     },
